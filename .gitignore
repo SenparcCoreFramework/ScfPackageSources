@@ -56,3 +56,4 @@ dkms.conf
 bin/
 obj/
 /src/ProjectFileManager
+/src/BuildOutPut
