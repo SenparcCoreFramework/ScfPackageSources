@@ -1,5 +1,5 @@
 ﻿using Senparc.CO2NET.Cache;
-using Senparc.CO2NET.Cache.Redis;
+using Senparc.CO2NET.Cache.CsRedis;
 using System;
 using System.Collections.Generic;
 using System.Text;

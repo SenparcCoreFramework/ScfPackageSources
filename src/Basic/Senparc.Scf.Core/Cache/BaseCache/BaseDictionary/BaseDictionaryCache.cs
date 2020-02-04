@@ -85,7 +85,7 @@ namespace Senparc.Scf.Core.Cache
 
             string finalKey = null;
 
-            if (base.Cache is Senparc.CO2NET.Cache.Redis.BaseRedisObjectCacheStrategy)
+            if (base.Cache is Senparc.CO2NET.Cache.CsRedis.BaseRedisObjectCacheStrategy)
             {
                 finalKey = $"{keyCode}";
             }

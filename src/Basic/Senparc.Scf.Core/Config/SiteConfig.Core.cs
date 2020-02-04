@@ -52,45 +52,45 @@ namespace Senparc.Scf.Core.Config
         /// </summary>
         public static readonly long DeveloperIncomRate = (long)0.5;
 
-        /// <summary>
-        /// TODO: 如果在系统启动时调用IHttpContextAccessor可能获取不到HttpContext！
-        /// </summary>
-        public static Dictionary<string, int> MemcachedAddresses
-        {
-            get
-            {
-                if (_memcachedAddressesDic == null)
-                {
-                    var result = new Dictionary<string, int>();
-                    if (!SiteConfig.IsDebug)
-                    {
-                        result[SiteConfig.DEFAULT_MEMCACHED_ADDRESS_1] = SiteConfig.DEFAULT_MEMCACHED_PORT_1; //主站
-                    }
-                    else
-                    {
-                        var httpContextAccessor = SenparcDI.GetService<IHttpContextAccessor>();
+        ///// <summary>
+        ///// TODO: 如果在系统启动时调用IHttpContextAccessor可能获取不到HttpContext！
+        ///// </summary>
+        //public static Dictionary<string, int> MemcachedAddresses
+        //{
+        //    get
+        //    {
+        //        if (_memcachedAddressesDic == null)
+        //        {
+        //            var result = new Dictionary<string, int>();
+        //            if (!SiteConfig.IsDebug)
+        //            {
+        //                result[SiteConfig.DEFAULT_MEMCACHED_ADDRESS_1] = SiteConfig.DEFAULT_MEMCACHED_PORT_1; //主站
+        //            }
+        //            else
+        //            {
+        //                var httpContextAccessor = SenparcDI.GetService<IHttpContextAccessor>();
 
-                        if (SiteConfig.IsUnitTest || (IsDebug && httpContextAccessor != null && httpContextAccessor.HttpContext.Request.IsLocal()))
-                        {
-                            result["127.0.0.1"] = 11210; //本地
-                        }
-                        else if (IsTestSite && IsDebug && httpContextAccessor != null && !httpContextAccessor.HttpContext.Request.IsLocal())
-                        {
-                            result[SiteConfig.DEFAULT_MEMCACHED_ADDRESS_1] = SiteConfig.DEFAULT_MEMCACHED_PORT_1;
-                        }
-                    }
+        //                if (SiteConfig.IsUnitTest || (IsDebug && httpContextAccessor != null && httpContextAccessor.HttpContext.Request.IsLocal()))
+        //                {
+        //                    result["127.0.0.1"] = 11210; //本地
+        //                }
+        //                else if (IsTestSite && IsDebug && httpContextAccessor != null && !httpContextAccessor.HttpContext.Request.IsLocal())
+        //                {
+        //                    result[SiteConfig.DEFAULT_MEMCACHED_ADDRESS_1] = SiteConfig.DEFAULT_MEMCACHED_PORT_1;
+        //                }
+        //            }
 
-                    if (result.Count == 0)
-                    {
-                        result[SiteConfig.DEFAULT_MEMCACHED_ADDRESS_1] = SiteConfig.DEFAULT_MEMCACHED_PORT_1; //主站
-                    }
+        //            if (result.Count == 0)
+        //            {
+        //                result[SiteConfig.DEFAULT_MEMCACHED_ADDRESS_1] = SiteConfig.DEFAULT_MEMCACHED_PORT_1; //主站
+        //            }
 
-                }
-                return _memcachedAddressesDic;
-            }
-            set => _memcachedAddressesDic = value;
+        //        }
+        //        return _memcachedAddressesDic;
+        //    }
+        //    set => _memcachedAddressesDic = value;
 
-        }
+        //}
 
         /// <summary>
         /// 缓存类型

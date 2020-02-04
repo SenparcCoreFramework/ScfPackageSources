@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Senparc.CO2NET.Cache;
-using Senparc.Scf.Core.Cache.BaseCache;
 using System;
 using System.Collections.Generic;
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using Senparc.CO2NET.Cache;
-using Senparc.Scf.Core.Cache.BaseCache;
 using Senparc.Scf.Log;
 using Senparc.Weixin.Entities;
 
