@@ -1,15 +1,29 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>0.1-beta1</Version>
+    <AssemblyName>Senparc.Scf.Repository</AssemblyName>
+    <RootNamespace>Senparc.Scf.Repository</RootNamespace>
+    <Description>Senparc.Scf.Repository</Description>
+    <Copyright>SenparcCoreFramework</Copyright>
+    <PackageTags>SenparcCoreFramework,SCF</PackageTags>
+    <Authors>SenparcCoreFramework</Authors>
+    <Owners>SenparcCoreFramework</Owners>
+    <PackageLicenseUrl>https://github.com/SenparcCoreFramework/ScfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
+    <Title>Senparc.Scf.Repository</Title>
+    <ProjectUrl> https://github.com/SenparcCoreFramework/SCF</ProjectUrl>
+    <PackageProjectUrl>https://github.com/SenparcCoreFramework/ScfPackageSources</PackageProjectUrl>
+    <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-scf.jpg</PackageIconUrl>
+    <PackageReleaseNotes>
+      v0.1
+      创世
+    </PackageReleaseNotes>
+    <RepositoryUrl> https://github.com/SenparcCoreFramework/ScfPackageSources</RepositoryUrl>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Senparc.CO2NET" Version="1.1.100-preview1" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Scf.Core\Senparc.Scf.Core.csproj" />
   </ItemGroup>
-
 </Project>

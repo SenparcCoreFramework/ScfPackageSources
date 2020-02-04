@@ -1,7 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>0.1-beta1</Version>
+    <AssemblyName>Senparc.Scf.Core</AssemblyName>
+    <RootNamespace>Senparc.Scf.Core</RootNamespace>
+    <Description>Senparc.Scf.Core</Description>
+    <Copyright>SenparcCoreFramework</Copyright>
+    <PackageTags>SenparcCoreFramework,SCF</PackageTags>
+    <Authors>SenparcCoreFramework</Authors>
+    <Owners>SenparcCoreFramework</Owners>
+    <PackageLicenseUrl>https://github.com/SenparcCoreFramework/ScfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
+    <Title>Senparc.Scf.Core</Title>
+    <ProjectUrl> https://github.com/SenparcCoreFramework/SCF</ProjectUrl>
+    <PackageProjectUrl>https://github.com/SenparcCoreFramework/ScfPackageSources</PackageProjectUrl>
+    <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-scf.jpg</PackageIconUrl>
+    <PackageReleaseNotes>v0.1
+创世
+</PackageReleaseNotes>
+    <RepositoryUrl> https://github.com/SenparcCoreFramework/ScfPackageSources</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
@@ -13,9 +29,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Senparc.CO2NET" Version="1.1.100-preview1" />
-
     <PackageReference Include="Senparc.Weixin" Version="6.7.100-preview1" />
-
     <PackageReference Include="Senparc.Weixin.Cache.CsRedis" Version="0.1.0-alpha1" />
     <PackageReference Include="Senparc.Weixin.Cache.Memcached" Version="2.6.100-preview1" />
     <PackageReference Include="Senparc.Weixin.MP" Version="16.10.100-preview1" />

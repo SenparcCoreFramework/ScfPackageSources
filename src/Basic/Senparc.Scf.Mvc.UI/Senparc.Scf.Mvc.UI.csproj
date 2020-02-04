@@ -1,11 +1,28 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>0.1-beta1</Version>
+    <AssemblyName>Senparc.Scf.Mvc.UI</AssemblyName>
+    <RootNamespace>Senparc.Scf.Mvc.UI</RootNamespace>
+    <Description>Senparc.Scf.Mvc.UI</Description>
+    <Copyright>SenparcCoreFramework</Copyright>
+    <PackageTags>SenparcCoreFramework,SCF</PackageTags>
+    <Authors>SenparcCoreFramework</Authors>
+    <Owners>SenparcCoreFramework</Owners>
+    <PackageLicenseUrl>https://github.com/SenparcCoreFramework/ScfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
+    <Title>Senparc.Scf.Mvc.UI</Title>
+    <ProjectUrl> https://github.com/SenparcCoreFramework/SCF</ProjectUrl>
+    <PackageProjectUrl>https://github.com/SenparcCoreFramework/ScfPackageSources</PackageProjectUrl>
+    <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-scf.jpg</PackageIconUrl>
+    <PackageReleaseNotes>
+      v0.1
+      创世
+    </PackageReleaseNotes>
+    <RepositoryUrl> https://github.com/SenparcCoreFramework/ScfPackageSources</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.RazorPages" Version="2.2.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Scf.Core\Senparc.Scf.Core.csproj" />
