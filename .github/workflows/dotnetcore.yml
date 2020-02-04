@@ -16,8 +16,8 @@ jobs:
     - name: Build with dotnet
       run: dotnet build src/Basic/ScfPackageSources.Basic.sln --configuration Release
 
-    - name: Publish NuGet
-      uses: rohith/publish-nuget@v2.0.0
-      with:
-        # Filepath of the project to be packaged, relative to root of repository
-        PROJECT_FILE_PATH: /**/*.csproj
+ #   - name: Publish NuGet
+ #     uses: rohith/publish-nuget@v2.0.0
+ #     with:
+ #       # Filepath of the project to be packaged, relative to root of repository
+ #       PROJECT_FILE_PATH: /**/*.csproj
