@@ -3,10 +3,10 @@
 namespace Senparc.Scf.XscfBase
 {
     /// <summary>
-    /// Xscf 模块特性
+    /// Xscf 模块特性 - 注册
     /// </summary>
-    public class XscfModuleAttribute : Attribute
+    public class XscfRegisterAttribute : Attribute
     {
-
+     
     }
 }
