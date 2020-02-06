@@ -14,7 +14,7 @@ jobs:
       with:
         dotnet-version: 3.1.100
     - name: Build with dotnet
-      run: dotnet build src/Basic/ScfPackageSources.Basic.sln --configuration Release
+      run: dotnet build src/ScfPackageSources.sln --configuration Release
 
  #   - name: Publish NuGet
  #     uses: rohith/publish-nuget@v2.0.0
