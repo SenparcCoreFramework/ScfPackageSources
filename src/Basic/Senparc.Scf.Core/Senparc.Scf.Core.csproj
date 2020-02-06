@@ -1,11 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.1-beta1</Version>
+    <Version>0.1-beta2</Version>
     <AssemblyName>Senparc.Scf.Core</AssemblyName>
     <RootNamespace>Senparc.Scf.Core</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    
     <Description>Senparc.Scf.Core</Description>
     <Copyright>SenparcCoreFramework</Copyright>
     <PackageTags>SenparcCoreFramework,SCF</PackageTags>
@@ -19,7 +18,7 @@
     <PackageReleaseNotes>
       v0.1
       创世
-    </PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl> https://github.com/SenparcCoreFramework/ScfPackageSources</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -31,8 +30,6 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-
-
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
