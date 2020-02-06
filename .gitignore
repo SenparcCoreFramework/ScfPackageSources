@@ -50,11 +50,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-/.vs
-/src/Basic/.vs/ScfPackageSources.Basic/v16
 *.user
 bin/
 obj/
-/src/ProjectFileManager
+**/ProjectFileManager
 /src/BuildOutPut
-/src/Basic/ProjectFileManager/
+**/.vs
+**/ProjectFileManager/

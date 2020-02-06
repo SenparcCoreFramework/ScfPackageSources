@@ -5,19 +5,19 @@ VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{20618121-91AE-4EFE-9899-ABCB0ADACE86}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Mvc.UI", "Senparc.Scf.Mvc.UI\Senparc.Scf.Mvc.UI.csproj", "{353775C5-4979-48FF-B4C6-90C54D923AB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Mvc.UI", "Basic\Senparc.Scf.Mvc.UI\Senparc.Scf.Mvc.UI.csproj", "{353775C5-4979-48FF-B4C6-90C54D923AB7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Core", "Senparc.Scf.Core\Senparc.Scf.Core.csproj", "{AB5A4906-7E58-4D1B-BA46-E7DCE40FD310}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Core", "Basic\Senparc.Scf.Core\Senparc.Scf.Core.csproj", "{AB5A4906-7E58-4D1B-BA46-E7DCE40FD310}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Repository", "Senparc.Scf.Repository\Senparc.Scf.Repository.csproj", "{9715307C-A38E-416C-B9A3-EF0F39837A1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Repository", "Basic\Senparc.Scf.Repository\Senparc.Scf.Repository.csproj", "{9715307C-A38E-416C-B9A3-EF0F39837A1A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Log", "Senparc.Scf.Log\Senparc.Scf.Log.csproj", "{2AF3D7C2-0633-4D15-8E29-5E068F0D2DDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Log", "Basic\Senparc.Scf.Log\Senparc.Scf.Log.csproj", "{2AF3D7C2-0633-4D15-8E29-5E068F0D2DDA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Utility", "Senparc.Scf.Utility\Senparc.Scf.Utility.csproj", "{49853A70-AE13-481D-9A98-72DE029717C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Utility", "Basic\Senparc.Scf.Utility\Senparc.Scf.Utility.csproj", "{49853A70-AE13-481D-9A98-72DE029717C9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Service", "Senparc.Scf.Service\Senparc.Scf.Service.csproj", "{05EA51B5-9C9D-457F-A69E-9ACB218D7AA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Service", "Basic\Senparc.Scf.Service\Senparc.Scf.Service.csproj", "{05EA51B5-9C9D-457F-A69E-9ACB218D7AA5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.SMS", "Senparc.Scf.SMS\Senparc.Scf.SMS.csproj", "{D67659FE-8708-4913-9A56-BE8ECB838405}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.SMS", "Basic\Senparc.Scf.SMS\Senparc.Scf.SMS.csproj", "{D67659FE-8708-4913-9A56-BE8ECB838405}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FEF3CC72-9596-49E1-A910-990F607E9E76}"
 EndProject
