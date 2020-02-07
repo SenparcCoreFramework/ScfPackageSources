@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Scf.Core.Models.DataBaseModel.Mapping
+namespace Senparc.Scf.Core.Models.DataBaseModel
 {
     public class XscfModuleAccountConfigurationMapping : ConfigurationMappingWithIdBase<XscfModule, int>
     {

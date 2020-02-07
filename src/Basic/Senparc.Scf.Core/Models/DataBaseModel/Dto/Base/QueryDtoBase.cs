@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Senparc.Core.Models.DataBaseModel.Dto.Base
 {
-    public class BaseQueryDtoBase
+    public class QueryDtoBase
     {
         /// <summary>
         /// xxxx Desc, ddd asc
