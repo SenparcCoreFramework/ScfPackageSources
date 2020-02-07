@@ -2,10 +2,10 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Version>0.1.1-beta1</Version>
-    <AssemblyName>Senparc.Scf.Utility</AssemblyName>
-    <RootNamespace>Senparc.Scf.Utility</RootNamespace>
+    <AssemblyName>Senparc.Scf.XscfBase</AssemblyName>
+    <RootNamespace>Senparc.Scf.XscfBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>Senparc.Scf.Utility</Description>
+    <Description>Senparc.Scf.XscfBase</Description>
     <Copyright>SenparcCoreFramework</Copyright>
     <PackageTags>SenparcCoreFramework,SCF</PackageTags>
     <Authors>SenparcCoreFramework</Authors>
@@ -23,21 +23,11 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\BuildOutPut\Senparc.Scf.Utility.XML</DocumentationFile>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Scf.XscfBase.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="Senparc.Weixin" Version="6.7.100-preview1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Senparc.Scf.Log\Senparc.Scf.Log.csproj" />
-  </ItemGroup>
 </Project>

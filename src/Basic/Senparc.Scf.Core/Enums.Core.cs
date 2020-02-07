@@ -1,6 +1,6 @@
 ﻿namespace Senparc.Scf.Core.Enums
 {
-   
+
 
     public enum MessageType
     {
@@ -83,7 +83,11 @@
 
     #region 实体属性
 
-
+    public enum XscfModules_State
+    {
+        关闭 = 0,
+        开放 = 1
+    }
 
     #endregion
 }
