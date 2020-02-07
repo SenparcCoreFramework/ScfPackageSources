@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.1-beta2</Version>
+    <Version>0.1.1-aplha1</Version>
     <AssemblyName>Senparc.Scf.Repository</AssemblyName>
     <RootNamespace>Senparc.Scf.Repository</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
