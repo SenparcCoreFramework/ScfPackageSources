@@ -18,6 +18,7 @@
     <PackageReleaseNotes>
       v0.1
       创世
+      v0.1.1 完善自动部署模块 Xscf
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/SenparcCoreFramework/ScfPackageSources</RepositoryUrl>
   </PropertyGroup>
