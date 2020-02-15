@@ -16,6 +16,10 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         string MenuName { get; }
         /// <summary>
+        /// 说明
+        /// </summary>
+        string Description { get; }
+        /// <summary>
         /// 安装代码
         /// </summary>
         void Install();

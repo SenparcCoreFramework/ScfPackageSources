@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Senparc.Scf.Core.Models.DataBaseModel
 {
-    public class XscfModuleDto:DtoBase
+    public class XscfModuleDto : DtoBase
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -19,7 +19,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
 
     public class CreateOrUpdate_XscfModuleDto : DtoBase
     {
-        [Required,StringLength(100)]
+        [Required, StringLength(100)]
         public string Name { get; set; }
         [Required, StringLength(100)]
         public string Uid { get; set; }
