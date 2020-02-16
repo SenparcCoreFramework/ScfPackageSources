@@ -31,4 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Senparc.CO2NET" Version="1.1.100-preview2" />
+  </ItemGroup>
 </Project>

@@ -16,5 +16,11 @@ namespace Senparc.Scf.XscfBase
         }
 
         public abstract string Run(params object[] param);
+
+        protected void RecordLog(StringBuilder sb, string msg)
+        {
+            sb.AppendLine($"[{SystemTime.Now.ToString()}]\t{msg}");
+        }
+
     }
 }
