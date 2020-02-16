@@ -1,13 +1,11 @@
 ﻿using Senparc.Scf.XscfBase;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Senparc.Xscf.ChangeNamespace
 {
     [XscfRegister]
-    public class Register : IRegister
+    public class Register : IXscfRegister
     {
         public Register()
         { }
@@ -15,7 +13,12 @@ namespace Senparc.Xscf.ChangeNamespace
         #region IRegister 接口
 
         public string Name => "Senparc.Xscf.ChangeNamespace";
+        public string Uid => "476A8F12-860D-4B18-B703-393BBDEFBD85";//必须确保全局唯一，生成后必须固定
+        public string Version => "0.1";//必须填写版本号
+
         public string MenuName => "修改命名空间";
+        public string Description => "此功能提供给开发者在安装完 SCF、发布产品之前，全局修改命名空间，请在生产环境中谨慎使用，此操作不可逆！必须做好提前备份！不建议在已经部署至生产环境并开始运行后使用此功能！";
+        public IList<Type> Functions => new[] { typeof(Senparc.Xscf.ChangeNamespace.Functions.ChangeNamespace) };
 
         public void Install()
         {
@@ -26,11 +29,5 @@ namespace Senparc.Xscf.ChangeNamespace
         }
 
         #endregion
-
-        [XscfMethod("Change")]
-        public void Change(string newNamespace)
-        {
-            //TODO：修改命名空间
-        }
     }
 }

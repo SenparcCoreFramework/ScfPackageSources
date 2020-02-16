@@ -15,6 +15,8 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
             builder.Property(e => e.Name).HasMaxLength(100).IsRequired();
             builder.Property(e => e.Uid).HasMaxLength(100).IsRequired();
             builder.Property(e => e.MenuName).HasMaxLength(100);
+            builder.Property(e => e.Version).HasMaxLength(100).IsRequired();
+            builder.Property(e => e.UpdateLog).IsRequired();
             builder.Property(e => e.AllowRemove).IsRequired();
             builder.Property(e => e.State).IsRequired();
         }

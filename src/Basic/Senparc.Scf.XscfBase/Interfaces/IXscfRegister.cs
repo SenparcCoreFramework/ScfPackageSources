@@ -5,16 +5,32 @@ using System.Threading.Tasks;
 
 namespace Senparc.Scf.XscfBase
 {
-    public interface IRegister
+    public interface IXscfRegister
     {
         /// <summary>
-        /// 模块名称
+        /// 模块名称，要求全局唯一
         /// </summary>
         string Name { get; }
+        /// <summary>
+        /// 编号，要求全局唯一
+        /// </summary>
+        string Uid { get; }
+        /// <summary>
+        /// 版本号
+        /// </summary>
+        string Version { get; }
         /// <summary>
         /// 菜单名称
         /// </summary>
         string MenuName { get; }
+        /// <summary>
+        /// 说明
+        /// </summary>
+        string Description { get; }
+        /// <summary>
+        /// 注册方法
+        /// </summary>
+        IList<Type> Functions { get; }
         /// <summary>
         /// 安装代码
         /// </summary>

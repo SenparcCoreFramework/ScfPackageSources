@@ -86,7 +86,9 @@
     public enum XscfModules_State
     {
         关闭 = 0,
-        开放 = 1
+        开放 = 1,
+        新增待审核 = 2,
+        更新待审核 = 2,
     }
 
     #endregion
