@@ -20,6 +20,7 @@
       创世
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/SenparcCoreFramework/ScfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\BuildOutPut</OutputPath>

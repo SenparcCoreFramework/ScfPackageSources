@@ -21,6 +21,7 @@
       v0.1.1 完善自动部署模块 Xscf
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/SenparcCoreFramework/ScfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\BuildOutPut</OutputPath>
