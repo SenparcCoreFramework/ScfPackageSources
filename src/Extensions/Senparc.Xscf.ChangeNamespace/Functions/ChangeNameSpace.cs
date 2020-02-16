@@ -18,6 +18,12 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
         {
         }
 
+        /// <summary>
+        /// <para>参数1：path</para>
+        /// <para>参数2：newNamespace，以.结尾</para>
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
         public override string Run(params object[] param)
         {
             StringBuilder sb = new StringBuilder();

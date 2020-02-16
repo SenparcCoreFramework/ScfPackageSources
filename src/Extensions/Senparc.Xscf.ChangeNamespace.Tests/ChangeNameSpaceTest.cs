@@ -10,9 +10,11 @@ namespace Senparc.Xscf.ChangeNamespace.Tests
         [TestMethod]
         public void RunTest()
         {
-            var services = new ServiceCollection(services);
-            var function = new ChangeNameSpace(null);
-
+            var services = new ServiceCollection();
+            var function = new ChangeNameSpace(services);
+            var path = @"E:\SenparcÏîÄ¿\SenparcCoreFramework\ScfPackageSources\src\Extensions\Senparc.Xscf.ChangeNamespace.Tests\App_Data\src";
+            var newNameSpace = "This.Is.NewNamespace.";
+            function.Run(path, newNameSpace);
 
         }
     }
