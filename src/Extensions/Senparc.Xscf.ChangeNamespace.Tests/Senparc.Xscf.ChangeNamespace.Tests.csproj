@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="APP_Data\src\**" />
+    <EmbeddedResource Remove="APP_Data\src\**" />
+    <None Remove="APP_Data\src\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
@@ -17,11 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="APP_Data\src\" />
+    <ProjectReference Include="..\Senparc.Xscf.ChangeNamespace\Senparc.Xscf.ChangeNamespace.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Senparc.Xscf.ChangeNamespace\Senparc.Xscf.ChangeNamespace.csproj" />
+    <Folder Include="APP_Data\" />
   </ItemGroup>
 
 </Project>
