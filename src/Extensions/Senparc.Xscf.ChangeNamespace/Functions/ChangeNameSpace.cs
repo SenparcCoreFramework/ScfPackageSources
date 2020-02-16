@@ -43,7 +43,7 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
 
             foreach (var item in meetRules)
             {
-                var files = Directory.GetFiles(path, item.FileType);
+                var files = Directory.GetFiles(path, item.FileType,SearchOption.AllDirectories);
                 base.RecordLog(sb, $"文件类型:{item.FileType} 数量:{files.Length}");
 
                 foreach (var file in files)
@@ -63,7 +63,7 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
                         base.RecordLog(sb, $"文件命中:{file}");
 
                         content = content.Replace(item.OrignalKeyword, item.ReplaceWord);
-                        using (var fs = new FileStream(file, FileMode.Truncate, FileAccess.Read))
+                        using (var fs = new FileStream(file, FileMode.Truncate, FileAccess.ReadWrite))
                         {
                             using (var sw = new StreamWriter(fs))
                             {
