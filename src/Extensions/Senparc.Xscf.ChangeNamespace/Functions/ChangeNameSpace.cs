@@ -6,18 +6,19 @@ using System.Text;
 
 namespace Senparc.Xscf.ChangeNamespace.Functions
 {
-    public class ChangeNameSpace : IXscfFunction
+    public class ChangeNameSpace : FunctionBase
     {
-        public IList<FunctionParam> FunctionParams
+        public override IList<FunctionParam> FunctionParams
             => new List<FunctionParam>() {
                 new FunctionParam("路径","本地物理路径，如：E:\\Senparc\\Scf\\", TypeCode.String),
                 new FunctionParam("新命名空间","命名空间根，必须以.结尾，用于替换[Senparc.Scf.]", TypeCode.String)
                 };
 
+        public ChangeNameSpace(IServiceProvider serviceProvider):base(serviceProvider)
+        {
+        }
 
-        public ChangeNameSpace() { }
-
-        public string Run(params object[] param)
+        public override string Run(params object[] param)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -26,7 +27,9 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
 
             var meetRules = new List<MeetRule>() {
                 new MeetRule("namespace Senparc.Scf.",$"namespace {newNamespace}","*.cs"),
+                new MeetRule("namespace Senparc.",$"namespace {newNamespace}","*.cs"),
                 new MeetRule("@model Senparc.Scf.",$"@model {newNamespace}","*.cshtml"),
+                new MeetRule("@model Senparc.",$"@model {newNamespace}","*.cshtml"),
             };
 
             foreach (var item in meetRules)
