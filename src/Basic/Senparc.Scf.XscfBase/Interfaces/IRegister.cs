@@ -8,9 +8,13 @@ namespace Senparc.Scf.XscfBase
     public interface IRegister
     {
         /// <summary>
-        /// 模块名称
+        /// 模块名称，要求全局唯一
         /// </summary>
         string Name { get; }
+        /// <summary>
+        /// 编号，要求全局唯一
+        /// </summary>
+        string Uid { get; }
         /// <summary>
         /// 菜单名称
         /// </summary>

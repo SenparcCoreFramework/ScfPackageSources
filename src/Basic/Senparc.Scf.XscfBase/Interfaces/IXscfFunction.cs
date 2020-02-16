@@ -16,9 +16,14 @@ namespace Senparc.Scf.XscfBase
         IList<FunctionParam> FunctionParams { get; }
 
         /// <summary>
+        /// ServiceProvider 实例
+        /// </summary>
+        IServiceProvider ServiceProvider { get; set; }
+
+        /// <summary>
         /// 执行程序
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="param">参数</param>
         /// <returns></returns>
         string Run(params object[] param);
     }
