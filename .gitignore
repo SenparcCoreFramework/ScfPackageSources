@@ -57,3 +57,4 @@ bin/
 obj/
 /src/ProjectFileManager
 /src/BuildOutPut
+/src/.vs
