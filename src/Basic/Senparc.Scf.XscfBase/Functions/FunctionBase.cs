@@ -4,9 +4,16 @@ using System.Text;
 
 namespace Senparc.Scf.XscfBase
 {
-    public abstract class FunctionBase : IXscfFunction
+    public abstract class FunctionBase<T> : IXscfFunction<T> where T : IFunctionParameter, new()
     {
-        public abstract IList<FunctionParam> FunctionParams { get; }
+        /// <summary>
+        /// FunctionParameter 类型
+        /// </summary>
+        public virtual Type FunctionParameterType => typeof(T);
+
+        /// <summary>
+        /// ServiceProvider 实例
+        /// </summary>
         public virtual IServiceProvider ServiceProvider { get; set; }
 
 
@@ -15,7 +22,12 @@ namespace Senparc.Scf.XscfBase
             ServiceProvider = serviceProvider;
         }
 
-        public abstract string Run(params object[] param);
+        /// <summary>
+        /// 执行程序
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public abstract string Run(T param);
 
         protected void RecordLog(StringBuilder sb, string msg)
         {

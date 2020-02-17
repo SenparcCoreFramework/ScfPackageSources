@@ -1,36 +1,43 @@
 ﻿using Senparc.Scf.XscfBase;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Text;
 
 namespace Senparc.Xscf.ChangeNamespace.Functions
 {
-    public class ChangeNamespace : FunctionBase
+    public class ChangeNamespace_Parameters : IFunctionParameter
     {
-        public override IList<FunctionParam> FunctionParams
-            => new List<FunctionParam>() {
-                new FunctionParam("路径","本地物理路径，如：E:\\Senparc\\Scf\\", TypeCode.String),
-                new FunctionParam("新命名空间","命名空间根，必须以.结尾，用于替换[Senparc.Scf.]", TypeCode.String)
-                };
+        [Required]
+        [MaxLength(300)]
+        [Description("路径||本地物理路径，如：E:\\Senparc\\Scf\\")]
+        public string Path { get; set; }
+        [Required]
+        [MaxLength(100)]
+        [Description("新命名空间||命名空间根，必须以.结尾，用于替换[Senparc.Scf.]")]
+        public string NewNamespace { get; set; }
+    }
 
+    public class ChangeNamespace : FunctionBase<ChangeNamespace_Parameters>
+    {
         public ChangeNamespace(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
         /// <summary>
-        /// <para>参数1：path</para>
-        /// <para>参数2：newNamespace，以.结尾</para>
+        /// 运行
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public override string Run(params object[] param)
+        public override string Run(ChangeNamespace_Parameters param)
         {
             StringBuilder sb = new StringBuilder();
             base.RecordLog(sb, "开始运行 ChangeNamespace");
 
-            var path = param[0] as string;
-            var newNamespace = param[1] as string;
+            var path = param.Path;
+            var newNamespace = param.NewNamespace;
 
             base.RecordLog(sb, $"path:{path} newNamespace:{newNamespace}");
 
@@ -77,7 +84,7 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
 
             }
 
-            return sb.ToString();//TODO:统一变成日志记录
+            return sb.ToString();
         }
     }
 }

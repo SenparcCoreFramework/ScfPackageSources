@@ -34,7 +34,9 @@ namespace Senparc.Scf.XscfBase
                                var aTypes = a.GetTypes();
                                return aTypes.Where(t =>
                                     !t.IsAbstract &&
-                                    (t.GetInterfaces().Contains(typeof(IXscfRegister)) || t.GetInterfaces().Contains(typeof(IXscfFunction))));
+                                    (t.GetInterfaces().Contains(typeof(IXscfRegister)) || 
+                                    t.GetInterfaces().Contains(typeof(IXscfFunction<>)/* 暂时不收录 */)
+                                    ));
                            }
                            catch (Exception ex)
                            {
@@ -77,6 +79,7 @@ namespace Senparc.Scf.XscfBase
                     }
                 }
 
+                /* 暂时不收录 */
                 ////再扫描具体方法
                 //foreach (var type in types.Where(z => z != null && z.GetInterfaces().Contains(typeof(IXscfFunction))))
                 //{

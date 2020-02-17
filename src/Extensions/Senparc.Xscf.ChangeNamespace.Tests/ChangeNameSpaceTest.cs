@@ -14,10 +14,16 @@ namespace Senparc.Xscf.ChangeNamespace.Tests
         {
             var serviceProvider = new ServiceCollection().BuildServiceProvider();
             var function = new Functions.ChangeNamespace(serviceProvider);
-           
-            var path =  Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"..\\..\\..\\" ,@"App_Data\src");
+
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\", @"App_Data\src");
             var newNameSpace = "This.Is.NewNamespace.";
-            var result = function.Run(path, newNameSpace);
+            var result = function.Run(new ChangeNamespace_Parameters()
+            {
+                Path = path,
+                NewNamespace = newNameSpace
+            });
+
+            Assert.AreEqual(function.FunctionParameterType, typeof(ChangeNamespace_Parameters));
 
             System.Console.WriteLine(result);
         }
