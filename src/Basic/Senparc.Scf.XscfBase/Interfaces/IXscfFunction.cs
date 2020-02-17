@@ -10,6 +10,9 @@ namespace Senparc.Scf.XscfBase
     /// </summary>
     public interface IXscfFunction<T> where T : IFunctionParameter
     {
+        string Name { get; }
+        string Description { get; }
+
         Type FunctionParameterType { get; }
         /// <summary>
         /// ServiceProvider 实例

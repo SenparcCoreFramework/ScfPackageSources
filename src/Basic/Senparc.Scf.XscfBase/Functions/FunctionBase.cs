@@ -7,6 +7,16 @@ namespace Senparc.Scf.XscfBase
     public abstract class FunctionBase<T> : IXscfFunction<T> where T : IFunctionParameter, new()
     {
         /// <summary>
+        /// 方法名称
+        /// </summary>
+        public abstract string Name { get; }
+        /// <summary>
+        /// 说明
+        /// </summary>
+        public abstract string Description { get; }
+
+
+        /// <summary>
         /// FunctionParameter 类型
         /// </summary>
         public virtual Type FunctionParameterType => typeof(T);
