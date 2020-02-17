@@ -1,11 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.1-beta1</Version>
+    <Version>0.1.1-beta2</Version>
     <AssemblyName>Senparc.Scf.Utility</AssemblyName>
     <RootNamespace>Senparc.Scf.Utility</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-
     <Description>Senparc.Scf.Utility</Description>
     <Copyright>SenparcCoreFramework</Copyright>
     <PackageTags>SenparcCoreFramework,SCF</PackageTags>
@@ -19,13 +18,14 @@
     <PackageReleaseNotes>
       v0.1
       创世
-    </PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl> https://github.com/SenparcCoreFramework/ScfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Scf.Utility.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-    <!--<DocumentationFile>..\..\BuildOutPut\Senparc.Scf.Utility.XML</DocumentationFile>-->
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <ErrorReport>prompt</ErrorReport>

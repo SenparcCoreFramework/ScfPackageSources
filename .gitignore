@@ -55,6 +55,6 @@ dkms.conf
 *.user
 bin/
 obj/
-/src/ProjectFileManager
+**/ProjectFileManager
 /src/BuildOutPut
 /src/.vs
