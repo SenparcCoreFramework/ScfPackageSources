@@ -1,4 +1,5 @@
-﻿using Senparc.CO2NET.Helpers;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Trace;
 using Senparc.Scf.Core.Exceptions;
 using Senparc.Scf.Core.Models.DataBaseModel;
@@ -11,7 +12,7 @@ using System.Text;
 
 namespace Senparc.Scf.XscfBase
 {
-    public class Register
+    public static class Register
     {
         /// <summary>
         /// 模块和方法集合 TODO：可放置到缓存中
@@ -22,7 +23,7 @@ namespace Senparc.Scf.XscfBase
         /// 初始化扫描
         /// </summary>
         /// <returns></returns>
-        public static string StartEngine()
+        public static string StartEngine(this IServiceCollection services)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"[{SystemTime.Now}] 开始初始化扫描 XscfModules");
@@ -70,6 +71,11 @@ namespace Senparc.Scf.XscfBase
                     if (!RegisterList.Contains(register))
                     {
                         RegisterList.Add(register);
+                        services.AddScoped(type);//DI 中注册
+                        foreach (var functionType in register.Functions)
+                        {
+                            services.AddScoped(functionType);//DI 中注册
+                        }
                     }
                 }
 
