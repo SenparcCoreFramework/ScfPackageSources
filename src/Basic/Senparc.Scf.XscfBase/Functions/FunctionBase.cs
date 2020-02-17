@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using System.Text;
 
 namespace Senparc.Scf.XscfBase
@@ -42,6 +45,30 @@ namespace Senparc.Scf.XscfBase
         protected void RecordLog(StringBuilder sb, string msg)
         {
             sb.AppendLine($"[{SystemTime.Now.ToString()}]\t{msg}");
+        }
+
+        public IEnumerable<FunctionParammeterInfo> GetFunctionParammeterInfo()
+        {
+
+            var props = FunctionParameterType.GetProperties(BindingFlags.Public);
+            foreach (var prop in props)
+            {
+                var name = prop.Name;
+                string title = null;
+                string description = null;
+                var isRequired = prop.GetCustomAttribute<RequiredAttribute>() != null;
+                var descriptionAttr = prop.GetCustomAttribute<DescriptionAttribute>();
+                if (descriptionAttr != null && descriptionAttr.Description != null)
+                {
+                    var descriptionAttrArr = descriptionAttr.Description.Split(new[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
+                    title = descriptionAttrArr[0];
+                    if (descriptionAttrArr.Length > 1)
+                    {
+                        description = descriptionAttrArr[1];
+                    }
+                }
+                yield return new FunctionParammeterInfo(name, title, description, isRequired);
+            }
         }
 
     }
