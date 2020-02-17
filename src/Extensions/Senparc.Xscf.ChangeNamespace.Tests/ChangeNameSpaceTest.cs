@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Xscf.ChangeNamespace.Functions;
+using System;
+using System.IO;
 
 namespace Senparc.Xscf.ChangeNamespace.Tests
 {
@@ -12,7 +14,8 @@ namespace Senparc.Xscf.ChangeNamespace.Tests
         {
             var serviceProvider = new ServiceCollection().BuildServiceProvider();
             var function = new Functions.ChangeNamespace(serviceProvider);
-            var path = @"E:\SenparcÏîÄ¿\SenparcCoreFramework\ScfPackageSources\src\Extensions\Senparc.Xscf.ChangeNamespace.Tests\App_Data\src";
+           
+            var path =  Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"..\\..\\..\\" ,@"App_Data\src");
             var newNameSpace = "This.Is.NewNamespace.";
             var result = function.Run(path, newNameSpace);
 
