@@ -13,7 +13,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
     public class ConfigurationMappingWithIdBase<TEntity,TKey> : IEntityTypeConfiguration<TEntity>
         where TEntity : EntityBase<TKey>
     {
-        public void Configure(EntityTypeBuilder<TEntity> builder)
+        public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
             builder.HasKey(z => z.Id);
             builder.Property(e => e.AddTime).HasColumnType("datetime").IsRequired();

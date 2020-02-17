@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Senparc.Scf.XscfBase
 {
-    public abstract class FunctionBase<T> : IXscfFunction<T> where T : IFunctionParameter, new()
+    public abstract class FunctionBase<T> : IXscfFunction<T> where T : IFunctionParameter
     {
         /// <summary>
         /// 方法名称
@@ -42,15 +42,23 @@ namespace Senparc.Scf.XscfBase
         /// <returns></returns>
         public abstract string Run(T param);
 
+        /// <summary>
+        /// 记录日志
+        /// </summary>
+        /// <param name="sb"></param>
+        /// <param name="msg"></param>
         protected void RecordLog(StringBuilder sb, string msg)
         {
             sb.AppendLine($"[{SystemTime.Now.ToString()}]\t{msg}");
         }
 
+        /// <summary>
+        /// 获取所有参数的信息列表
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<FunctionParammeterInfo> GetFunctionParammeterInfo()
         {
-
-            var props = FunctionParameterType.GetProperties(BindingFlags.Public);
+            var props = FunctionParameterType.GetProperties();
             foreach (var prop in props)
             {
                 var name = prop.Name;

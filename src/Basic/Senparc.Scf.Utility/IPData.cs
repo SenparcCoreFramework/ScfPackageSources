@@ -5,6 +5,8 @@ using System.Text.RegularExpressions;
 using Senparc.Scf.Core.Utility;
 using Microsoft.AspNetCore.Http;
 
+#pragma warning disable CS0675 // 对进行了带符号扩展的操作数使用了按位或运算符
+
 namespace Senparc.Scf.Utility
 {
     /// <summary>
@@ -553,3 +555,4 @@ namespace Senparc.Scf.Utility
         }
     }
 }
+#pragma warning restore CS0675 // 对进行了带符号扩展的操作数使用了按位或运算符

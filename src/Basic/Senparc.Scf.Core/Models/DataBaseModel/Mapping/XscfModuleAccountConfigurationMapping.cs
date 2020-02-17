@@ -8,7 +8,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
 {
     public class XscfModuleAccountConfigurationMapping : ConfigurationMappingWithIdBase<XscfModule, int>
     {
-        public void Configure(EntityTypeBuilder<XscfModule> builder)
+        public override void Configure(EntityTypeBuilder<XscfModule> builder)
         {
             base.Configure(builder);
 

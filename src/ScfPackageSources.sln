@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Service", "Basi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.SMS", "Basic\Senparc.Scf.SMS\Senparc.Scf.SMS.csproj", "{D67659FE-8708-4913-9A56-BE8ECB838405}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FEF3CC72-9596-49E1-A910-990F607E9E76}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests-Basic", "Tests-Basic", "{FEF3CC72-9596-49E1-A910-990F607E9E76}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{BBF132A7-018B-417A-9F56-396FB9CF391D}"
 EndProject
@@ -27,7 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xscf.ChangeNamespac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.XscfBase", "Basic\Senparc.Scf.XscfBase\Senparc.Scf.XscfBase.csproj", "{A151364D-A8F3-49CF-8A0E-8CBE9833225D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Xscf.ChangeNamespace.Tests", "Extensions\Senparc.Xscf.ChangeNamespace.Tests\Senparc.Xscf.ChangeNamespace.Tests.csproj", "{A0FE121B-15BA-4CD5-B46B-72DA01AC7A76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xscf.ChangeNamespace.Tests", "Extensions\Senparc.Xscf.ChangeNamespace.Tests\Senparc.Xscf.ChangeNamespace.Tests.csproj", "{A0FE121B-15BA-4CD5-B46B-72DA01AC7A76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Scf.XscfBase.Tests", "Basic\Senparc.Scf.XscfBase.Tests\Senparc.Scf.XscfBase.Tests.csproj", "{C040A61E-E18C-4DB1-ADC1-E399B4675ED8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests-Extensions", "Tests-Extensions", "{49BB21C7-7403-4086-BB93-1C5F36116F85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +99,11 @@ Global
 		{A0FE121B-15BA-4CD5-B46B-72DA01AC7A76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0FE121B-15BA-4CD5-B46B-72DA01AC7A76}.Test|Any CPU.ActiveCfg = Test|Any CPU
 		{A0FE121B-15BA-4CD5-B46B-72DA01AC7A76}.Test|Any CPU.Build.0 = Test|Any CPU
+		{C040A61E-E18C-4DB1-ADC1-E399B4675ED8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C040A61E-E18C-4DB1-ADC1-E399B4675ED8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C040A61E-E18C-4DB1-ADC1-E399B4675ED8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C040A61E-E18C-4DB1-ADC1-E399B4675ED8}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{C040A61E-E18C-4DB1-ADC1-E399B4675ED8}.Test|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,7 +118,8 @@ Global
 		{D67659FE-8708-4913-9A56-BE8ECB838405} = {20618121-91AE-4EFE-9899-ABCB0ADACE86}
 		{6E82880C-097D-47A5-82B4-BA505050BC85} = {BBF132A7-018B-417A-9F56-396FB9CF391D}
 		{A151364D-A8F3-49CF-8A0E-8CBE9833225D} = {20618121-91AE-4EFE-9899-ABCB0ADACE86}
-		{A0FE121B-15BA-4CD5-B46B-72DA01AC7A76} = {FEF3CC72-9596-49E1-A910-990F607E9E76}
+		{A0FE121B-15BA-4CD5-B46B-72DA01AC7A76} = {49BB21C7-7403-4086-BB93-1C5F36116F85}
+		{C040A61E-E18C-4DB1-ADC1-E399B4675ED8} = {FEF3CC72-9596-49E1-A910-990F607E9E76}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7427A6C9-D522-4B10-B0AC-607D69736B50}

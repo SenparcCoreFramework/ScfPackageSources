@@ -18,34 +18,43 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         public static List<IXscfRegister> RegisterList { get; set; } = new List<IXscfRegister>();
 
-        public static string Scan(IList<CreateOrUpdate_XscfModuleDto> xscfModules,
-            XscfModuleService xscfModuleService,
-            Action<IXscfRegister> afterInstalled = null)
+        /// <summary>
+        /// 初始化扫描
+        /// </summary>
+        /// <returns></returns>
+        public static string StartEngine()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append($"[{SystemTime.Now}] 开始扫描 XscfModules");
+            sb.Append($"[{SystemTime.Now}] 开始初始化扫描 XscfModules");
             var scanTypesCount = 0;
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                       .SelectMany(a =>
-                       {
-                           try
+            IEnumerable<Type> types = null;
+            try
+            {
+                types = AppDomain.CurrentDomain.GetAssemblies()
+                           .SelectMany(a =>
                            {
-                               scanTypesCount++;
-                               var aTypes = a.GetTypes();
-                               return aTypes.Where(t =>
-                                    !t.IsAbstract &&
-                                    (t.GetInterfaces().Contains(typeof(IXscfRegister)) || 
-                                    t.GetInterfaces().Contains(typeof(IXscfFunction<>)/* 暂时不收录 */)
-                                    ));
+                               try
+                               {
+                                   scanTypesCount++;
+                                   var aTypes = a.GetTypes();
+                                   return aTypes.Where(t =>
+                                        !t.IsAbstract &&
+                                        (t.GetInterfaces().Contains(typeof(IXscfRegister)) ||
+                                        t.GetInterfaces().Contains(typeof(IXscfFunction<>)/* 暂时不收录 */)
+                                        ));
+                               }
+                               catch (Exception ex)
+                               {
+                                   sb.Append($"[{SystemTime.Now}] 自动扫描程序集异常：" + a.FullName);
+                                   SenparcTrace.SendCustomLog("XscfRegister() 自动扫描程序集异常：" + a.FullName, ex.ToString());
+                                   return new List<Type>();//不能 return null
                            }
-                           catch (Exception ex)
-                           {
-                               sb.Append($"[{SystemTime.Now}] 自动扫描程序集异常：" + a.FullName);
-                               SenparcTrace.SendCustomLog("XscfRegister() 自动扫描程序集异常：" + a.FullName, ex.ToString());
-                               return new List<Type>();//不能 return null
-                           }
-                       });
-
+                           });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"扫描程集异常：{ex.Message}");
+            }
 
             if (types != null)
             {
@@ -61,21 +70,6 @@ namespace Senparc.Scf.XscfBase
                     if (!RegisterList.Contains(register))
                     {
                         RegisterList.Add(register);
-                    }
-
-                    var xscfModuleStoredDto = xscfModules.FirstOrDefault(z => z.Uid == register.Uid);
-                    var xscfModuleAssemblyDto = new UpdateVersion_XscfModuleDto(register.Name, register.Uid, register.MenuName, register.Version, register.Description);
-
-                    //检查更新，并安装到数据库
-                    var addedOrUpdated = xscfModuleService.CheckAndUpdateVersion(xscfModuleStoredDto, xscfModuleAssemblyDto);
-                    sb.Append($"[{SystemTime.Now}] 是否更新版本：{addedOrUpdated}");
-
-                    if (addedOrUpdated)
-                    {
-                        //执行安装程序
-                        register.Install();
-
-                        afterInstalled?.Invoke(register);
                     }
                 }
 
@@ -95,7 +89,57 @@ namespace Senparc.Scf.XscfBase
                 //}
             }
 
-            sb.Append($"[{SystemTime.Now}] 扫描结束，共扫描 {scanTypesCount} 个程序集");
+            sb.Append($"[{SystemTime.Now}] 初始化扫描结束，共扫描 {scanTypesCount} 个程序集");
+            return sb.ToString();
+        }
+
+        public static string Scan(IList<CreateOrUpdate_XscfModuleDto> xscfModules,
+            XscfModuleService xscfModuleService,
+            Action<IXscfRegister> afterInstalled = null)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"[{SystemTime.Now}] 开始扫描 XscfModules");
+
+            //先注册
+            var updatedCount = 0;
+            foreach (var register in RegisterList)
+            {
+                sb.Append($"[{SystemTime.Now}] 扫描到 IXscfRegister：{register.GetType().FullName}");
+
+                var xscfModuleStoredDto = xscfModules.FirstOrDefault(z => z.Uid == register.Uid);
+                var xscfModuleAssemblyDto = new UpdateVersion_XscfModuleDto(register.Name, register.Uid, register.MenuName, register.Version, register.Description);
+
+                //检查更新，并安装到数据库
+                var addedOrUpdated = xscfModuleService.CheckAndUpdateVersion(xscfModuleStoredDto, xscfModuleAssemblyDto);
+                sb.Append($"[{SystemTime.Now}] 是否更新版本：{addedOrUpdated}");
+
+                if (addedOrUpdated)
+                {
+                    updatedCount++;
+
+                    //执行安装程序
+                    register.Install();
+
+                    afterInstalled?.Invoke(register);
+                }
+            }
+
+            /* 暂时不收录 */
+            ////再扫描具体方法
+            //foreach (var type in types.Where(z => z != null && z.GetInterfaces().Contains(typeof(IXscfFunction))))
+            //{
+            //    sb.Append($"[{SystemTime.Now}] 扫描到 IXscfFunction：{type.FullName}");
+
+            //    if (!ModuleFunctionCollection.ContainsKey(type))
+            //    {
+            //        throw new SCFExceptionBase($"{type.FullName} 未能提供正确的注册方法！");
+            //    }
+
+            //    var function = type as IXscfFunction;
+            //    ModuleFunctionCollection[type].Add(function);
+            //}
+
+            sb.Append($"[{SystemTime.Now}] 扫描结束，共新增或更新 {updatedCount} 个程序集");
             return sb.ToString();
         }
     }
