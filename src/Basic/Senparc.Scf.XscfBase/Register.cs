@@ -30,7 +30,7 @@ namespace Senparc.Scf.XscfBase
             sb.AppendLine($"[{SystemTime.Now}] 开始初始化扫描 XscfModules");
             var scanTypesCount = 0;
             IEnumerable<Type> types = null;
-            var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
+            //var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
             //using (cache.BeginCacheLock("Senparc.Scf.XscfBase.Register", "Scan")) //在注册阶段还未完成缓存配置
             {
 
