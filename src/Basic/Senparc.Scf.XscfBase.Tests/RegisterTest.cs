@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Senparc.Scf.Core.Tests;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,12 +32,12 @@ namespace Senparc.Scf.XscfBase.Tests
     }
 
     [TestClass]
-    public class RegisterTest
+    public class RegisterTest : TestBase
     {
         [TestMethod]
         public void StartEngineTest()
         {
-            var result = Senparc.Scf.XscfBase.Register.StartEngine();
+            var result = base.ServiceCollection.StartEngine();
             Console.WriteLine(result);
             Assert.IsTrue(Senparc.Scf.XscfBase.Register.RegisterList.Count > 0);
         }

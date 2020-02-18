@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Senparc.Scf.Core.Tests\Senparc.Scf.Core.Tests.csproj" />
     <ProjectReference Include="..\Senparc.Scf.XscfBase\Senparc.Scf.XscfBase.csproj" />
   </ItemGroup>
 
