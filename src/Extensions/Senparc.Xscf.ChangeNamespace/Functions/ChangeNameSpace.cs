@@ -20,29 +20,32 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
         public string NewNamespace { get; set; }
     }
 
-    public class ChangeNamespace : FunctionBase<ChangeNamespace_Parameters>
+    public class ChangeNamespace : FunctionBase
     {
         public override string Name => "修改命名空间";
 
         public override string Description => "修改所有源码在 .cs, .cshtml 中的命名空间";
 
+        public override Type FunctionParameterType => typeof(ChangeNamespace_Parameters);
 
         public ChangeNamespace(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
-
+     
         /// <summary>
         /// 运行
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public override string Run(ChangeNamespace_Parameters param)
+        public override string Run(IFunctionParameter param)
         {
+            var typeParam = param as ChangeNamespace_Parameters;
+
             StringBuilder sb = new StringBuilder();
             base.RecordLog(sb, "开始运行 ChangeNamespace");
 
-            var path = param.Path;
-            var newNamespace = param.NewNamespace;
+            var path = typeParam.Path;
+            var newNamespace = typeParam.NewNamespace;
 
             base.RecordLog(sb, $"path:{path} newNamespace:{newNamespace}");
 
@@ -91,5 +94,6 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
 
             return sb.ToString();
         }
+
     }
 }

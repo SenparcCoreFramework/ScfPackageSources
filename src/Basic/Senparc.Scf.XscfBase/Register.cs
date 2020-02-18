@@ -46,7 +46,7 @@ namespace Senparc.Scf.XscfBase
                                        return aTypes.Where(t =>
                                             !t.IsAbstract &&
                                             (t.GetInterfaces().Contains(typeof(IXscfRegister)) ||
-                                            t.GetInterfaces().Contains(typeof(IXscfFunction<>)/* 暂时不收录 */)
+                                            t.GetInterfaces().Contains(typeof(IXscfFunction)/* 暂时不收录 */)
                                             ));
                                    }
                                    catch (Exception ex)

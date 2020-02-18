@@ -8,12 +8,19 @@ namespace Senparc.Scf.XscfBase
     /// <summary>
     /// 扩展方法接口
     /// </summary>
-    public interface IXscfFunction<T> where T : IFunctionParameter
+    public interface IXscfFunction
     {
         string Name { get; }
         string Description { get; }
 
         Type FunctionParameterType { get; }
+
+        /// <summary>
+        /// 生成参数定义对象的实例
+        /// </summary>
+        /// <returns></returns>
+        IFunctionParameter GenerateParameterInstance();
+
         /// <summary>
         /// ServiceProvider 实例
         /// </summary>
@@ -24,6 +31,6 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         /// <param name="param">参数</param>
         /// <returns></returns>
-        string Run(T param);
+        string Run(IFunctionParameter param);
     }
 }
