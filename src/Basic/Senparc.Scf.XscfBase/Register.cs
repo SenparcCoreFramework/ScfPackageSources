@@ -31,7 +31,7 @@ namespace Senparc.Scf.XscfBase
             var scanTypesCount = 0;
             IEnumerable<Type> types = null;
             var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
-            using (cache.BeginCacheLock("Senparc.Scf.XscfBase.Register", "Scan"))
+            //using (cache.BeginCacheLock("Senparc.Scf.XscfBase.Register", "Scan")) //在注册阶段还未完成缓存配置
             {
 
                 try
