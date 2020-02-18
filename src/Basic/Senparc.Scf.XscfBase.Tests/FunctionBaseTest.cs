@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Senparc.Scf.XscfBase.Tests
 {
-    public class FunctionBaseTest_Function : FunctionBase<FunctionBaseTest_FunctionParameter>
+    public class FunctionBaseTest_Function : FunctionBase
     {
         public FunctionBaseTest_Function(IServiceProvider serviceProvider) : base(serviceProvider)
         {
@@ -16,7 +16,9 @@ namespace Senparc.Scf.XscfBase.Tests
 
         public override string Description => "测试方法说明";
 
-        public override string Run(FunctionBaseTest_FunctionParameter param)
+        public override Type FunctionParameterType => typeof(FunctionBaseTest_FunctionParameter);
+
+        public override string Run(IFunctionParameter param)
         {
             Console.WriteLine("Run");
             return "OK";

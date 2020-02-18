@@ -17,6 +17,9 @@ namespace Senparc.Xscf.ChangeNamespace.Tests
 
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\", @"App_Data\src");
             var newNameSpace = "This.Is.NewNamespace.";
+
+            //TODO:≤‚ ‘∑¥œÚ ‰»Î
+
             var result = function.Run(new ChangeNamespace_Parameters()
             {
                 Path = path,

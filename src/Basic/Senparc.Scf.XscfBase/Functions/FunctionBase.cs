@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Senparc.Scf.XscfBase
 {
-    public abstract class FunctionBase<T> : IXscfFunction<T> where T : IFunctionParameter
+    public abstract class FunctionBase : IXscfFunction
     {
         /// <summary>
         /// 方法名称
@@ -18,11 +18,16 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         public abstract string Description { get; }
 
-
         /// <summary>
         /// FunctionParameter 类型
         /// </summary>
-        public virtual Type FunctionParameterType => typeof(T);
+        public abstract Type FunctionParameterType { get; }
+
+        public virtual IFunctionParameter GenerateParameterInstance()
+        {
+            var obj = FunctionParameterType.Assembly.CreateInstance(FunctionParameterType.FullName) as IFunctionParameter;
+            return obj;
+        }
 
         /// <summary>
         /// ServiceProvider 实例
@@ -40,7 +45,7 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public abstract string Run(T param);
+        public abstract string Run(IFunctionParameter param);
 
         /// <summary>
         /// 记录日志
@@ -78,6 +83,5 @@ namespace Senparc.Scf.XscfBase
                 yield return new FunctionParammeterInfo(name, title, description, isRequired);
             }
         }
-
     }
 }
