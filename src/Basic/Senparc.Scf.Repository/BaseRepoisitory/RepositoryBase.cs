@@ -301,7 +301,7 @@ namespace Senparc.Scf.Repository
 
         public virtual async Task SaveChangesAsync()
         {
-            await BaseDB.BaseDataContext.SaveChangesAsync();//TODO: SaveOptions.
+            await BaseDB.BaseDataContext.SaveChangesAsync().ConfigureAwait(false);//TODO: SaveOptions.
         }
 
         public virtual async Task SaveAsync(T obj)
@@ -309,12 +309,12 @@ namespace Senparc.Scf.Repository
             if (this.IsInsert(obj))
             {
                 obj.AddTime = obj.LastUpdateTime = SystemTime.Now.LocalDateTime;
-                await this.AddAsync(obj);
+                await this.AddAsync(obj).ConfigureAwait(false);
             }
             else
             {
                 obj.LastUpdateTime = SystemTime.Now.LocalDateTime;
-                await this.UpdateAsync(obj);
+                await this.UpdateAsync(obj).ConfigureAwait(false);
             }
         }
 
