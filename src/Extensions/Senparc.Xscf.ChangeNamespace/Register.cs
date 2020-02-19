@@ -1,8 +1,10 @@
-﻿using Senparc.Scf.XscfBase;
+﻿using Senparc.Scf.Core.Enums;
+using Senparc.Scf.XscfBase;
 using Senparc.Xscf.ChangeNamespace.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Senparc.Xscf.ChangeNamespace
 {
@@ -23,12 +25,14 @@ namespace Senparc.Xscf.ChangeNamespace
 
         public IList<Type> Functions => new[] { typeof(Functions.ChangeNamespace) };
 
-        public void Install()
+        public virtual Task InstallOrUpdateAsync(InstallOrUpdate installOrUpdate)
         {
+            return Task.CompletedTask;
         }
 
-        public void Uninstall()
+        public virtual Task UninstallAsync()
         {
+            return Task.CompletedTask;
         }
 
         #endregion

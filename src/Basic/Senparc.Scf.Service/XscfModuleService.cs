@@ -1,8 +1,10 @@
-﻿using Senparc.Scf.Core.Models.DataBaseModel;
+﻿using Senparc.Scf.Core.Enums;
+using Senparc.Scf.Core.Models.DataBaseModel;
 using Senparc.Scf.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Senparc.Scf.Service
 {
@@ -18,15 +20,15 @@ namespace Senparc.Scf.Service
         /// <param name="storedDto"></param>
         /// <param name="assemblyDto"></param>
         /// <returns>返回是否需要新增或更新</returns>
-        public bool CheckAndUpdateVersion(CreateOrUpdate_XscfModuleDto storedDto, UpdateVersion_XscfModuleDto assemblyDto)
+        public async Task<InstallOrUpdate?> CheckAndUpdateVersionAsync(CreateOrUpdate_XscfModuleDto storedDto, UpdateVersion_XscfModuleDto assemblyDto)
         {
             if (storedDto == null)
             {
                 //新增模块
                 var xscfModule = new XscfModule(assemblyDto.Name, assemblyDto.Uid, assemblyDto.MenuName, assemblyDto.Version, "", assemblyDto.Description, true, Core.Enums.XscfModules_State.新增待审核);
                 xscfModule.Create();
-                base.SaveObject(xscfModule);
-                return true;
+                await base.SaveObjectAsync(xscfModule).ConfigureAwait(false);
+                return InstallOrUpdate.Install;
             }
             else
             {
@@ -35,10 +37,10 @@ namespace Senparc.Scf.Service
                 {
                     var xscfModule = base.GetObject(z => z.Uid == storedDto.Uid);
                     xscfModule.UpdateVersion(assemblyDto.Version, assemblyDto.MenuName, assemblyDto.Description);
-                    base.SaveObject(xscfModule);
-                    return true;
+                   await base.SaveObjectAsync(xscfModule).ConfigureAwait(false);
+                    return InstallOrUpdate.Update;
                 }
-                return false;
+                return null;
             }
         }
     }

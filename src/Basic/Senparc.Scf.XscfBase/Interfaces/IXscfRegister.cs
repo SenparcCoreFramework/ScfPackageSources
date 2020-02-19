@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Senparc.Scf.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,10 +35,10 @@ namespace Senparc.Scf.XscfBase
         /// <summary>
         /// 安装代码
         /// </summary>
-        void Install();
+        Task InstallOrUpdateAsync(InstallOrUpdate installOrUpdate);
         /// <summary>
         /// 卸载代码
         /// </summary>
-        void Uninstall();
+        Task UninstallAsync();
     }
 }
