@@ -1,8 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Senparc.Scf.Core.Enums;
 using Senparc.Scf.Core.Tests;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Senparc.Scf.XscfBase.Tests
 {
@@ -20,14 +22,16 @@ namespace Senparc.Scf.XscfBase.Tests
 
         public IList<Type> Functions => new List<Type>() { typeof(FunctionBaseTest_Function) };
 
-        public void Install()
+        public Task InstallOrUpdateAsync(InstallOrUpdate installOrUpdate)
         {
-            Console.WriteLine("Install");
+            Console.WriteLine(installOrUpdate);
+            return Task.CompletedTask;
         }
 
-        public void Uninstall()
+        public Task UninstallAsync()
         {
             Console.WriteLine("Uninstall");
+            return Task.CompletedTask;
         }
     }
 

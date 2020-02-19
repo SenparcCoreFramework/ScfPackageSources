@@ -2,6 +2,7 @@
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Trace;
+using Senparc.Scf.Core.Enums;
 using Senparc.Scf.Core.Exceptions;
 using Senparc.Scf.Core.Models.DataBaseModel;
 using Senparc.Scf.Service;
@@ -10,6 +11,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Senparc.Scf.XscfBase
 {
@@ -104,9 +106,18 @@ namespace Senparc.Scf.XscfBase
             return sb.ToString();
         }
 
-        public static string Scan(IList<CreateOrUpdate_XscfModuleDto> xscfModules,
+        /// <summary>
+        /// 扫描并安装
+        /// </summary>
+        /// <param name="xscfModules">现有已安装的模块</param>
+        /// <param name="xscfModuleService">XscfModuleService</param>
+        /// <param name="afterInstalledOrUpdated">安装或更新后执行</param>
+        /// <param name="justScanThisUid">只扫描并更新特定的Uid</param>
+        /// <returns></returns>
+        public static async Task<string> ScanAndInstall(IList<CreateOrUpdate_XscfModuleDto> xscfModules,
             XscfModuleService xscfModuleService,
-            Action<IXscfRegister> afterInstalled = null)
+            Action<IXscfRegister, InstallOrUpdate> afterInstalledOrUpdated = null,
+            string justScanThisUid = null)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"[{SystemTime.Now}] 开始扫描 XscfModules");
@@ -114,27 +125,37 @@ namespace Senparc.Scf.XscfBase
             //先注册
             var updatedCount = 0;
             var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
-            using (cache.BeginCacheLock("Senparc.Scf.XscfBase.Register", "Scan"))
+            using (await cache.BeginCacheLockAsync("Senparc.Scf.XscfBase.Register", "Scan").ConfigureAwait(false))
             {
                 foreach (var register in RegisterList)
                 {
                     sb.AppendLine($"[{SystemTime.Now}] 扫描到 IXscfRegister：{register.GetType().FullName}");
+                    if (justScanThisUid != null && register.Uid != justScanThisUid)
+                    {
+                        sb.AppendLine($"[{SystemTime.Now}] 由于只要求更新 uid：[{justScanThisUid}]，此模块跳过");
+                        continue;
+                    }
+                    else
+                    {
+                        sb.AppendLine($"[{SystemTime.Now}] 符合尝试安装/更新要求，继续执行");
+                    }
 
                     var xscfModuleStoredDto = xscfModules.FirstOrDefault(z => z.Uid == register.Uid);
                     var xscfModuleAssemblyDto = new UpdateVersion_XscfModuleDto(register.Name, register.Uid, register.MenuName, register.Version, register.Description);
 
                     //检查更新，并安装到数据库
-                    var addedOrUpdated = xscfModuleService.CheckAndUpdateVersion(xscfModuleStoredDto, xscfModuleAssemblyDto);
-                    sb.AppendLine($"[{SystemTime.Now}] 是否更新版本：{addedOrUpdated}");
 
-                    if (addedOrUpdated)
+                    var installOrUpdate = await xscfModuleService.CheckAndUpdateVersionAsync(xscfModuleStoredDto, xscfModuleAssemblyDto).ConfigureAwait(false);
+                    sb.AppendLine($"[{SystemTime.Now}] 是否更新版本：{installOrUpdate?.ToString() ?? "未安装"}");
+
+                    if (installOrUpdate.HasValue)
                     {
                         updatedCount++;
 
                         //执行安装程序
-                        register.Install();
+                        await register.InstallOrUpdateAsync(installOrUpdate.Value).ConfigureAwait(false);
 
-                        afterInstalled?.Invoke(register);
+                        afterInstalledOrUpdated?.Invoke(register, installOrUpdate.Value);
                     }
                 }
             }

@@ -31,6 +31,15 @@
     }
 
     /// <summary>
+    /// 安装或更新
+    /// </summary>
+    public enum InstallOrUpdate
+    {
+        Install,
+        Update
+    }
+
+    /// <summary>
     /// Email设置类型
     /// </summary>
     public enum SendEmailType
@@ -49,6 +58,18 @@
     }
 
 
+    /// <summary>
+    /// Meta类型
+    /// </summary>
+    public enum MetaType
+    {
+        keywords,
+        description
+    }
+
+    #region 实体属性
+
+
     public enum Account_RegisterWay
     {
         官网注册 = 0,
@@ -58,21 +79,13 @@
         微信自动注册 = 4
     }
 
-
-    /// <summary>
-    /// Meta类型
-    /// </summary>
-    public enum MetaType
-    {
-        keywords,
-        description
-    }
     public enum AccountPayLog_PayType
     {
         网银支付 = 0,
         支付宝 = 1,
         微信支付 = 2
     }
+
     public enum AccountPayLog_Status
     {
         未支付 = 0,
@@ -81,7 +94,6 @@
         已冻结 = 3
     }
 
-    #region 实体属性
 
     public enum XscfModules_State
     {
