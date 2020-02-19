@@ -163,7 +163,7 @@ namespace Senparc.Scf.Service
             {
                 TryDetectChange(obj);
             }
-            await RepositoryBase.SaveAsync(obj);
+            await RepositoryBase.SaveAsync(obj).ConfigureAwait(false);
         }
 
         public virtual async Task DeleteObjectAsync(Expression<Func<T, bool>> predicate)
