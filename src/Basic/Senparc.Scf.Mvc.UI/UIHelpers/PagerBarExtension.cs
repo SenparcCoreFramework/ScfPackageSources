@@ -5,6 +5,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.Scf.Core.Models;
 using Senparc.Scf.Utility;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace System.Web.Mvc
 {
@@ -317,7 +318,7 @@ namespace System.Web.Mvc
             onclick = (onclick != null) ? "onclick=\"" + onclick + "\"" : "";
             onclick = onclick.Replace("{pageindex}", linkPageIndex.ToString());
 
-            var httpContext = SenparcDI.GetService<IHttpContextAccessor>().HttpContext;
+            var httpContext = SenparcDI.GetServiceProvider().GetService<IHttpContextAccessor>().HttpContext;
 
             url = (!string.IsNullOrEmpty(url)) ? url.UrlDecode().Replace(currentPageWordFormat, linkPageIndex.ToString()) : "";
             var href = (onclick != null && onclick.IndexOf("return false") != -1) ? "href=\"#" + barMark + "\" " : "href=\"" + url + "\" ";

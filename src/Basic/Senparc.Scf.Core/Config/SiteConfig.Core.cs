@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Senparc.CO2NET;
 using Senparc.Scf.Core.Enums;
@@ -6,6 +7,7 @@ using Senparc.Scf.Core.Models;
 using Senparc.Scf.Utility;
 using System.Collections.Generic;
 using System.Threading;
+using System;
 
 namespace Senparc.Scf.Core.Config
 {
@@ -24,7 +26,8 @@ namespace Senparc.Scf.Core.Config
         {
             get
             {
-                var scs = SenparcDI.GetService<IOptions<SenparcCoreSetting>>();
+                IServiceProvider serviceProvider = SenparcDI.GlobalServiceCollection.BuildServiceProvider();
+                var scs = serviceProvider.GetService<IOptions<SenparcCoreSetting>>();
                 return scs.Value;
             }
         }
