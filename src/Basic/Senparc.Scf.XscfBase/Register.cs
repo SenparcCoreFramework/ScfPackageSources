@@ -115,8 +115,8 @@ namespace Senparc.Scf.XscfBase
         /// <param name="justScanThisUid">只扫描并更新特定的Uid</param>
         /// <returns></returns>
         public static async Task<string> ScanAndInstall(IList<CreateOrUpdate_XscfModuleDto> xscfModules,
-            XscfModuleService xscfModuleService,
-            Action<IXscfRegister, InstallOrUpdate> afterInstalledOrUpdated = null,
+            IServiceProvider serviceProvider,
+            Func<IXscfRegister, InstallOrUpdate, Task> afterInstalledOrUpdated = null,
             string justScanThisUid = null)
         {
             StringBuilder sb = new StringBuilder();
@@ -144,7 +144,7 @@ namespace Senparc.Scf.XscfBase
                     var xscfModuleAssemblyDto = new UpdateVersion_XscfModuleDto(register.Name, register.Uid, register.MenuName, register.Version, register.Description);
 
                     //检查更新，并安装到数据库
-
+                    var xscfModuleService = serviceProvider.GetService<XscfModuleService>();
                     var installOrUpdate = await xscfModuleService.CheckAndUpdateVersionAsync(xscfModuleStoredDto, xscfModuleAssemblyDto).ConfigureAwait(false);
                     sb.AppendLine($"[{SystemTime.Now}] 是否更新版本：{installOrUpdate?.ToString() ?? "未安装"}");
 
@@ -155,7 +155,7 @@ namespace Senparc.Scf.XscfBase
                         //执行安装程序
                         await register.InstallOrUpdateAsync(installOrUpdate.Value).ConfigureAwait(false);
 
-                        afterInstalledOrUpdated?.Invoke(register, installOrUpdate.Value);
+                        await afterInstalledOrUpdated?.Invoke(register, installOrUpdate.Value);
                     }
                 }
             }
