@@ -80,7 +80,8 @@ namespace Senparc.Scf.XscfBase
                         description = descriptionAttrArr[1];
                     }
                 }
-                yield return new FunctionParammeterInfo(name, title, description, isRequired);
+                var systemType = prop.PropertyType.Name;
+                yield return new FunctionParammeterInfo(name, title, description, isRequired, systemType);
             }
         }
     }

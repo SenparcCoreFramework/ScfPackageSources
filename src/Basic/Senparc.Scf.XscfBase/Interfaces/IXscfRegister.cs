@@ -39,6 +39,6 @@ namespace Senparc.Scf.XscfBase
         /// <summary>
         /// 卸载代码
         /// </summary>
-        Task UninstallAsync();
+        Task UninstallAsync(Func<Task> unsinstallFunc);
     }
 }
