@@ -30,9 +30,9 @@ namespace Senparc.Xscf.ChangeNamespace
             return Task.CompletedTask;
         }
 
-        public virtual Task UninstallAsync()
+        public virtual async Task UninstallAsync(Func<Task> unsinstallFunc)
         {
-            return Task.CompletedTask;
+            await unsinstallFunc().ConfigureAwait(false);
         }
 
         #endregion

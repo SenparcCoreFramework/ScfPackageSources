@@ -28,10 +28,10 @@ namespace Senparc.Scf.XscfBase.Tests
             return Task.CompletedTask;
         }
 
-        public Task UninstallAsync()
+        public async Task UninstallAsync(Func<Task> unsinstallFunc)
         {
             Console.WriteLine("Uninstall");
-            return Task.CompletedTask;
+            await unsinstallFunc().ConfigureAwait(false);
         }
     }
 

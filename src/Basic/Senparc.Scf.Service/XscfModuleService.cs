@@ -25,7 +25,7 @@ namespace Senparc.Scf.Service
             if (storedDto == null)
             {
                 //新增模块
-                var xscfModule = new XscfModule(assemblyDto.Name, assemblyDto.Uid, assemblyDto.MenuName, assemblyDto.Version, "", assemblyDto.Description, true, Core.Enums.XscfModules_State.新增待审核);
+                var xscfModule = new XscfModule(assemblyDto.Name, assemblyDto.Uid, assemblyDto.MenuName, assemblyDto.Version, assemblyDto.Description,"", true, Core.Enums.XscfModules_State.新增待审核);
                 xscfModule.Create();
                 await base.SaveObjectAsync(xscfModule).ConfigureAwait(false);
                 return InstallOrUpdate.Install;

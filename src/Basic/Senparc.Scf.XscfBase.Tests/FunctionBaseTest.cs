@@ -52,6 +52,7 @@ namespace Senparc.Scf.XscfBase.Tests
             Assert.AreEqual("路径", paraInfo[0].Title);
             Assert.AreEqual("本地物理路径，如：E:\\Senparc\\Scf\\", paraInfo[0].Description);
             Assert.AreEqual(true, paraInfo[0].IsRequired);
+            Assert.AreEqual("String", paraInfo[0].SystemType);
 
             Assert.AreEqual("NewNamespace", paraInfo[1].Name);
             Assert.AreEqual("新命名空间", paraInfo[1].Title);

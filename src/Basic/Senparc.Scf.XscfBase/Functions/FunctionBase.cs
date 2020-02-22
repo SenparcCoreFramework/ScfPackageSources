@@ -11,8 +11,12 @@ namespace Senparc.Scf.XscfBase
     {
         /// <summary>
         /// 方法名称
+        /// <para>注意：Name 必须在单个 Xscf 模块中唯一！</para>
         /// </summary>
         public abstract string Name { get; }
+
+        //TODO:检查 name 冲突的情况
+
         /// <summary>
         /// 说明
         /// </summary>
@@ -80,7 +84,8 @@ namespace Senparc.Scf.XscfBase
                         description = descriptionAttrArr[1];
                     }
                 }
-                yield return new FunctionParammeterInfo(name, title, description, isRequired);
+                var systemType = prop.PropertyType.Name;
+                yield return new FunctionParammeterInfo(name, title, description, isRequired, systemType);
             }
         }
     }

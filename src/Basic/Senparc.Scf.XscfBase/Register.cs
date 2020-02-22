@@ -110,7 +110,6 @@ namespace Senparc.Scf.XscfBase
         /// 扫描并安装
         /// </summary>
         /// <param name="xscfModules">现有已安装的模块</param>
-        /// <param name="xscfModuleService">XscfModuleService</param>
         /// <param name="afterInstalledOrUpdated">安装或更新后执行</param>
         /// <param name="justScanThisUid">只扫描并更新特定的Uid</param>
         /// <returns></returns>
