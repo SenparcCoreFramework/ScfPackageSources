@@ -22,6 +22,7 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
 
     public class ChangeNamespace : FunctionBase
     {
+        //注意：Name 必须在单个 Xscf 模块中唯一！
         public override string Name => "修改命名空间";
 
         public override string Description => "修改所有源码在 .cs, .cshtml 中的命名空间";
