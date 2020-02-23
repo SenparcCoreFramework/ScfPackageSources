@@ -16,7 +16,7 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
         public string Path { get; set; }
         [Required]
         [MaxLength(100)]
-        [Description("当前自定义的命名空间||命名空间根，一般以.结尾，如：[My.Namespace.]，最终将替换为[Senparc.Scf.]")]
+        [Description("当前自定义的命名空间||命名空间根，一般以.结尾，如：[My.Namespace.]，最终将替换为例如[Senparc.Scf.]或[Senparc.]")]
         public string MyNamespace { get; set; }
     }
 
@@ -43,20 +43,20 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
         /// <returns></returns>
         public override string Run(IFunctionParameter param)
         {
-            var typeParam = param as ChangeNamespace_Parameters;
+            var typeParam = param as RestoreNameSpace_Parameters;
 
             StringBuilder sb = new StringBuilder();
             base.RecordLog(sb, "开始运行 RestoreNameSpace");
 
             var path = typeParam.Path;
-            var myNamespace = typeParam.NewNamespace;
+            var myNamespace = typeParam.MyNamespace;
 
             base.RecordLog(sb, $"path:{path} myNamespace:{myNamespace}");
 
             var meetRules = new List<MeetRule>() {
-                new MeetRule($"namespace {myNamespace}","namespace Senparc.Scf.","*.cs"),
+                //new MeetRule($"namespace {myNamespace}","namespace Senparc.Scf.","*.cs"),
                 new MeetRule($"namespace {myNamespace}","namespace Senparc.","*.cs"),
-                new MeetRule($"@model {myNamespace}","@model Senparc.Scf.","*.cshtml"),
+                //new MeetRule($"@model {myNamespace}","@model Senparc.Scf.","*.cshtml"),
                 new MeetRule($"@model {myNamespace}","@model Senparc.","*.cshtml"),
             };
 

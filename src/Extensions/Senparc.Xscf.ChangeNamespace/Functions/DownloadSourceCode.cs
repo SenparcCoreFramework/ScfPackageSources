@@ -18,7 +18,7 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
         /// <para>注意：string[]类型的默认值为选项的备选值，如果没有提供备选值，此参数将别忽略</para>
         /// </summary>
         [Required]
-        [Description("源码来源||目前更新最快的是 GitHub，Gitee（码云）在国内下载速度更快，但是不能确定是最新代码，请注意核对。")]
+        [Description("源码来源||目前更新最快的是 GitHub，Gitee（码云）在国内下载速度更快，但是不能确定是最新代码，下载前请注意核对最新 GitHub 上的版本。")]
         public string[] Site { get; set; } = new[] {
             Parameters_Site.GitHub.ToString(),
             Parameters_Site.Gitee.ToString()
@@ -38,7 +38,7 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
 
         public override string Description => "修改所有源码在 .cs, .cshtml 中的命名空间";
 
-        public override Type FunctionParameterType => typeof(ChangeNamespace_Parameters);
+        public override Type FunctionParameterType => typeof(DownloadSourceCode_Parameters);
 
         public DownloadSourceCode(IServiceProvider serviceProvider) : base(serviceProvider)
         {
