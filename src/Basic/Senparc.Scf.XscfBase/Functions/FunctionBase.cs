@@ -68,8 +68,28 @@ namespace Senparc.Scf.XscfBase
         public IEnumerable<FunctionParammeterInfo> GetFunctionParammeterInfo()
         {
             var props = FunctionParameterType.GetProperties();
+            ParammeterType parammeterType = ParammeterType.Text;
             foreach (var prop in props)
             {
+                List<string> selectionItems = null;
+                //判断是否存在选项
+                if (prop.PropertyType.IsArray)
+                {
+                    var obj = GenerateParameterInstance();
+                    var selection = prop.GetValue(obj, null);
+                    if (selection == null)
+                    {
+                        continue;//此参数不加入
+                    }
+
+                    selectionItems = new List<string>();
+                    parammeterType = ParammeterType.SingleSelection;//TODO:根据其他条件（如创建一个新的Attribute）判断多选
+                    foreach (var item in (Array)selection)
+                    {
+                        selectionItems.Add(item.ToString());
+                    }
+                }
+
                 var name = prop.Name;
                 string title = null;
                 string description = null;
@@ -85,7 +105,8 @@ namespace Senparc.Scf.XscfBase
                     }
                 }
                 var systemType = prop.PropertyType.Name;
-                yield return new FunctionParammeterInfo(name, title, description, isRequired, systemType);
+
+                yield return new FunctionParammeterInfo(name, title, description, isRequired, systemType, parammeterType, selectionItems?.ToArray());
             }
         }
     }
