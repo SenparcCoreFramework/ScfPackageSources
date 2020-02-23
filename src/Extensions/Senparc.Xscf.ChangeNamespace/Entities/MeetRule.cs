@@ -7,13 +7,15 @@ namespace Senparc.Xscf.ChangeNamespace
     public class MeetRule
     {
 
-        public MeetRule(string orignalKeyword, string replaceWord, string fileType = null)
+        public MeetRule(string prefix, string orignalKeyword, string replaceWord, string fileType = null)
         {
+            Prefix = prefix;
             OrignalKeyword = orignalKeyword;
             ReplaceWord = replaceWord;
             FileType = fileType;
         }
 
+        public string Prefix { get; set; }
         public string OrignalKeyword { get; set; }
         public string ReplaceWord { get; set; }
         public string FileType { get; set; }
