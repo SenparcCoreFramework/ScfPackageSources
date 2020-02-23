@@ -60,9 +60,9 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
 
             var meetRules = new List<MeetRule>() {
                 //new MeetRule("namespace Senparc.Scf.",$"namespace {newNamespace}","*.cs"),
-                new MeetRule("namespace","Senparc.",$"namespace {newNamespace}","*.cs"),
+                new MeetRule("namespace","Senparc.",$"{newNamespace}","*.cs"),
                 //new MeetRule("@model Senparc.Scf.",$"@model {newNamespace}","*.cshtml"),
-                new MeetRule("@model","Senparc.",$"@model {newNamespace}","*.cshtml"),
+                new MeetRule("@model","Senparc.",$"{newNamespace}","*.cshtml"),
             };
 
             //TODO:使用正则记录，并全局修改
@@ -89,19 +89,19 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
                             while (null != line)
                             {
                                 line = sr.ReadLine()?.Trim();
-                                var oldNamespace = $"{item.Prefix} {item.OrignalKeyword}";
-                                if (line != null && line.StartsWith(oldNamespace))
+                                var oldNamespaceFull = $"{item.Prefix} {item.OrignalKeyword}";
+                                if (line != null && line.StartsWith(oldNamespaceFull))
                                 {
                                     if (!namespaceCollection.ContainsKey(file))
                                     {
                                         namespaceCollection[file] = new List<MatchNamespace>();
                                     }
-                                    var getOldNamespace = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                                    var getOld = getOldNamespace[1];
-                                    var getNew = getOldNamespace[1].Replace(item.OrignalKeyword, item.ReplaceWord);
+                                    var oldNamespaceArr = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                                    var getOld = oldNamespaceArr[1];
+                                    var getNew = oldNamespaceArr[1].Replace(item.OrignalKeyword, item.ReplaceWord);
                                     namespaceCollection[file].Add(new MatchNamespace()
                                     {
-                                        Prefix = getOldNamespace[0],//prefix
+                                        Prefix = oldNamespaceArr[0],//prefix
                                         OldNamespace = getOld,
                                         NewNamespace = getNew
                                     });
@@ -139,14 +139,14 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
                     {
                         foreach (var namespaceInfo in namespaceInfos.Value)
                         {
-                            var oldNamespace = $"{namespaceInfo.Prefix} {namespaceInfo.OldNamespace}";
+                            var oldNamespaceFull = $"{namespaceInfo.Prefix} {namespaceInfo.OldNamespace}";
 
                             //替换旧的NameSpace
-                            if (content.IndexOf(oldNamespace) > -1)
+                            if (content.IndexOf(oldNamespaceFull) > -1)
                             {
-                                base.RecordLog(sb, $"文件命中:{file} -> {oldNamespace}");
-                                var newNameSpace = $"{namespaceInfo.Prefix} {namespaceInfo.NewNamespace}";
-                                content = content.Replace(oldNamespace, newNameSpace);
+                                base.RecordLog(sb, $"文件命中:{file} -> {oldNamespaceFull}");
+                                var newNameSpaceFull = $"{namespaceInfo.Prefix} {namespaceInfo.NewNamespace}";
+                                content = content.Replace(oldNamespaceFull, newNameSpaceFull);
                             }
                         }
                     }
