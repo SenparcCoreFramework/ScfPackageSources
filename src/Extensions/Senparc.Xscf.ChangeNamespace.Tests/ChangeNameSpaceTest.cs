@@ -30,5 +30,27 @@ namespace Senparc.Xscf.ChangeNamespace.Tests
 
             System.Console.WriteLine(result);
         }
+
+        [TestMethod]
+        public void RunRestoreTest()
+        {
+            var serviceProvider = new ServiceCollection().BuildServiceProvider();
+            var function = new Functions.RestoreNameSpace(serviceProvider);
+
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\", @"App_Data\src");
+            var myNameSpace = "This.Is.NewNamespace.";
+
+            //TODO:≤‚ ‘∑¥œÚ ‰»Î
+
+            var result = function.Run(new RestoreNameSpace_Parameters()
+            {
+                Path = path,
+                MyNamespace = myNameSpace
+            });
+
+            Assert.AreEqual(function.FunctionParameterType, typeof(RestoreNameSpace_Parameters));
+
+            System.Console.WriteLine(result);
+        }
     }
 }
