@@ -41,6 +41,8 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
         {
         }
 
+        public string OldNamespaceKeyword { get; set; } = "Senparc.";
+
         /// <summary>
         /// 运行
         /// </summary>
@@ -60,9 +62,10 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
 
             var meetRules = new List<MeetRule>() {
                 //new MeetRule("namespace Senparc.Scf.",$"namespace {newNamespace}","*.cs"),
-                new MeetRule("namespace","Senparc.",$"{newNamespace}","*.cs"),
+                new MeetRule("namespace",OldNamespaceKeyword,$"{newNamespace}","*.cs"),
                 //new MeetRule("@model Senparc.Scf.",$"@model {newNamespace}","*.cshtml"),
-                new MeetRule("@model","Senparc.",$"{newNamespace}","*.cshtml"),
+                new MeetRule("@model",OldNamespaceKeyword,$"{newNamespace}","*.cshtml"),
+                new MeetRule("@addTagHelper *,",OldNamespaceKeyword,$"{newNamespace}","*.cshtml"),
             };
 
             //TODO:使用正则记录，并全局修改
@@ -96,12 +99,14 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
                                     {
                                         namespaceCollection[file] = new List<MatchNamespace>();
                                     }
-                                    var oldNamespaceArr = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                                    var getOld = oldNamespaceArr[1];
-                                    var getNew = oldNamespaceArr[1].Replace(item.OrignalKeyword, item.ReplaceWord);
+
+                                    //不能使用Split，中间可能还有空格
+                                    //var oldNamespaceArr = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                                    var getOld = line.Replace(item.Prefix + " ", "");//也可以用IndexOf+Length来做
+                                    var getNew = getOld.Replace(item.OrignalKeyword, item.ReplaceWord);
                                     namespaceCollection[file].Add(new MatchNamespace()
                                     {
-                                        Prefix = oldNamespaceArr[0],//prefix
+                                        Prefix = item.Prefix,//prefix
                                         OldNamespace = getOld,
                                         NewNamespace = getNew
                                     });

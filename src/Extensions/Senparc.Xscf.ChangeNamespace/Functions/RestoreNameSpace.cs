@@ -44,60 +44,15 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
         public override string Run(IFunctionParameter param)
         {
             var typeParam = param as RestoreNameSpace_Parameters;
-
-            StringBuilder sb = new StringBuilder();
-            base.RecordLog(sb, "开始运行 RestoreNameSpace");
-
-            var path = typeParam.Path;
-            var myNamespace = typeParam.MyNamespace;
-
-            base.RecordLog(sb, $"path:{path} myNamespace:{myNamespace}");
-
-            var meetRules = new List<MeetRule>() {
-                //new MeetRule($"namespace {myNamespace}","namespace Senparc.Scf.","*.cs"),
-                new MeetRule($"namespace {myNamespace}","namespace Senparc.","*.cs"),
-                //new MeetRule($"@model {myNamespace}","@model Senparc.Scf.","*.cshtml"),
-                new MeetRule($"@model {myNamespace}","@model Senparc.","*.cshtml"),
-            };
-
-            foreach (var item in meetRules)
+            var changeNamespaceParam = new ChangeNamespace_Parameters()
             {
-                var files = Directory.GetFiles(path, item.FileType, SearchOption.AllDirectories);
-                base.RecordLog(sb, $"文件类型:{item.FileType} 数量:{files.Length}");
-
-                foreach (var file in files)
-                {
-                    string content = null;
-                    using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read))
-                    {
-                        using (var sr = new StreamReader(fs))
-                        {
-                            content = sr.ReadToEnd();
-                        }
-                        fs.Close();
-                    }
-
-                    if (content.IndexOf(item.OrignalKeyword) >= 0)
-                    {
-                        base.RecordLog(sb, $"文件命中:{file}");
-
-                        content = content.Replace(item.OrignalKeyword, item.ReplaceWord);
-                        using (var fs = new FileStream(file, FileMode.Truncate, FileAccess.ReadWrite))
-                        {
-                            using (var sw = new StreamWriter(fs))
-                            {
-                                sw.Write(content);
-                                sw.Flush();
-                            }
-                            fs.Close();
-                        }
-                    }
-                }
-
-            }
-
-            return sb.ToString();
+                NewNamespace = "Senparc.",
+                Path = typeParam.Path
+            };
+            ChangeNamespace changeNamespaceFunction = new ChangeNamespace(base.ServiceProvider);
+            changeNamespaceFunction.OldNamespaceKeyword = typeParam.MyNamespace;
+            var result = changeNamespaceFunction.Run(changeNamespaceParam);
+            return result;
         }
-
     }
 }
