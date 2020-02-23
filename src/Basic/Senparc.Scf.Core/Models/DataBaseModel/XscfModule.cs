@@ -26,7 +26,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         /// <param name="log"></param>
         private void AddUpdateLog(string log)
         {
-            UpdateLog += Environment.NewLine + $"[{SystemTime.Now}] {log}";
+            UpdateLog += $"\r\n[{SystemTime.Now}] {log}";
         }
 
 
