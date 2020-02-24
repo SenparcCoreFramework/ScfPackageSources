@@ -31,7 +31,7 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
         public ChangeNamespace(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
-     
+
         /// <summary>
         /// 运行
         /// </summary>
@@ -48,6 +48,12 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
             var newNamespace = typeParam.NewNamespace;
 
             base.RecordLog(sb, $"path:{path} newNamespace:{newNamespace}");
+
+            if (!Directory.Exists(path))
+            {
+                base.RecordLog(sb, $"path:{path} not exist");
+                return sb.ToString();
+            }
 
             var meetRules = new List<MeetRule>() {
                 new MeetRule("namespace Senparc.Scf.",$"namespace {newNamespace}","*.cs"),
