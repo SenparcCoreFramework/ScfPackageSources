@@ -26,7 +26,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         /// <param name="log"></param>
         private void AddUpdateLog(string log)
         {
-            UpdateLog += $"[{SystemTime.Now}] {log}";
+            UpdateLog += $"\r\n[{SystemTime.Now}] {log}";
         }
 
 
@@ -62,7 +62,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         }
 
         public void UpdateState(XscfModules_State newState)
-        { 
+        {
             AddUpdateLog($"更新模块状态：{MenuName}。状态：{State} > {newState}");
             State = newState;
         }

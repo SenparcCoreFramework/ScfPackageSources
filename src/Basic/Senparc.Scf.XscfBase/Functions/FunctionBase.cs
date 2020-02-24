@@ -11,8 +11,12 @@ namespace Senparc.Scf.XscfBase
     {
         /// <summary>
         /// 方法名称
+        /// <para>注意：Name 必须在单个 Xscf 模块中唯一！</para>
         /// </summary>
         public abstract string Name { get; }
+
+        //TODO:检查 name 冲突的情况
+
         /// <summary>
         /// 说明
         /// </summary>
@@ -64,8 +68,28 @@ namespace Senparc.Scf.XscfBase
         public IEnumerable<FunctionParammeterInfo> GetFunctionParammeterInfo()
         {
             var props = FunctionParameterType.GetProperties();
+            ParammeterType parammeterType = ParammeterType.Text;
             foreach (var prop in props)
             {
+                List<string> selectionItems = null;
+                //判断是否存在选项
+                if (prop.PropertyType.IsArray)
+                {
+                    var obj = GenerateParameterInstance();
+                    var selection = prop.GetValue(obj, null);
+                    if (selection == null)
+                    {
+                        continue;//此参数不加入
+                    }
+
+                    selectionItems = new List<string>();
+                    parammeterType = ParammeterType.SingleSelection;//TODO:根据其他条件（如创建一个新的Attribute）判断多选
+                    foreach (var item in (Array)selection)
+                    {
+                        selectionItems.Add(item.ToString());
+                    }
+                }
+
                 var name = prop.Name;
                 string title = null;
                 string description = null;
@@ -80,7 +104,9 @@ namespace Senparc.Scf.XscfBase
                         description = descriptionAttrArr[1];
                     }
                 }
-                yield return new FunctionParammeterInfo(name, title, description, isRequired);
+                var systemType = prop.PropertyType.Name;
+
+                yield return new FunctionParammeterInfo(name, title, description, isRequired, systemType, parammeterType, selectionItems?.ToArray());
             }
         }
     }
