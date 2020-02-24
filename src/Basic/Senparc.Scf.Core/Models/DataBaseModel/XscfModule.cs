@@ -18,6 +18,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         public string Description { get; set; }
         public string UpdateLog { get; private set; }
         public bool AllowRemove { get; private set; }
+        public string MenuId { get; private set; }
         public XscfModules_State State { get; private set; }
 
         /// <summary>
@@ -26,14 +27,14 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         /// <param name="log"></param>
         private void AddUpdateLog(string log)
         {
-            UpdateLog += $"\r\n[{SystemTime.Now}] {log}";
+            UpdateLog += $"[{SystemTime.Now}] {log}\r\n";
         }
 
 
         private XscfModule() { }
 
 
-        public XscfModule(string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, XscfModules_State state)
+        public XscfModule(string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId, XscfModules_State state)
         {
             Name = name;
             Uid = uid;
@@ -42,6 +43,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
             Description = description;
             UpdateLog = updateLog;
             AllowRemove = allowRemove;
+            MenuId = menuId;
             State = state;
         }
 
@@ -65,6 +67,12 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         {
             AddUpdateLog($"更新模块状态：{MenuName}。状态：{State} > {newState}");
             State = newState;
+        }
+
+        public void UpdateMenuId(string menuId)
+        {
+            MenuId = menuId;
+            AddUpdateLog($"已绑定菜单");
         }
     }
 }

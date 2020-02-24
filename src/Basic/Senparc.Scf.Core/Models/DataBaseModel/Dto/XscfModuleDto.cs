@@ -19,9 +19,10 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         public string Description { get; }
         public string UpdateLog { get; }
         public bool AllowRemove { get; }
+        public string MenuId { get; }
         public XscfModules_State State { get; }
 
-        public XscfModuleDto(int id, string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, XscfModules_State state)
+        public XscfModuleDto(int id, string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId, XscfModules_State state)
         {
             Id = id;
             Name = name;
@@ -31,6 +32,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
             Description = description;
             UpdateLog = updateLog;
             AllowRemove = allowRemove;
+            MenuId = menuId;
             State = state;
         }
     }
@@ -53,10 +55,11 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         public string UpdateLog { get; }
         [Required]
         public bool AllowRemove { get; }
+        public string MenuId { get; }
         [Required]
         public XscfModules_State State { get; }
 
-        public CreateOrUpdate_XscfModuleDto(string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, XscfModules_State state)
+        public CreateOrUpdate_XscfModuleDto(string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId, XscfModules_State state)
         {
             Name = name;
             Uid = uid;
@@ -65,13 +68,14 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
             Description = description;
             UpdateLog = updateLog;
             AllowRemove = allowRemove;
+            MenuId = menuId;
             State = state;
         }
     }
 
     public class UpdateVersion_XscfModuleDto : DtoBase
     {
-      
+
         [Required, StringLength(100)]
         public string Name { get; }
         [Required, StringLength(100)]
@@ -91,7 +95,22 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
             Version = version;
             Description = description;
         }
+    }
 
+    /// <summary>
+    /// 跟新菜单Id
+    /// </summary>
+    public class UpdateMenuId_XscfModuleDto : DtoBase
+    {
+        public string Uid { get; set; }
+
+        public string MenuId { get; }
+
+        public UpdateMenuId_XscfModuleDto(string uid, string menuId)
+        {
+            Uid = uid;
+            MenuId = menuId;
+        }
     }
 
 }

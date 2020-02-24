@@ -25,7 +25,7 @@ namespace Senparc.Scf.Service
             if (storedDto == null)
             {
                 //新增模块
-                var xscfModule = new XscfModule(assemblyDto.Name, assemblyDto.Uid, assemblyDto.MenuName, assemblyDto.Version, assemblyDto.Description,"", true, Core.Enums.XscfModules_State.新增待审核);
+                var xscfModule = new XscfModule(assemblyDto.Name, assemblyDto.Uid, assemblyDto.MenuName, assemblyDto.Version, assemblyDto.Description, "", true, "", Core.Enums.XscfModules_State.新增待审核);
                 xscfModule.Create();
                 await base.SaveObjectAsync(xscfModule).ConfigureAwait(false);
                 return InstallOrUpdate.Install;
@@ -37,11 +37,23 @@ namespace Senparc.Scf.Service
                 {
                     var xscfModule = base.GetObject(z => z.Uid == storedDto.Uid);
                     xscfModule.UpdateVersion(assemblyDto.Version, assemblyDto.MenuName, assemblyDto.Description);
-                   await base.SaveObjectAsync(xscfModule).ConfigureAwait(false);
+                    await base.SaveObjectAsync(xscfModule).ConfigureAwait(false);
                     return InstallOrUpdate.Update;
                 }
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 跟新菜单Id
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        public async Task UpdateMenuId(UpdateMenuId_XscfModuleDto dto)
+        {
+            var xscfModule = await base.GetObjectAsync(z => z.Uid == dto.Uid).ConfigureAwait(false);
+            xscfModule.UpdateMenuId(dto.MenuId);
+            await SaveObjectAsync(xscfModule).ConfigureAwait(false);
         }
     }
 }
