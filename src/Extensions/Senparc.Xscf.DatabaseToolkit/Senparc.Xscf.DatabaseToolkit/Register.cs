@@ -15,7 +15,8 @@ namespace Senparc.Xscf.DatabaseToolkit
 
         #region IRegister 接口
 
-        public string Name => "Senparc.Xscf.DatabaseToolkit";
+        public string Name => "Senparc.Xscf.DatabaseToolkit"
+            ;
         public string Uid => "3019CCBE-0739-43D5-9DED-027A0B26745E";//必须确保全局唯一，生成后必须固定
         public string Version => "0.1.0";//必须填写版本号
 
@@ -26,9 +27,7 @@ namespace Senparc.Xscf.DatabaseToolkit
         /// 注册当前模块需要支持的功能模块
         /// </summary>
         public IList<Type> Functions => new[] { 
-            typeof(Functions.ChangeNamespace),
-            typeof(Functions.RestoreNameSpace),
-            typeof(Functions.DownloadSourceCode),
+            typeof(Functions.UpdateDatabase),
         };
 
         public virtual Task InstallOrUpdateAsync(InstallOrUpdate installOrUpdate)
