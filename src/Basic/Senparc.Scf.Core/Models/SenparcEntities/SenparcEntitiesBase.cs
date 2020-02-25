@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
-namespace Senparc.Scf.Core.Models.SenparcEntities
+namespace Senparc.Scf.Core.Models
 {
     /// <summary>
     /// SenparcEntities 的基类
