@@ -68,7 +68,9 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
             if (!Directory.Exists(path))
             {
                 base.RecordLog(sb, $"path:{path} not exist");
-                return sb.ToString();
+                result.Success = false;
+                result.Message = "路径不存在！";
+                return result;
             }
 
             base.RecordLog(sb, $"path:{path} newNamespace:{newNamespace}");
