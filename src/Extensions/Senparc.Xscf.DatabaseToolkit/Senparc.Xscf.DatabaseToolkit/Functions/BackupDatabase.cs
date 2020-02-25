@@ -48,14 +48,28 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                 var sql = $@"Backup Database {senparcEntities.Database.GetDbConnection().Database} To disk='{typeParam.Path}'";
                 RecordLog(sb, "准备执行 SQL：" + sql);
                 int affectRows = senparcEntities.Database.ExecuteSqlRaw(sql);
-                if (affectRows == 1)
+                RecordLog(sb, "执行完毕，备份结束。affectRows：" + affectRows);
+
+                RecordLog(sb, "检查备份文件：" + typeParam.Path);
+                if (File.Exists(typeParam.Path))
                 {
-                    RecordLog(sb, "执行完毕，备份结束");
+                    var modifyTime = File.GetLastWriteTimeUtc(typeParam.Path);
+                    if (SystemTime.NowDiff(modifyTime).TotalSeconds < 5/*5秒钟内创建的*/)
+                    {
+                        RecordLog(sb, "检查通过，备份成功！最后修改时间：" + modifyTime.ToString());
+                        result.Message = "备份完成！";
+                    }
+                    else
+                    {
+                        result.Message = "文件存在，但修改时间不符，可能未备份成功，请检查文件！";
+                        RecordLog(sb, result.Message);
+                    }
                 }
                 else
                 {
-                    RecordLog(sb, "执行完毕，备份结束，可能未成功");
-                    result.Message = "备份完成，可能未成功。为进一步确保，建议您核对备份文件修改时间。";
+                    result.Message = "备份文件未生成，备份失败！";
+                    RecordLog(sb, result.Message);
+
                 }
             }
             catch (Exception ex)
