@@ -1,31 +1,29 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.3.103-beta3</Version>
-    <AssemblyName>Senparc.Scf.XscfBase</AssemblyName>
-    <RootNamespace>Senparc.Scf.XscfBase</RootNamespace>
+    <Version>0.1.101-beta1</Version>
+    <AssemblyName>Senparc.Xscf.DatabaseToolkit</AssemblyName>
+    <RootNamespace>Senparc.Xscf.DatabaseToolkit</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>Senparc.Scf.XscfBase</Description>
+    <Description>Senparc.Xscf.DatabaseToolkit 修改命名空间</Description>
     <Copyright>SenparcCoreFramework</Copyright>
-    <PackageTags>SenparcCoreFramework,SCF</PackageTags>
+    <PackageTags>SenparcCoreFramework,SCF,Senparc.Xscf.DatabaseToolkit</PackageTags>
     <Authors>SenparcCoreFramework</Authors>
     <Owners>SenparcCoreFramework</Owners>
     <PackageLicenseUrl>https://github.com/SenparcCoreFramework/ScfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
-    <Title>XSCF 模块基础库</Title>
+    <Title>XSCF 数据库工具包模块</Title>
     <ProjectUrl> https://github.com/SenparcCoreFramework/SCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/SenparcCoreFramework/ScfPackageSources</PackageProjectUrl>
     <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-scf.jpg</PackageIconUrl>
     <PackageReleaseNotes>
       v0.1 创世
-      v0.2.100 完成基础架构，功能跑通
-      v0.3.100 优化 Function 返回值
-</PackageReleaseNotes>
+    </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/SenparcCoreFramework/ScfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>..\..\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\BuildOutPut\Senparc.Scf.XscfBase.XML</DocumentationFile>
+    <OutputPath>..\..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\..\BuildOutPut\Senparc.Xscf.DatabaseToolkit.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -33,10 +31,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET" Version="1.3.101" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Senparc.Scf.Core\Senparc.Scf.Core.csproj" />
-    <ProjectReference Include="..\Senparc.Scf.Service\Senparc.Scf.Service.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
+    <ProjectReference Include="..\..\..\Basic\Senparc.Scf.Core\Senparc.Scf.Core.csproj" />
+    <ProjectReference Include="..\..\..\Basic\Senparc.Scf.XscfBase\Senparc.Scf.XscfBase.csproj" />
   </ItemGroup>
 </Project>
+
+

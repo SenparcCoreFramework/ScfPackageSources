@@ -29,11 +29,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.XscfBase", "Bas
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xscf.ChangeNamespace.Tests", "Extensions\Senparc.Xscf.ChangeNamespace.Tests\Senparc.Xscf.ChangeNamespace.Tests.csproj", "{A0FE121B-15BA-4CD5-B46B-72DA01AC7A76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Scf.XscfBase.Tests", "Basic\Senparc.Scf.XscfBase.Tests\Senparc.Scf.XscfBase.Tests.csproj", "{C040A61E-E18C-4DB1-ADC1-E399B4675ED8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.XscfBase.Tests", "Basic\Senparc.Scf.XscfBase.Tests\Senparc.Scf.XscfBase.Tests.csproj", "{C040A61E-E18C-4DB1-ADC1-E399B4675ED8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests-Extensions", "Tests-Extensions", "{49BB21C7-7403-4086-BB93-1C5F36116F85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Scf.Core.Tests", "Basic\Senparc.Scf.Core.Tests\Senparc.Scf.Core.Tests.csproj", "{D1FAA0A7-A6A9-4C95-80DB-F082B9B4C0FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Core.Tests", "Basic\Senparc.Scf.Core.Tests\Senparc.Scf.Core.Tests.csproj", "{D1FAA0A7-A6A9-4C95-80DB-F082B9B4C0FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Xscf.DatabaseToolkit", "Extensions\Senparc.Xscf.DatabaseToolkit\Senparc.Xscf.DatabaseToolkit\Senparc.Xscf.DatabaseToolkit.csproj", "{392AB3DA-C723-41F6-BEA9-41AA716B185E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,12 @@ Global
 		{D1FAA0A7-A6A9-4C95-80DB-F082B9B4C0FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1FAA0A7-A6A9-4C95-80DB-F082B9B4C0FB}.Test|Any CPU.ActiveCfg = Debug|Any CPU
 		{D1FAA0A7-A6A9-4C95-80DB-F082B9B4C0FB}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{392AB3DA-C723-41F6-BEA9-41AA716B185E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{392AB3DA-C723-41F6-BEA9-41AA716B185E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{392AB3DA-C723-41F6-BEA9-41AA716B185E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{392AB3DA-C723-41F6-BEA9-41AA716B185E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{392AB3DA-C723-41F6-BEA9-41AA716B185E}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{392AB3DA-C723-41F6-BEA9-41AA716B185E}.Test|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -128,6 +136,7 @@ Global
 		{A0FE121B-15BA-4CD5-B46B-72DA01AC7A76} = {49BB21C7-7403-4086-BB93-1C5F36116F85}
 		{C040A61E-E18C-4DB1-ADC1-E399B4675ED8} = {FEF3CC72-9596-49E1-A910-990F607E9E76}
 		{D1FAA0A7-A6A9-4C95-80DB-F082B9B4C0FB} = {FEF3CC72-9596-49E1-A910-990F607E9E76}
+		{392AB3DA-C723-41F6-BEA9-41AA716B185E} = {BBF132A7-018B-417A-9F56-396FB9CF391D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7427A6C9-D522-4B10-B0AC-607D69736B50}

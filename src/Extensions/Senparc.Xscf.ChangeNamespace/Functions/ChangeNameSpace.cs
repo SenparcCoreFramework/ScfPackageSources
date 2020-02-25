@@ -1,5 +1,6 @@
 ﻿using Senparc.CO2NET.Extensions;
 using Senparc.Scf.XscfBase;
+using Senparc.Scf.XscfBase.Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
         public string OldNamespace { get; set; }
         public string NewNamespace { get; set; }
     }
+
     public class ChangeNamespace_Parameters : IFunctionParameter
     {
         [Required]
@@ -48,9 +50,14 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public override string Run(IFunctionParameter param)
+        public override FunctionResult Run(IFunctionParameter param)
         {
             var typeParam = param as ChangeNamespace_Parameters;
+
+            FunctionResult result = new FunctionResult()
+            {
+                Success = true
+            };
 
             StringBuilder sb = new StringBuilder();
             base.RecordLog(sb, "开始运行 ChangeNamespace");
@@ -61,9 +68,7 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
             base.RecordLog(sb, $"path:{path} newNamespace:{newNamespace}");
 
             var meetRules = new List<MeetRule>() {
-                //new MeetRule("namespace Senparc.Scf.",$"namespace {newNamespace}","*.cs"),
                 new MeetRule("namespace",OldNamespaceKeyword,$"{newNamespace}","*.cs"),
-                //new MeetRule("@model Senparc.Scf.",$"@model {newNamespace}","*.cshtml"),
                 new MeetRule("@model",OldNamespaceKeyword,$"{newNamespace}","*.cshtml"),
                 new MeetRule("@addTagHelper *,",OldNamespaceKeyword,$"{newNamespace}","*.cshtml"),
             };
@@ -72,15 +77,14 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
 
             Dictionary<string, List<MatchNamespace>> namespaceCollection = new Dictionary<string, List<MatchNamespace>>(StringComparer.OrdinalIgnoreCase);
 
-
+            //扫描所有规则
             foreach (var item in meetRules)
             {
                 var files = Directory.GetFiles(path, item.FileType, SearchOption.AllDirectories);
 
-                //扫描所有 namespace
+                //扫描所有文件，将满足这一条规则替换条件的对象记录下来
                 foreach (var file in files)
                 {
-
                     base.RecordLog(sb, $"扫描文件类型:{item.FileType} 数量:{files.Length}");
 
                     //string content = null;
@@ -127,7 +131,7 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
                     }
                 }
 
-                //替换
+                //遍历所有文件，替换已经解锁出来的旧命名空间
                 foreach (var file in files)
                 {
                     string content = null;
@@ -169,7 +173,9 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
 
             }
 
-            return sb.ToString();
+            result.Log = sb.ToString();
+            result.Message = "更新成功！您还可以使用【还原命名空间】功能进行还原！";
+            return result;
         }
 
     }

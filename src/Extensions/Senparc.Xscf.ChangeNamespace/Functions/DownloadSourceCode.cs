@@ -49,27 +49,39 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public override string Run(IFunctionParameter param)
+        public override FunctionResult Run(IFunctionParameter param)
         {
             /* 这里是处理文字选项（单选）的一个示例 */
             var typeParam = param as DownloadSourceCode_Parameters;
+
+            FunctionResult result = new FunctionResult()
+            {
+                Success = true
+            };
+
 
             if (Enum.TryParse<DownloadSourceCode_Parameters.Parameters_Site>(typeParam.Site.FirstOrDefault()/*单选可以这样做，如果是多选需要遍历*/, out var siteType))
             {
                 switch (siteType)
                 {
                     case DownloadSourceCode_Parameters.Parameters_Site.GitHub:
-                        return "https://github.com/SenparcCoreFramework/SCF/archive/master.zip";
+                        result.Message = "https://github.com/SenparcCoreFramework/SCF/archive/master.zip";
+                        break;
                     case DownloadSourceCode_Parameters.Parameters_Site.Gitee:
-                        return "https://gitee.com/SenparcCoreFramework/SCF/repository/archive/master.zip";
+                        result.Message = "https://gitee.com/SenparcCoreFramework/SCF/repository/archive/master.zip";
+                        break;
                     default:
-                        return "未知的下载地址";
+                        result.Message = "未知的下载地址";
+                        result.Success = false;
+                        break;
                 }
             }
             else
             {
-                return "未知的下载参数";
+                result.Message = "未知的下载参数";
+                result.Success = false;
             }
+            return result;
         }
     }
 }
