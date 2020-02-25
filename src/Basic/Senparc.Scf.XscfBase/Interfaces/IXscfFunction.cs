@@ -1,4 +1,5 @@
 ﻿
+using Senparc.Scf.XscfBase.Functions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,6 +32,6 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         /// <param name="param">参数</param>
         /// <returns></returns>
-        string Run(IFunctionParameter param);
+        FunctionResult Run(IFunctionParameter param);
     }
 }

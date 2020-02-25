@@ -1,4 +1,5 @@
 ﻿using Senparc.Scf.XscfBase;
+using Senparc.Scf.XscfBase.Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -41,7 +42,7 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public override string Run(IFunctionParameter param)
+        public override FunctionResult Run(IFunctionParameter param)
         {
             var typeParam = param as RestoreNameSpace_Parameters;
             var changeNamespaceParam = new ChangeNamespace_Parameters()
@@ -52,6 +53,10 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
             ChangeNamespace changeNamespaceFunction = new ChangeNamespace(base.ServiceProvider);
             changeNamespaceFunction.OldNamespaceKeyword = typeParam.MyNamespace;
             var result = changeNamespaceFunction.Run(changeNamespaceParam);
+            if (result.Success)
+            {
+                result.Message = "还原命名空间成功！";
+            }
             return result;
         }
     }

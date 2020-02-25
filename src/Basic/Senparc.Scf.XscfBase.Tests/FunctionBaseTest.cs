@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Scf.Core.Tests;
+using Senparc.Scf.XscfBase.Functions;
 
 namespace Senparc.Scf.XscfBase.Tests
 {
@@ -19,10 +20,16 @@ namespace Senparc.Scf.XscfBase.Tests
 
         public override Type FunctionParameterType => typeof(FunctionBaseTest_FunctionParameter);
 
-        public override string Run(IFunctionParameter param)
+        public override FunctionResult Run(IFunctionParameter param)
         {
             Console.WriteLine("Run");
-            return "OK";
+            FunctionResult result = new FunctionResult()
+            {
+                Success = true,
+                Message = "OK",
+                Log = "This is Log"
+            };
+            return result;
         }
     }
 

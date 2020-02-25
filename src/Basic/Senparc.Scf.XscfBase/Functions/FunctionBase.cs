@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Senparc.Scf.XscfBase.Functions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -49,7 +50,7 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public abstract string Run(IFunctionParameter param);
+        public abstract FunctionResult Run(IFunctionParameter param);
 
         /// <summary>
         /// 记录日志

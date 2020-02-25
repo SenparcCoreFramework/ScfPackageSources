@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Basic\Senparc.Scf.Core\Senparc.Scf.Core.csproj" />
+    <ProjectReference Include="..\..\..\Basic\Senparc.Scf.XscfBase\Senparc.Scf.XscfBase.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Functions\" />
+  </ItemGroup>
+
+</Project>
