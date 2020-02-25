@@ -49,11 +49,13 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                 RecordLog(sb, "准备执行 SQL：" + sql);
                 int affectRows = senparcEntities.Database.ExecuteSqlRaw(sql);
                 RecordLog(sb, "执行完毕，备份结束");
+                result.Message = "备份成功。为进一步确保，建议您核对备份文件修改时间。";
             }
             catch (Exception ex)
             {
                 result.Success = false;
                 result.Exception = new XscfFunctionException(ex.Message, ex);
+                result.Message = "备份失败！";
 
                 RecordLog(sb, "发生错误：" + ex.Message);
                 RecordLog(sb, ex.StackTrace.ToString());
@@ -67,7 +69,7 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
         {
             [Required]
             [MaxLength(300)]
-            [Description("路径||本地物理路径，如：E:\\Senparc\\Database-Backup\\，请确保此路径有网站程序访问权限！")]
+            [Description("路径||本地物理路径，如：E:\\Senparc\\Database-Backup\\SCF.bak，必须包含文件名。请确保此路径有网站程序访问权限！")]
             public string Path { get; set; }
         }
     }

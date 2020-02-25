@@ -55,11 +55,13 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                 RecordLog(sb, "开始执行 Migrate()");
                 senparcEntities.Migrate();
                 RecordLog(sb, "执行 Migrate() 结束，操作完成");
+                result.Message = "操作完成，立即生效。";
             }
             catch (Exception ex)
             {
                 result.Success = false;
                 result.Exception = new XscfFunctionException(ex.Message, ex);
+                result.Message = "发生错误！";
 
                 RecordLog(sb, "发生错误：" + ex.Message);
                 RecordLog(sb, ex.StackTrace.ToString());
