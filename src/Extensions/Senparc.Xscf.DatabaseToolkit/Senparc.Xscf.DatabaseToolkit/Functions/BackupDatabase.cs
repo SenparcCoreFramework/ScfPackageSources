@@ -54,14 +54,14 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                 if (File.Exists(typeParam.Path))
                 {
                     var modifyTime = File.GetLastWriteTimeUtc(typeParam.Path);
-                    if (SystemTime.NowDiff(modifyTime).TotalSeconds < 5/*5秒钟内创建的*/)
+                    if ((SystemTime.UtcDateTime - modifyTime).TotalSeconds < 5/*5秒钟内创建的*/)
                     {
                         RecordLog(sb, "检查通过，备份成功！最后修改时间：" + modifyTime.ToString());
                         result.Message = "备份完成！";
                     }
                     else
                     {
-                        result.Message = "文件存在，但修改时间不符，可能未备份成功，请检查文件！";
+                        result.Message = $"文件存在，但修改时间不符，可能未备份成功，请检查文件！文件最后修改时间：{modifyTime.ToString()}";
                         RecordLog(sb, result.Message);
                     }
                 }
