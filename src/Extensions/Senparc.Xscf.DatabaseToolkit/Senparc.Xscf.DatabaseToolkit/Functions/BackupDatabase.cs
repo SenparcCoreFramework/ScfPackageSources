@@ -45,11 +45,18 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                 RecordLog(sb, "开始获取 ISenparcEntities 对象");
                 var senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntities)) as SenparcEntitiesBase;
                 RecordLog(sb, "获取 ISenparcEntities 对象成功");
-                var sql = $@"Backup Database {senparcEntities.Database.GetDbConnection().Database} To disk='{param}'";
+                var sql = $@"Backup Database {senparcEntities.Database.GetDbConnection().Database} To disk='{typeParam.Path}'";
                 RecordLog(sb, "准备执行 SQL：" + sql);
                 int affectRows = senparcEntities.Database.ExecuteSqlRaw(sql);
-                RecordLog(sb, "执行完毕，备份结束");
-                result.Message = "备份成功。为进一步确保，建议您核对备份文件修改时间。";
+                if (affectRows == 1)
+                {
+                    RecordLog(sb, "执行完毕，备份结束");
+                }
+                else
+                {
+                    RecordLog(sb, "执行完毕，备份结束，可能未成功");
+                    result.Message = "备份完成，可能未成功。为进一步确保，建议您核对备份文件修改时间。";
+                }
             }
             catch (Exception ex)
             {
