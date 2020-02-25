@@ -65,6 +65,14 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
             var path = typeParam.Path;
             var newNamespace = typeParam.NewNamespace;
 
+            if (!Directory.Exists(path))
+            {
+                base.RecordLog(sb, $"path:{path} not exist");
+                result.Success = false;
+                result.Message = "路径不存在！";
+                return result;
+            }
+
             base.RecordLog(sb, $"path:{path} newNamespace:{newNamespace}");
 
             var meetRules = new List<MeetRule>() {
