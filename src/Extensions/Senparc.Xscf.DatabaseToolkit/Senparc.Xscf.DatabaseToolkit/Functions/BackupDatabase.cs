@@ -45,7 +45,7 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                 RecordLog(sb, "开始获取 ISenparcEntities 对象");
                 var senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntities)) as SenparcEntitiesBase;
                 RecordLog(sb, "获取 ISenparcEntities 对象成功");
-                var sql = $@"Backup Database {senparcEntities.Database.GetDbConnection().DataSource} To disk='{param}'";
+                var sql = $@"Backup Database {senparcEntities.Database.GetDbConnection().Database} To disk='{param}'";
                 RecordLog(sb, "准备执行 SQL：" + sql);
                 int affectRows = senparcEntities.Database.ExecuteSqlRaw(sql);
                 RecordLog(sb, "执行完毕，备份结束");
