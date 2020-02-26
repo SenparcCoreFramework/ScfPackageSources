@@ -11,14 +11,13 @@ using System.Text;
 
 namespace Senparc.Xscf.DatabaseToolkit.Functions
 {
-
-    public class UpdateDatabase_Parameters : IFunctionParameter
-    {
-
-    }
-
     public class UpdateDatabase : FunctionBase
     {
+        public class UpdateDatabase_Parameters : IFunctionParameter
+        {
+
+        }
+
         //注意：Name 必须在单个 Xscf 模块中唯一！
         public override string Name => "Merge EF Core";
 
@@ -37,15 +36,7 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
         /// <returns></returns>
         public override FunctionResult Run(IFunctionParameter param)
         {
-            /* 这里是处理文字选项（单选）的一个示例 */
-            var typeParam = param as UpdateDatabase_Parameters;
-            StringBuilder sb = new StringBuilder();
-            FunctionResult result = new FunctionResult()
-            {
-                Success = true
-            };
-
-            try
+            return FunctionHelper.RunFunction<UpdateDatabase_Parameters>(param, (typeParam, sb, result) =>
             {
                 RecordLog(sb, "开始获取 ISenparcEntities 对象");
                 ISenparcEntities senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntities)) as ISenparcEntities;
@@ -56,19 +47,7 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                 senparcEntities.Migrate();
                 RecordLog(sb, "执行 Migrate() 结束，操作完成");
                 result.Message = "操作完成，立即生效。";
-            }
-            catch (Exception ex)
-            {
-                result.Success = false;
-                result.Exception = new XscfFunctionException(ex.Message, ex);
-                result.Message = "发生错误！";
-
-                RecordLog(sb, "发生错误：" + ex.Message);
-                RecordLog(sb, ex.StackTrace.ToString());
-            }
-
-            result.Log = sb.ToString();
-            return result;
+            });
         }
     }
 }

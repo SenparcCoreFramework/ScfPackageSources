@@ -14,6 +14,14 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
 {
     public class BackupDatabase : FunctionBase
     {
+        public class BackupDatabase_Parameters : IFunctionParameter
+        {
+            [Required]
+            [MaxLength(300)]
+            [Description("路径||本地物理路径，如：E:\\Senparc\\Database-Backup\\SCF.bak，必须包含文件名。请确保此路径有网站程序访问权限！")]
+            public string Path { get; set; }
+        }
+
         //注意：Name 必须在单个 Xscf 模块中唯一！
         public override string Name => "备份数据库";
 
@@ -32,15 +40,7 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
         /// <returns></returns>
         public override FunctionResult Run(IFunctionParameter param)
         {
-            /* 这里是处理文字选项（单选）的一个示例 */
-            var typeParam = param as BackupDatabase_Parameters;
-            StringBuilder sb = new StringBuilder();
-            FunctionResult result = new FunctionResult()
-            {
-                Success = true
-            };
-
-            try
+            return FunctionHelper.RunFunction<BackupDatabase_Parameters>(param, (typeParam, sb, result) =>
             {
                 RecordLog(sb, "开始获取 ISenparcEntities 对象");
                 var senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntities)) as SenparcEntitiesBase;
@@ -69,29 +69,8 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                 {
                     result.Message = "备份文件未生成，备份失败！";
                     RecordLog(sb, result.Message);
-
                 }
-            }
-            catch (Exception ex)
-            {
-                result.Success = false;
-                result.Exception = new XscfFunctionException(ex.Message, ex);
-                result.Message = "备份失败！";
-
-                RecordLog(sb, "发生错误：" + ex.Message);
-                RecordLog(sb, ex.StackTrace.ToString());
-            }
-
-            result.Log = sb.ToString();
-            return result;
-        }
-
-        public class BackupDatabase_Parameters : IFunctionParameter
-        {
-            [Required]
-            [MaxLength(300)]
-            [Description("路径||本地物理路径，如：E:\\Senparc\\Database-Backup\\SCF.bak，必须包含文件名。请确保此路径有网站程序访问权限！")]
-            public string Path { get; set; }
+            });
         }
     }
 }
