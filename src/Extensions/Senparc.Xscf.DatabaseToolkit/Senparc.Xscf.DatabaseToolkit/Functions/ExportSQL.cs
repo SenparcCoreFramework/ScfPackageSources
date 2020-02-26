@@ -46,9 +46,7 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                  var sql = senparcEntities.Database.GenerateCreateScript();
                  RecordLog(sb, "SQL 已生成：");
                  RecordLog(sb, $"============ SCF Database {SystemTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}  ============");
-                 RecordLog(sb, "");
-                 RecordLog(sb, sql);
-                 RecordLog(sb, "");
+                 RecordLog(sb, "\r\n\r\n" + sql + "\r\n\r\n");
                  RecordLog(sb, $"============ SCF Database {SystemTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}  ============");
                  result.Message = "SQL 已生成，请下载日志文件！";
              });

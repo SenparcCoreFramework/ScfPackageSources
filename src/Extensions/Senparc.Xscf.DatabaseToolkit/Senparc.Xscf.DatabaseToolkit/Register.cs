@@ -28,7 +28,9 @@ namespace Senparc.Xscf.DatabaseToolkit
         /// </summary>
         public IList<Type> Functions => new[] { 
             typeof(Functions.UpdateDatabase),
-            typeof(Functions.BackupDatabase)
+            typeof(Functions.BackupDatabase),
+            typeof(Functions.ExportSQL),
+
         };
 
         public virtual Task InstallOrUpdateAsync(InstallOrUpdate installOrUpdate)
