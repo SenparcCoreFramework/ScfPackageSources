@@ -6,26 +6,28 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Text;
+using static Senparc.Xscf.ChangeNamespace.Functions.ChangeNamespace;
 
 namespace Senparc.Xscf.ChangeNamespace.Functions
 {
-    public class RestoreNameSpace_Parameters : IFunctionParameter
-    {
-        [Required]
-        [MaxLength(300)]
-        [Description("路径||本地物理路径，如：E:\\Senparc\\Scf\\")]
-        public string Path { get; set; }
-        [Required]
-        [MaxLength(100)]
-        [Description("当前自定义的命名空间||命名空间根，一般以.结尾，如：[My.Namespace.]，最终将替换为例如[Senparc.Scf.]或[Senparc.]")]
-        public string MyNamespace { get; set; }
-    }
-
     /// <summary>
     /// 还原命名空间
     /// </summary>
     public class RestoreNameSpace : FunctionBase
     {
+        public class RestoreNameSpace_Parameters : IFunctionParameter
+        {
+            [Required]
+            [MaxLength(300)]
+            [Description("路径||本地物理路径，如：E:\\Senparc\\Scf\\")]
+            public string Path { get; set; }
+            [Required]
+            [MaxLength(100)]
+            [Description("当前自定义的命名空间||命名空间根，一般以.结尾，如：[My.Namespace.]，最终将替换为例如[Senparc.Scf.]或[Senparc.]")]
+            public string MyNamespace { get; set; }
+        }
+
+
         //注意：Name 必须在单个 Xscf 模块中唯一！
         public override string Name => "还原命名空间";
 
@@ -44,20 +46,23 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
         /// <returns></returns>
         public override FunctionResult Run(IFunctionParameter param)
         {
-            var typeParam = param as RestoreNameSpace_Parameters;
-            var changeNamespaceParam = new ChangeNamespace_Parameters()
+            return FunctionHelper.RunFunction<RestoreNameSpace_Parameters>(param, (typeParam, sb, result) =>
             {
-                NewNamespace = "Senparc.",
-                Path = typeParam.Path
-            };
-            ChangeNamespace changeNamespaceFunction = new ChangeNamespace(base.ServiceProvider);
-            changeNamespaceFunction.OldNamespaceKeyword = typeParam.MyNamespace;
-            var result = changeNamespaceFunction.Run(changeNamespaceParam);
-            if (result.Success)
-            {
-                result.Message = "还原命名空间成功！";
-            }
-            return result;
+                var changeNamespaceParam = new ChangeNamespace_Parameters()
+                {
+                    NewNamespace = "Senparc.",
+                    Path = typeParam.Path
+                };
+
+                ChangeNamespace changeNamespaceFunction = new ChangeNamespace(base.ServiceProvider);
+                changeNamespaceFunction.OldNamespaceKeyword = typeParam.MyNamespace;
+                var newesult = changeNamespaceFunction.Run(changeNamespaceParam);
+                if (result.Success)
+                {
+                    result.Message = "还原命名空间成功！";
+                }
+                return newesult;
+            });
         }
     }
 }

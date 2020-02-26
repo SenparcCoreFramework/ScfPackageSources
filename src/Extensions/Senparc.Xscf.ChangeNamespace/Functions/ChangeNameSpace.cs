@@ -10,28 +10,28 @@ using System.Text;
 
 namespace Senparc.Xscf.ChangeNamespace.Functions
 {
-
-    public class MatchNamespace
-    {
-        public string Prefix { get; set; }
-        public string OldNamespace { get; set; }
-        public string NewNamespace { get; set; }
-    }
-
-    public class ChangeNamespace_Parameters : IFunctionParameter
-    {
-        [Required]
-        [MaxLength(300)]
-        [Description("路径||本地物理路径，如：E:\\Senparc\\Scf\\")]
-        public string Path { get; set; }
-        [Required]
-        [MaxLength(100)]
-        [Description("新命名空间||命名空间根，必须以.结尾，用于替换[Senparc.Scf.]")]
-        public string NewNamespace { get; set; }
-    }
-
     public class ChangeNamespace : FunctionBase
     {
+        public class MatchNamespace
+        {
+            public string Prefix { get; set; }
+            public string OldNamespace { get; set; }
+            public string NewNamespace { get; set; }
+        }
+
+        public class ChangeNamespace_Parameters : IFunctionParameter
+        {
+            [Required]
+            [MaxLength(300)]
+            [Description("路径||本地物理路径，如：E:\\Senparc\\Scf\\")]
+            public string Path { get; set; }
+            [Required]
+            [MaxLength(100)]
+            [Description("新命名空间||命名空间根，必须以.结尾，用于替换[Senparc.Scf.]")]
+            public string NewNamespace { get; set; }
+        }
+
+
         //注意：Name 必须在单个 Xscf 模块中唯一！
         public override string Name => "修改命名空间";
 
@@ -52,138 +52,132 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
         /// <returns></returns>
         public override FunctionResult Run(IFunctionParameter param)
         {
-            var typeParam = param as ChangeNamespace_Parameters;
-
-            FunctionResult result = new FunctionResult()
+            return FunctionHelper.RunFunction<ChangeNamespace_Parameters>(param, (typeParam, sb, result) =>
             {
-                Success = true
-            };
+                base.RecordLog(sb, "开始运行 ChangeNamespace");
 
-            StringBuilder sb = new StringBuilder();
-            base.RecordLog(sb, "开始运行 ChangeNamespace");
+                var path = typeParam.Path;
+                var newNamespace = typeParam.NewNamespace;
 
-            var path = typeParam.Path;
-            var newNamespace = typeParam.NewNamespace;
+                if (!Directory.Exists(path))
+                {
+                    base.RecordLog(sb, $"path:{path} not exist");
+                    result.Success = false;
+                    result.Message = "路径不存在！";
+                    return;
+                }
 
-            if (!Directory.Exists(path))
-            {
-                base.RecordLog(sb, $"path:{path} not exist");
-                result.Success = false;
-                result.Message = "路径不存在！";
-                return result;
-            }
+                base.RecordLog(sb, $"path:{path} newNamespace:{newNamespace}");
 
-            base.RecordLog(sb, $"path:{path} newNamespace:{newNamespace}");
-
-            var meetRules = new List<MeetRule>() {
+                var meetRules = new List<MeetRule>() {
                 new MeetRule("namespace",OldNamespaceKeyword,$"{newNamespace}","*.cs"),
                 new MeetRule("@model",OldNamespaceKeyword,$"{newNamespace}","*.cshtml"),
                 new MeetRule("@addTagHelper *,",OldNamespaceKeyword,$"{newNamespace}","*.cshtml"),
             };
 
-            //TODO:使用正则记录，并全局修改
+                //TODO:使用正则记录，并全局修改
 
-            Dictionary<string, List<MatchNamespace>> namespaceCollection = new Dictionary<string, List<MatchNamespace>>(StringComparer.OrdinalIgnoreCase);
+                Dictionary<string, List<MatchNamespace>> namespaceCollection = new Dictionary<string, List<MatchNamespace>>(StringComparer.OrdinalIgnoreCase);
 
-            //扫描所有规则
-            foreach (var item in meetRules)
-            {
-                var files = Directory.GetFiles(path, item.FileType, SearchOption.AllDirectories);
-
-                //扫描所有文件，将满足这一条规则替换条件的对象记录下来
-                foreach (var file in files)
+                //扫描所有规则
+                foreach (var item in meetRules)
                 {
-                    base.RecordLog(sb, $"扫描文件类型:{item.FileType} 数量:{files.Length}");
+                    var files = Directory.GetFiles(path, item.FileType, SearchOption.AllDirectories);
 
-                    //string content = null;
-                    using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read))
+                    //扫描所有文件，将满足这一条规则替换条件的对象记录下来
+                    foreach (var file in files)
                     {
-                        using (var sr = new StreamReader(fs))
+                        base.RecordLog(sb, $"扫描文件类型:{item.FileType} 数量:{files.Length}");
+
+                        //string content = null;
+                        using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read))
                         {
-                            var line = sr.ReadLine();
-                            while (null != line)
+                            using (var sr = new StreamReader(fs))
                             {
-                                line = sr.ReadLine()?.Trim();
-                                var oldNamespaceFull = $"{item.Prefix} {item.OrignalKeyword}";
-                                if (line != null && line.StartsWith(oldNamespaceFull))
+                                var line = sr.ReadLine();
+                                while (null != line)
                                 {
-                                    if (!namespaceCollection.ContainsKey(file))
+                                    line = sr.ReadLine()?.Trim();
+                                    var oldNamespaceFull = $"{item.Prefix} {item.OrignalKeyword}";
+                                    if (line != null && line.StartsWith(oldNamespaceFull))
                                     {
-                                        namespaceCollection[file] = new List<MatchNamespace>();
+                                        if (!namespaceCollection.ContainsKey(file))
+                                        {
+                                            namespaceCollection[file] = new List<MatchNamespace>();
+                                        }
+
+                                        //不能使用Split，中间可能还有空格
+                                        //var oldNamespaceArr = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                                        var getOld = line.Replace(item.Prefix + " ", "");//也可以用IndexOf+Length来做
+                                        var getNew = getOld.Replace(item.OrignalKeyword, item.ReplaceWord);
+                                        namespaceCollection[file].Add(new MatchNamespace()
+                                        {
+                                            Prefix = item.Prefix,//prefix
+                                            OldNamespace = getOld,
+                                            NewNamespace = getNew
+                                        });
+
+                                        namespaceCollection[file].Add(new MatchNamespace()
+                                        {
+                                            Prefix = "using",
+                                            OldNamespace = getOld,
+                                            NewNamespace = getNew
+                                        });
                                     }
 
-                                    //不能使用Split，中间可能还有空格
-                                    //var oldNamespaceArr = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                                    var getOld = line.Replace(item.Prefix + " ", "");//也可以用IndexOf+Length来做
-                                    var getNew = getOld.Replace(item.OrignalKeyword, item.ReplaceWord);
-                                    namespaceCollection[file].Add(new MatchNamespace()
-                                    {
-                                        Prefix = item.Prefix,//prefix
-                                        OldNamespace = getOld,
-                                        NewNamespace = getNew
-                                    });
-
-                                    namespaceCollection[file].Add(new MatchNamespace()
-                                    {
-                                        Prefix = "using",
-                                        OldNamespace = getOld,
-                                        NewNamespace = getNew
-                                    });
+                                    //content += Environment.NewLine + line;
                                 }
-
-                                //content += Environment.NewLine + line;
+                                sr.ReadLine();
                             }
-                            sr.ReadLine();
+                            fs.Close();
                         }
-                        fs.Close();
-                    }
-                }
-
-                //遍历所有文件，替换已经解锁出来的旧命名空间
-                foreach (var file in files)
-                {
-                    string content = null;
-                    using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read))
-                    {
-                        using (var sr = new StreamReader(fs))
-                        {
-                            content = sr.ReadToEnd();
-                        }
-                        fs.Close();
                     }
 
-                    foreach (var namespaceInfos in namespaceCollection)
+                    //遍历所有文件，替换已经解锁出来的旧命名空间
+                    foreach (var file in files)
                     {
-                        foreach (var namespaceInfo in namespaceInfos.Value)
+                        string content = null;
+                        using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read))
                         {
-                            var oldNamespaceFull = $"{namespaceInfo.Prefix} {namespaceInfo.OldNamespace}";
-
-                            //替换旧的NameSpace
-                            if (content.IndexOf(oldNamespaceFull) > -1)
+                            using (var sr = new StreamReader(fs))
                             {
-                                base.RecordLog(sb, $"文件命中:{file} -> {oldNamespaceFull}");
-                                var newNameSpaceFull = $"{namespaceInfo.Prefix} {namespaceInfo.NewNamespace}";
-                                content = content.Replace(oldNamespaceFull, newNameSpaceFull);
+                                content = sr.ReadToEnd();
+                            }
+                            fs.Close();
+                        }
+
+                        foreach (var namespaceInfos in namespaceCollection)
+                        {
+                            foreach (var namespaceInfo in namespaceInfos.Value)
+                            {
+                                var oldNamespaceFull = $"{namespaceInfo.Prefix} {namespaceInfo.OldNamespace}";
+
+                                //替换旧的NameSpace
+                                if (content.IndexOf(oldNamespaceFull) > -1)
+                                {
+                                    base.RecordLog(sb, $"文件命中:{file} -> {oldNamespaceFull}");
+                                    var newNameSpaceFull = $"{namespaceInfo.Prefix} {namespaceInfo.NewNamespace}";
+                                    content = content.Replace(oldNamespaceFull, newNameSpaceFull);
+                                }
                             }
                         }
+
+                        using (var fs = new FileStream(file, FileMode.Truncate, FileAccess.ReadWrite))
+                        {
+                            using (var sw = new StreamWriter(fs))
+                            {
+                                sw.Write(content);
+                                sw.Flush();
+                            }
+                            fs.Close();
+                        }
                     }
 
-                    using (var fs = new FileStream(file, FileMode.Truncate, FileAccess.ReadWrite))
-                    {
-                        using (var sw = new StreamWriter(fs))
-                        {
-                            sw.Write(content);
-                            sw.Flush();
-                        }
-                        fs.Close();
-                    }
                 }
 
-            }
-
-            result.Log = sb.ToString();
-            result.Message = "更新成功！您还可以使用【还原命名空间】功能进行还原！";
-            return result;
+                result.Log = sb.ToString();
+                result.Message = "更新成功！您还可以使用【还原命名空间】功能进行还原！";
+            });
         }
 
     }
