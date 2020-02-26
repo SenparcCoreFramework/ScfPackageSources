@@ -20,9 +20,9 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
         }
 
         //注意：Name 必须在单个 Xscf 模块中唯一！
-        public override string Name => "Merge EF Core";
+        public override string Name => "导出当前数据库 SQL 脚本";
 
-        public override string Description => "使用 Entity Framework Core 的 Code First 模式对数据库进行更新，使数据库和当前运行版本匹配。";
+        public override string Description => "导出当前站点正在使用的所有表的 SQL 脚本";
 
         public override Type FunctionParameterType => typeof(ExportSQL_Parameters);
 

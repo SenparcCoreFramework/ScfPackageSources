@@ -10,6 +10,7 @@ using static Senparc.Xscf.ChangeNamespace.Functions.ChangeNamespace;
 
 namespace Senparc.Xscf.ChangeNamespace.Functions
 {
+
     /// <summary>
     /// 还原命名空间
     /// </summary>

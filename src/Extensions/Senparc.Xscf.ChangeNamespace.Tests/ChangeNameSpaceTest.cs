@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Xscf.ChangeNamespace.Functions;
 using System;
 using System.IO;
+using static Senparc.Xscf.ChangeNamespace.Functions.ChangeNamespace;
+using static Senparc.Xscf.ChangeNamespace.Functions.RestoreNameSpace;
 
 namespace Senparc.Xscf.ChangeNamespace.Tests
 {
