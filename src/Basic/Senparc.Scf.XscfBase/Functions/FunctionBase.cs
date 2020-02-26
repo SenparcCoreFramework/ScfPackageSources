@@ -59,7 +59,7 @@ namespace Senparc.Scf.XscfBase
         /// <param name="msg"></param>
         protected void RecordLog(StringBuilder sb, string msg)
         {
-            sb.AppendLine($"[{SystemTime.Now.ToString()}]\t{msg}");
+            FunctionHelper.RecordLog(sb, msg);
         }
 
         /// <summary>
