@@ -58,3 +58,4 @@ obj/
 **/ProjectFileManager
 /src/BuildOutPut
 /src/.vs
+/src/Basic/.vs/ScfPackageSources.Basic/DesignTimeBuild
