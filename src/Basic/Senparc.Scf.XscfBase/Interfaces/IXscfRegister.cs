@@ -29,7 +29,7 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         string Description { get; }
         /// <summary>
-        /// 注册方法
+        /// 注册方法，注册的顺序决定了界面中排列的顺序
         /// </summary>
         IList<Type> Functions { get; }
         /// <summary>

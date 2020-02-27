@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.1.105-beta2</Version>
+    <Version>0.1.106-beta2</Version>
     <AssemblyName>Senparc.Xscf.DatabaseToolkit</AssemblyName>
     <RootNamespace>Senparc.Xscf.DatabaseToolkit</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -17,6 +17,10 @@
     <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-scf.jpg</PackageIconUrl>
     <PackageReleaseNotes>
       v0.1 创世
+      v0.1.101 添加Merge数据库功能
+      v0.1.102 添加备份数据库功能
+      v0.1.103 添加检查数据库功能
+      v0.1.106 添加导出数据库功能
     </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/SenparcCoreFramework/ScfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
