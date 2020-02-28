@@ -3,12 +3,6 @@ using Senparc.Scf.Core.Models;
 using Senparc.Scf.XscfBase;
 using Senparc.Scf.XscfBase.Functions;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Senparc.Xscf.DatabaseToolkit.Functions
 {
