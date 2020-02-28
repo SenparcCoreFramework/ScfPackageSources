@@ -37,7 +37,7 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                 RecordLog(sb, "开始获取 ISenparcEntities 对象");
                 var senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntities)) as SenparcEntitiesBase;
                 RecordLog(sb, "获取 ISenparcEntities 对象成功");
-                RecordLog(sb, "开始重新标记 Merge 状态");
+                RecordLog(sb, "开始检测未安装版本");
                 var pendingMigrations = senparcEntities.Database.GetPendingMigrations();
 
                 var oldMigrations = senparcEntities.Database.GetAppliedMigrations();
