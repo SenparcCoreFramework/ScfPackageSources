@@ -21,6 +21,7 @@ namespace Senparc.Xscf.DatabaseToolkit
         public string Version => "0.2.0";//必须填写版本号
 
         public string MenuName => "数据库工具包";
+        public string Icon => "fa fa-database";
         public string Description => "为方便数据库操作提供的工具包。请完全了解本工具各项功能特点后再使用，所有数据库操作都有损坏数据的可能，修改数据库前务必注意数据备份！";
 
         /// <summary>

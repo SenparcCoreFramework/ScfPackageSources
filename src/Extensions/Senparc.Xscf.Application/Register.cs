@@ -21,6 +21,7 @@ namespace Senparc.Xscf.Application
         public string Version => "0.0.5";//必须填写版本号
 
         public string MenuName => "应用程序模块";
+        public string Icon => "fa fa-pencil";
         public string Description => "此模块提供给开发者一个可以启动任何程序！";
 
         /// <summary>

@@ -25,6 +25,10 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         string MenuName { get; }
         /// <summary>
+        /// Icon图标
+        /// </summary>
+        string Icon { get; }
+        /// <summary>
         /// 说明
         /// </summary>
         string Description { get; }

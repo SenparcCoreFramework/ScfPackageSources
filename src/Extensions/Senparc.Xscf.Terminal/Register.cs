@@ -21,6 +21,7 @@ namespace Senparc.Xscf.Terminal
         public string Version => "0.0.5";//必须填写版本号
 
         public string MenuName => "终端模块";
+        public string Icon => "fa fa-terminal";
         public string Description => "此模块提供给开发者一个可以直接使用终端命令控制系统的模块！";
 
         /// <summary>
