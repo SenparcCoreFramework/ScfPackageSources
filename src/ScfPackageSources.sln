@@ -35,7 +35,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests-Extensions", "Tests-E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Scf.Core.Tests", "Basic\Senparc.Scf.Core.Tests\Senparc.Scf.Core.Tests.csproj", "{D1FAA0A7-A6A9-4C95-80DB-F082B9B4C0FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Xscf.DatabaseToolkit", "Extensions\Senparc.Xscf.DatabaseToolkit\Senparc.Xscf.DatabaseToolkit\Senparc.Xscf.DatabaseToolkit.csproj", "{392AB3DA-C723-41F6-BEA9-41AA716B185E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xscf.DatabaseToolkit", "Extensions\Senparc.Xscf.DatabaseToolkit\Senparc.Xscf.DatabaseToolkit\Senparc.Xscf.DatabaseToolkit.csproj", "{392AB3DA-C723-41F6-BEA9-41AA716B185E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xscf.Terminal", "Extensions\Senparc.Xscf.Terminal\Senparc.Xscf.Terminal.csproj", "{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +121,12 @@ Global
 		{392AB3DA-C723-41F6-BEA9-41AA716B185E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{392AB3DA-C723-41F6-BEA9-41AA716B185E}.Test|Any CPU.ActiveCfg = Debug|Any CPU
 		{392AB3DA-C723-41F6-BEA9-41AA716B185E}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D}.Test|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -137,6 +145,7 @@ Global
 		{C040A61E-E18C-4DB1-ADC1-E399B4675ED8} = {FEF3CC72-9596-49E1-A910-990F607E9E76}
 		{D1FAA0A7-A6A9-4C95-80DB-F082B9B4C0FB} = {FEF3CC72-9596-49E1-A910-990F607E9E76}
 		{392AB3DA-C723-41F6-BEA9-41AA716B185E} = {BBF132A7-018B-417A-9F56-396FB9CF391D}
+		{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D} = {BBF132A7-018B-417A-9F56-396FB9CF391D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7427A6C9-D522-4B10-B0AC-607D69736B50}
