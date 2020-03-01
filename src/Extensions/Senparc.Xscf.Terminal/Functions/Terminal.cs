@@ -23,7 +23,7 @@ namespace Senparc.Xscf.Terminal.Functions
         //注意：Name 必须在单个 Xscf 模块中唯一！
         public override string Name => "命令提示符";
 
-        public override string Description => "输入Windows命令提示符中的命令,即可返回相应的结果";
+        public override string Description => "输入Windows命令提示符中的命令,即可返回相应的结果。请注意：命令将在服务器系统中执行！";
 
         public override Type FunctionParameterType => typeof(Terminal_Parameters);
 
@@ -47,6 +47,9 @@ namespace Senparc.Xscf.Terminal.Functions
 
             StringBuilder sb = new StringBuilder();
             base.RecordLog(sb, "开始运行 Terminal");
+
+            //TODO:需要限制一下执行的命令
+
             string strExecRes = string.Empty;
             if (!string.IsNullOrEmpty(typeParam.CommandLine))
             {
@@ -59,6 +62,12 @@ namespace Senparc.Xscf.Terminal.Functions
             sb.AppendLine(strExecRes);
             result.Log = sb.ToString();
             result.Message = "操作成功！";
+
+            if (!string.IsNullOrEmpty(strExecRes))
+            {
+                result.Message += Environment.CommandLine + strExecRes;
+            }
+
             return result;
         }
 

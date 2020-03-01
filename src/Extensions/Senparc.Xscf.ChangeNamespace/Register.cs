@@ -18,10 +18,10 @@ namespace Senparc.Xscf.ChangeNamespace
 
         public string Name => "Senparc.Xscf.ChangeNamespace";
         public string Uid => "476A8F12-860D-4B18-B703-393BBDEFBD85";//必须确保全局唯一，生成后必须固定
-        public string Version => "0.3.3";//必须填写版本号
+        public string Version => "0.3.4";//必须填写版本号
 
         public string MenuName => "修改命名空间";
-        public string Icon => "fa fa-terminal";
+        public string Icon => "fa fa-space-shuttle";//参考如：https://colorlib.com/polygon/gentelella/icons.html
         public string Description => "此模块提供给开发者在安装完 SCF、发布产品之前，全局修改命名空间，请在生产环境中谨慎使用，此操作不可逆！必须做好提前备份！不建议在已经部署至生产环境并开始运行后使用此功能！";
 
         /// <summary>

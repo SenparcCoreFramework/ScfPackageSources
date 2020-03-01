@@ -77,6 +77,11 @@ namespace Senparc.Scf.XscfBase
 
                         if (!RegisterList.Contains(register))
                         {
+                            if (RegisterList.Exists(z => z.Uid.Equals(register.Uid, StringComparison.OrdinalIgnoreCase)))
+                            {
+                                throw new XscfFunctionException("已经存在相同 Uid 的模块：" + register.Uid);
+                            }
+
                             RegisterList.Add(register);
                             services.AddScoped(type);//DI 中注册
                             foreach (var functionType in register.Functions)
