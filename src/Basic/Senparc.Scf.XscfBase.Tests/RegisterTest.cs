@@ -17,7 +17,8 @@ namespace Senparc.Scf.XscfBase.Tests
         public string Version => "1.0";
 
         public string MenuName => "测试模块";
-
+        public string Icon => "fa fa-space-shuttle";//参考如：https://colorlib.com/polygon/gentelella/icons.html
+       
         public string Description => "这是测试模块的介绍";
 
         public IList<Type> Functions => new List<Type>() { typeof(FunctionBaseTest_Function) };
