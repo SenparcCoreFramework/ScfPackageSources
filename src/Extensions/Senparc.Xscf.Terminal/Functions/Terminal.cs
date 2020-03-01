@@ -14,7 +14,7 @@ namespace Senparc.Xscf.Terminal.Functions
     public class Terminal_Parameters : IFunctionParameter
     {
         [MaxLength(300)]
-        [Description("命令行，如：dir /?")]
+        [Description("> 命令||命令行，如：dir /?")]
         public string CommandLine { get; set; }
     }
 
