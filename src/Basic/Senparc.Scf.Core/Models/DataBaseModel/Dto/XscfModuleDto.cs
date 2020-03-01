@@ -20,9 +20,10 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         public string UpdateLog { get; }
         public bool AllowRemove { get; }
         public string MenuId { get; }
+        public string Icon { get; }
         public XscfModules_State State { get; }
 
-        public XscfModuleDto(int id, string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId, XscfModules_State state)
+        public XscfModuleDto(int id, string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId,string icon, XscfModules_State state)
         {
             Id = id;
             Name = name;
@@ -33,6 +34,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
             UpdateLog = updateLog;
             AllowRemove = allowRemove;
             MenuId = menuId;
+            Icon = icon;
             State = state;
         }
     }
@@ -56,10 +58,11 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         [Required]
         public bool AllowRemove { get; }
         public string MenuId { get; }
+        public string Icon { get; }
         [Required]
         public XscfModules_State State { get; }
 
-        public CreateOrUpdate_XscfModuleDto(string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId, XscfModules_State state)
+        public CreateOrUpdate_XscfModuleDto(string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId,string icon, XscfModules_State state)
         {
             Name = name;
             Uid = uid;
@@ -69,6 +72,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
             UpdateLog = updateLog;
             AllowRemove = allowRemove;
             MenuId = menuId;
+            Icon = icon;
             State = state;
         }
     }
