@@ -178,8 +178,7 @@ namespace Senparc.Xscf.Terminal.Functions
                 }
                 else
                 {
-                    isRes = false;
-                    break;
+                    continue;
                 }
             }
             return isRes;
