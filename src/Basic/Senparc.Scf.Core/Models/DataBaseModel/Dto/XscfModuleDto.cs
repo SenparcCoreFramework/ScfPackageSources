@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Senparc.Core.Models.DataBaseModel;
 using Senparc.Scf.Core.Enums;
 using System;
 using System.Collections.Generic;
