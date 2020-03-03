@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Senparc.Core.Models.DataBaseModel
+namespace Senparc.Scf.Core.Models.DataBaseModel
 {
     public class DtoBase
     {

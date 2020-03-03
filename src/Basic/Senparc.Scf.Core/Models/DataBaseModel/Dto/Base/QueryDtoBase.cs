@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Core.Models.DataBaseModel.Dto.Base
+namespace Senparc.Scf.Core.Models.DataBaseModel.Dto.Base
 {
     public class QueryDtoBase
     {

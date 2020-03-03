@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Senparc.Core.Models.DataBaseModel;
 using Senparc.Scf.Core.Enums;
 using System;
 using System.Collections.Generic;
@@ -23,7 +22,8 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         public string Icon { get; }
         public XscfModules_State State { get; }
 
-        public XscfModuleDto(int id, string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId,string icon, XscfModules_State state)
+
+        public XscfModuleDto(int id, string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId, string icon, XscfModules_State state)
         {
             Id = id;
             Name = name;
@@ -62,7 +62,9 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         [Required]
         public XscfModules_State State { get; }
 
-        public CreateOrUpdate_XscfModuleDto(string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId,string icon, XscfModules_State state)
+        CreateOrUpdate_XscfModuleDto() { }
+
+        public CreateOrUpdate_XscfModuleDto(string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId, string icon, XscfModules_State state)
         {
             Name = name;
             Uid = uid;
