@@ -22,5 +22,10 @@ namespace Senparc.Scf.Core.Areas
         /// <para>注意：此选项需要配合 XscfRegister 使用才有效，否则请忽略</para>
         /// </summary>
         string HomeUrl { get; }
+
+        /// <summary>
+        /// 菜单项
+        /// </summary>
+        List<AreaPageMenuItem> AareaPageMenuItems { get; }
     }
 }
