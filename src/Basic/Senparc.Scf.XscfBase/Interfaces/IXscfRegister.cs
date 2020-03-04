@@ -45,5 +45,12 @@ namespace Senparc.Scf.XscfBase
         /// 卸载代码
         /// </summary>
         Task UninstallAsync(Func<Task> unsinstallFunc);
+
+        /// <summary>
+        /// 获取首页Url
+        /// <para>仅限实现了 IAreaRegister 接口之后的 Register，否则将返回 null</para>
+        /// </summary>
+        /// <returns></returns>
+        string GetAreaHomeUrl();
     }
 }

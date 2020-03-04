@@ -15,13 +15,24 @@ namespace Senparc.Scf.AreaBase.Admin
     /// </summary>
     public abstract class AdminXscfModulePageModelBase : AdminPageModelBase
     {
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
         public string Uid { get; set; }
 
+        private XscfModuleDto _xscfModuleDto;
         /// <summary>
         /// XscfModuleDto
         /// </summary>
-        public virtual XscfModuleDto XscfModuleDto { get; set; }
+        public XscfModuleDto XscfModuleDto
+        {
+            get
+            {
+                if (_xscfModuleDto == null)
+                {
+                    SetXscfModuleDto();
+                }
+                return _xscfModuleDto;
+            }
+        }
 
         /// <summary>
         /// 当前正在操作的 XscfRegister
@@ -33,13 +44,11 @@ namespace Senparc.Scf.AreaBase.Admin
         /// </summary>
         public virtual List<IXscfRegister> XscfRegisterList => Senparc.Scf.XscfBase.Register.RegisterList;
 
-        protected readonly XscfModuleService _xscfModuleService;
+        protected readonly Lazy<XscfModuleService> _xscfModuleService;
 
-        protected AdminXscfModulePageModelBase(XscfModuleService xscfModuleService)
+        protected AdminXscfModulePageModelBase(Lazy<XscfModuleService> xscfModuleService)
         {
             _xscfModuleService = xscfModuleService;
-
-            SetXscfModuleDto();
         }
 
         public virtual void SetXscfModuleDto()
@@ -49,13 +58,13 @@ namespace Senparc.Scf.AreaBase.Admin
                 throw new XscfPageException(null, "页面未提供UID！");
             }
 
-            var xscfModule = _xscfModuleService.GetObject(z => z.Uid == Uid);
+            var xscfModule = _xscfModuleService.Value.GetObject(z => z.Uid == Uid);
             if (xscfModule == null)
             {
                 throw new XscfPageException(null, "尚未注册 XSCF 模块，UID：" + Uid);
             }
 
-            XscfModuleDto = _xscfModuleService.Mapper.Map<XscfModuleDto>(xscfModule);
+            _xscfModuleDto = _xscfModuleService.Value.Mapper.Map<XscfModuleDto>(xscfModule);
         }
     }
 }

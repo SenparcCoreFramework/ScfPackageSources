@@ -1,4 +1,5 @@
-﻿using Senparc.Scf.Core.Enums;
+﻿using Senparc.Scf.Core.Areas;
+using Senparc.Scf.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -56,6 +57,28 @@ namespace Senparc.Scf.XscfBase
         public virtual async Task UninstallAsync(Func<Task> unsinstallFunc)
         {
             await unsinstallFunc().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// 获取首页Url
+        /// <para>仅限实现了 IAreaRegister 接口之后的 Register，否则将返回 null</para>
+        /// </summary>
+        /// <returns></returns>
+        public virtual string GetAreaHomeUrl()
+        {
+            if (this is IAreaRegister)
+            {
+                var homeUrl = (this as IAreaRegister).HomeUrl;
+                if (homeUrl == null)
+                {
+                    return "/";
+                }
+
+                homeUrl += homeUrl.Contains("?") ? "&" : "?";
+                homeUrl += $"uid={Uid}";
+                return homeUrl;
+            }
+            return null;
         }
     }
 }
