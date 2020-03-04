@@ -114,11 +114,12 @@ namespace Senparc.Scf.XscfBase
         /// <summary>
         /// 扫描并安装
         /// </summary>
-        /// <param name="xscfModules">现有已安装的模块</param>
+        /// <param name="xscfModuleDtos">现有已安装的模块</param>
+        /// <param name="serviceProvider">IServiceProvider</param>
         /// <param name="afterInstalledOrUpdated">安装或更新后执行</param>
         /// <param name="justScanThisUid">只扫描并更新特定的Uid</param>
         /// <returns></returns>
-        public static async Task<string> ScanAndInstall(IList<CreateOrUpdate_XscfModuleDto> xscfModules,
+        public static async Task<string> ScanAndInstall(IList<CreateOrUpdate_XscfModuleDto> xscfModuleDtos,
             IServiceProvider serviceProvider,
             Func<IXscfRegister, InstallOrUpdate, Task> afterInstalledOrUpdated = null,
             string justScanThisUid = null)
@@ -144,7 +145,7 @@ namespace Senparc.Scf.XscfBase
                         sb.AppendLine($"[{SystemTime.Now}] 符合尝试安装/更新要求，继续执行");
                     }
 
-                    var xscfModuleStoredDto = xscfModules.FirstOrDefault(z => z.Uid == register.Uid);
+                    var xscfModuleStoredDto = xscfModuleDtos.FirstOrDefault(z => z.Uid == register.Uid);
                     var xscfModuleAssemblyDto = new UpdateVersion_XscfModuleDto(register.Name, register.Uid, register.MenuName, register.Version, register.Description);
 
                     //检查更新，并安装到数据库
