@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Senparc.CO2NET.Extensions;
 using Senparc.Scf.Core.Models.DataBaseModel;
+using Senparc.Scf.Service;
 using Senparc.Scf.XscfBase;
 using System;
 using System.Collections.Generic;
@@ -19,22 +21,41 @@ namespace Senparc.Scf.AreaBase.Admin
         /// <summary>
         /// XscfModuleDto
         /// </summary>
-        public abstract XscfModuleDto XscfModuleDto { get; set; }
+        public virtual XscfModuleDto XscfModuleDto { get; set; }
 
         /// <summary>
         /// 当前正在操作的 XscfRegister
         /// </summary>
-        public IXscfRegister XscfRegister => XscfModuleDto != null ? XscfRegisterList.FirstOrDefault(z => z.Uid == XscfModuleDto.Uid) : null;
+        public virtual IXscfRegister XscfRegister => XscfModuleDto != null ? XscfRegisterList.FirstOrDefault(z => z.Uid == XscfModuleDto.Uid) : null;
 
         /// <summary>
         /// 所有 XscfRegister 列表（包括还未注册的）
         /// </summary>
-        public List<IXscfRegister> XscfRegisterList => Senparc.Scf.XscfBase.Register.RegisterList;
+        public virtual List<IXscfRegister> XscfRegisterList => Senparc.Scf.XscfBase.Register.RegisterList;
 
+        protected readonly XscfModuleService _xscfModuleService;
 
-        public AdminXscfModulePageModelBase()
+        protected AdminXscfModulePageModelBase(XscfModuleService xscfModuleService)
         {
+            _xscfModuleService = xscfModuleService;
 
+            SetXscfModuleDto();
+        }
+
+        public virtual void SetXscfModuleDto()
+        {
+            if (Uid.IsNullOrEmpty())
+            {
+                throw new XscfPageException(null, "页面未提供UID！");
+            }
+
+            var xscfModule = _xscfModuleService.GetObject(z => z.Uid == Uid);
+            if (xscfModule == null)
+            {
+                throw new XscfPageException(null, "尚未注册 XSCF 模块，UID：" + Uid);
+            }
+
+            XscfModuleDto = _xscfModuleService.Mapper.Map<XscfModuleDto>(xscfModule);
         }
     }
 }
