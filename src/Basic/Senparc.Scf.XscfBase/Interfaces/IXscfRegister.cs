@@ -36,10 +36,7 @@ namespace Senparc.Scf.XscfBase
         /// 注册方法，注册的顺序决定了界面中排列的顺序
         /// </summary>
         IList<Type> Functions { get; }
-        /// <summary>
-        /// 如果提供了 UI 界面，必须指定一个首页
-        /// </summary>
-        string HomeUrl { get; }
+
         /// <summary>
         /// 安装代码
         /// </summary>
