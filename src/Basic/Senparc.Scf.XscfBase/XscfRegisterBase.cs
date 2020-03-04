@@ -69,14 +69,28 @@ namespace Senparc.Scf.XscfBase
             if (this is IAreaRegister)
             {
                 var homeUrl = (this as IAreaRegister).HomeUrl;
-                if (homeUrl == null)
+                return GetAreaUrl(homeUrl);
+            }
+            return null;
+        }
+        /// <summary>
+        /// 获取指定网页的Url
+        /// <para>仅限实现了 IAreaRegister 接口之后的 Register，否则将返回 null</para>
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public virtual string GetAreaUrl(string path)
+        {
+            if (this is IAreaRegister)
+            {
+                if (path == null)
                 {
                     return "/";
                 }
 
-                homeUrl += homeUrl.Contains("?") ? "&" : "?";
-                homeUrl += $"uid={Uid}";
-                return homeUrl;
+                path += path.Contains("?") ? "&" : "?";
+                path += $"uid={Uid}";
+                return path;
             }
             return null;
         }

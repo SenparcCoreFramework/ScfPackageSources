@@ -52,5 +52,7 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         /// <returns></returns>
         string GetAreaHomeUrl();
+
+        string GetAreaUrl(string path);
     }
 }
