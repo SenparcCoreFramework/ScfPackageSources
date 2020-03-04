@@ -9,17 +9,17 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
 {
     public class XscfModuleDto : DtoBase
     {
-        public int Id { get; }
-        public string Name { get; }
-        public string Uid { get; }
-        public string MenuName { get; }
-        public string Version { get; }
-        public string Description { get; }
-        public string UpdateLog { get; }
-        public bool AllowRemove { get; }
-        public string MenuId { get; }
-        public string Icon { get; }
-        public XscfModules_State State { get; }
+        public int Id { get; private set; }
+        public string Name { get; private set; }
+        public string Uid { get; private set; }
+        public string MenuName { get; private set; }
+        public string Version { get; private set; }
+        public string Description { get; private set; }
+        public string UpdateLog { get; private set; }
+        public bool AllowRemove { get; private set; }
+        public string MenuId { get; private set; }
+        public string Icon { get; private set; }
+        public XscfModules_State State { get; private set; }
         private XscfModuleDto() { }
 
 
@@ -82,15 +82,15 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
     {
 
         [Required, StringLength(100)]
-        public string Name { get; }
+        public string Name { get; private set; }
         [Required, StringLength(100)]
-        public string Uid { get; }
+        public string Uid { get; private set; }
         [Required, StringLength(100)]
-        public string MenuName { get; }
+        public string MenuName { get; private set; }
         [Required]
-        public string Version { get; }
+        public string Version { get; private set; }
         [Required]
-        public string Description { get; }
+        public string Description { get; private set; }
 
         private UpdateVersion_XscfModuleDto() { }
 
@@ -112,7 +112,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
     {
         public string Uid { get; set; }
 
-        public string MenuId { get; }
+        public string MenuId { get; private set; }
 
         private UpdateMenuId_XscfModuleDto() { }
 
