@@ -6,7 +6,7 @@ namespace Senparc.Scf.Core.Exceptions
 {
     public class ScfModuleException : SCFExceptionBase
     {
-     public IXscfRegister   XscfRegister
+        //public IXscfRegister XscfRegister;
         public ScfModuleException(string message, bool logged = false) : base(message, logged)
         {
         }

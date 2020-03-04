@@ -8,28 +8,28 @@ using System.Threading.Tasks;
 
 namespace Senparc.Scf.XscfBase.Tests
 {
-    public class TestModule : IXscfRegister
+    public class TestModule : XscfRegisterBase, IXscfRegister
     {
-        public string Name => "Senparc.Scf.XscfBase.Tests.TestModule";
+        public override string Name => "Senparc.Scf.XscfBase.Tests.TestModule";
 
-        public string Uid => "000111";
+        public override string Uid => "000111";
 
-        public string Version => "1.0";
+        public override string Version => "1.0";
 
-        public string MenuName => "测试模块";
-        public string Icon => "fa fa-space-shuttle";//参考如：https://colorlib.com/polygon/gentelella/icons.html
+        public override string MenuName => "测试模块";
+        public override string Icon => "fa fa-space-shuttle";//参考如：https://colorlib.com/polygon/gentelella/icons.html
        
-        public string Description => "这是测试模块的介绍";
+        public override string Description => "这是测试模块的介绍";
 
-        public IList<Type> Functions => new List<Type>() { typeof(FunctionBaseTest_Function) };
+        public override IList<Type> Functions => new List<Type>() { typeof(FunctionBaseTest_Function) };
 
-        public Task InstallOrUpdateAsync(InstallOrUpdate installOrUpdate)
+        public override Task InstallOrUpdateAsync(InstallOrUpdate installOrUpdate)
         {
             Console.WriteLine(installOrUpdate);
             return Task.CompletedTask;
         }
 
-        public async Task UninstallAsync(Func<Task> unsinstallFunc)
+        public override async Task UninstallAsync(Func<Task> unsinstallFunc)
         {
             Console.WriteLine("Uninstall");
             await unsinstallFunc().ConfigureAwait(false);
