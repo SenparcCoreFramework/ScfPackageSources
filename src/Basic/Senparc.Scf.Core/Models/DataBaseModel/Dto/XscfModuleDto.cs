@@ -9,7 +9,6 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
 {
     public class XscfModuleDto : DtoBase
     {
-
         public int Id { get; }
         public string Name { get; }
         public string Uid { get; }
