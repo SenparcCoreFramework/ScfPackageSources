@@ -15,9 +15,6 @@ namespace Senparc.Scf.AreaBase.Admin
     /// </summary>
     public abstract class AdminXscfModulePageModelBase : AdminPageModelBase
     {
-        [BindProperty(SupportsGet = true)]
-        public string Uid { get; set; }
-
         private XscfModuleDto _xscfModuleDto;
         /// <summary>
         /// XscfModuleDto
