@@ -9,7 +9,9 @@ namespace Senparc.Scf.AreaBase.Admin//  Senparc.Areas.Admin
 
     public interface IAdminPageModelBase : IPageModelBase
     {
+        AdminWorkContext AdminWorkContext { get; set; }
 
+        IActionResult RenderError(string message);
     }
 
     //暂时取消权限验证
@@ -17,11 +19,10 @@ namespace Senparc.Scf.AreaBase.Admin//  Senparc.Areas.Admin
     [AdminAuthorize("AdminOnly")]
     public class AdminPageModelBase : PageModelBase, IAdminPageModelBase
     {
-
         /// <summary>
         /// 存储相关用户信息
         /// </summary>
-        public AdminWorkContext AdminWorkContext { get; set; }
+        public virtual AdminWorkContext AdminWorkContext { get; set; }
 
         public virtual IActionResult RenderError(string message)
         {

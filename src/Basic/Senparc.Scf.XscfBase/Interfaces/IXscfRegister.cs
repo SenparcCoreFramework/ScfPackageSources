@@ -36,6 +36,7 @@ namespace Senparc.Scf.XscfBase
         /// 注册方法，注册的顺序决定了界面中排列的顺序
         /// </summary>
         IList<Type> Functions { get; }
+
         /// <summary>
         /// 安装代码
         /// </summary>
@@ -44,5 +45,14 @@ namespace Senparc.Scf.XscfBase
         /// 卸载代码
         /// </summary>
         Task UninstallAsync(Func<Task> unsinstallFunc);
+
+        /// <summary>
+        /// 获取首页Url
+        /// <para>仅限实现了 IAreaRegister 接口之后的 Register，否则将返回 null</para>
+        /// </summary>
+        /// <returns></returns>
+        string GetAreaHomeUrl();
+
+        string GetAreaUrl(string path);
     }
 }
