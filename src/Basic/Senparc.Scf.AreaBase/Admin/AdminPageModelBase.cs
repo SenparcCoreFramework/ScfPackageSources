@@ -12,7 +12,7 @@ namespace Senparc.Scf.AreaBase.Admin//  Senparc.Areas.Admin
     public interface IAdminPageModelBase : IPageModelBase
     {
         AdminWorkContext AdminWorkContext { get; set; }
-
+        string Uid { get; set; }
         List<IXscfRegister> XscfRegisterList { get; }
 
         IActionResult RenderError(string message);
@@ -27,6 +27,9 @@ namespace Senparc.Scf.AreaBase.Admin//  Senparc.Areas.Admin
         /// 存储相关用户信息
         /// </summary>
         public virtual AdminWorkContext AdminWorkContext { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string Uid { get; set; }
 
         /// <summary>
         /// 所有 XscfRegister 列表（包括还未注册的）
