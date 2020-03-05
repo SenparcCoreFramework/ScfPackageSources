@@ -3,6 +3,8 @@ using Senparc.Scf.AreaBase.Admin.Filters;
 using Senparc.Scf.Core.Models.VD;
 using Senparc.Scf.Core.WorkContext;
 using Senparc.Scf.Mvc.UI;
+using Senparc.Scf.XscfBase;
+using System.Collections.Generic;
 
 namespace Senparc.Scf.AreaBase.Admin//  Senparc.Areas.Admin
 {
@@ -10,6 +12,8 @@ namespace Senparc.Scf.AreaBase.Admin//  Senparc.Areas.Admin
     public interface IAdminPageModelBase : IPageModelBase
     {
         AdminWorkContext AdminWorkContext { get; set; }
+
+        List<IXscfRegister> XscfRegisterList { get; }
 
         IActionResult RenderError(string message);
     }
@@ -23,6 +27,12 @@ namespace Senparc.Scf.AreaBase.Admin//  Senparc.Areas.Admin
         /// 存储相关用户信息
         /// </summary>
         public virtual AdminWorkContext AdminWorkContext { get; set; }
+
+        /// <summary>
+        /// 所有 XscfRegister 列表（包括还未注册的）
+        /// </summary>
+        public virtual List<IXscfRegister> XscfRegisterList => Senparc.Scf.XscfBase.Register.RegisterList;
+
 
         public virtual IActionResult RenderError(string message)
         {

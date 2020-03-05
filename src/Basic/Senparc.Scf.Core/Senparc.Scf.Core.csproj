@@ -19,7 +19,7 @@
       v0.1 创世
       v0.1.1 完善自动部署模块 Xscf
       v0.3.101 丰富 XscfModule 的数据库属性
-</PackageReleaseNotes>
+    </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/SenparcCoreFramework/ScfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
