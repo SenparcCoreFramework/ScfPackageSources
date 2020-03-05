@@ -39,11 +39,6 @@ namespace Senparc.Scf.AreaBase.Admin
         /// </summary>
         public virtual IXscfRegister XscfRegister => XscfModuleDto != null ? XscfRegisterList.FirstOrDefault(z => z.Uid == XscfModuleDto.Uid) : null;
 
-        /// <summary>
-        /// 所有 XscfRegister 列表（包括还未注册的）
-        /// </summary>
-        public virtual List<IXscfRegister> XscfRegisterList => Senparc.Scf.XscfBase.Register.RegisterList;
-
         protected readonly Lazy<XscfModuleService> _xscfModuleService;
 
         protected AdminXscfModulePageModelBase(Lazy<XscfModuleService> xscfModuleService)
