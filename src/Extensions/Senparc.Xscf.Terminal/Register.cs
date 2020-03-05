@@ -9,20 +9,20 @@ using System.Threading.Tasks;
 namespace Senparc.Xscf.Terminal
 {
     [XscfRegister]
-    public class Register : IXscfRegister
+    public class Register : XscfRegisterBase, IXscfRegister
     {
         public Register()
         { }
 
         #region IRegister 接口
 
-        public string Name => "Senparc.Xscf.Terminal";
-        public string Uid => "600C608A-F99A-4B1B-A18E-8CE69BE8DA92";//必须确保全局唯一，生成后必须固定
-        public string Version => "0.1.5";//必须填写版本号
+        public override string Name => "Senparc.Xscf.Terminal";
+        public override string Uid => "600C608A-F99A-4B1B-A18E-8CE69BE8DA92";//必须确保全局唯一，生成后必须固定
+        public override string Version => "0.1.5";//必须填写版本号
 
-        public string MenuName => "终端模块";
-        public string Icon => "fa fa-terminal";
-        public string Description => $"此模块提供给开发者一个可以直接使用终端命令控制系统的模块！" +
+        public override string MenuName => "终端模块";
+        public override string Icon => "fa fa-terminal";
+        public override string Description => $"此模块提供给开发者一个可以直接使用终端命令控制系统的模块！" +
                                       $"目前可以使用的命令如下:" +
                                       $"=================================" +
                                       $"'CD',             //Displays the name of or changes the current directory." +
@@ -74,16 +74,16 @@ namespace Senparc.Xscf.Terminal
         /// <summary>
         /// 注册当前模块需要支持的功能模块
         /// </summary>
-        public IList<Type> Functions => new[] { 
+        public override IList<Type> Functions => new[] { 
             typeof(Functions.Terminal),
         };
 
-        public virtual Task InstallOrUpdateAsync(InstallOrUpdate installOrUpdate)
+        public override Task InstallOrUpdateAsync(InstallOrUpdate installOrUpdate)
         {
             return Task.CompletedTask;
         }
 
-        public virtual async Task UninstallAsync(Func<Task> unsinstallFunc)
+        public override async Task UninstallAsync(Func<Task> unsinstallFunc)
         {
             await unsinstallFunc().ConfigureAwait(false);
         }
