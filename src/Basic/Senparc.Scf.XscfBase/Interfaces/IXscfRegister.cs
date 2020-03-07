@@ -41,11 +41,11 @@ namespace Senparc.Scf.XscfBase
         /// <summary>
         /// 安装代码
         /// </summary>
-        Task InstallOrUpdateAsync(InstallOrUpdate installOrUpdate);
+        Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate);
         /// <summary>
         /// 卸载代码
         /// </summary>
-        Task UninstallAsync(Func<Task> unsinstallFunc);
+        Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc);
 
         /// <summary>
         /// 获取首页Url
