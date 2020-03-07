@@ -10,6 +10,10 @@ using System.Text;
 
 namespace Senparc.Scf.XscfBase.Database
 {
+    /// <summary>
+    /// 提供给数据库 Migration 使用的 DesignTimeDbContextFactory
+    /// </summary>
+    /// <typeparam name="TSenparcEntities"></typeparam>
     public abstract class SenparcDbContextFactoryBase<TSenparcEntities> : IDesignTimeDbContextFactory<TSenparcEntities>
          where TSenparcEntities : DbContext
     {
