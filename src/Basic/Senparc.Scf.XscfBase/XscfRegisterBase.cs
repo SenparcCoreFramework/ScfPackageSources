@@ -1,4 +1,5 @@
-﻿using Senparc.Scf.Core.Areas;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Senparc.Scf.Core.Areas;
 using Senparc.Scf.Core.Enums;
 using System;
 using System.Collections.Generic;
@@ -93,6 +94,11 @@ namespace Senparc.Scf.XscfBase
                 return path;
             }
             return null;
+        }
+
+        public virtual IServiceCollection AddXscfModule(IServiceCollection services)
+        {
+            return services;
         }
     }
 }

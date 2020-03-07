@@ -1,4 +1,5 @@
-﻿using Senparc.Scf.Core.Enums;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Senparc.Scf.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -53,6 +54,18 @@ namespace Senparc.Scf.XscfBase
         /// <returns></returns>
         string GetAreaHomeUrl();
 
+        /// <summary>
+        /// 获取 Area 其他页面的 URL
+        /// </summary>
+        /// <param name="path">URL 路径（不带 uid 参数）</param>
+        /// <returns></returns>
         string GetAreaUrl(string path);
+
+        /// <summary>
+        /// 在 ConfigureServices 启动时注册当前模块
+        /// </summary>
+        /// <param name="services">IServiceCollection</param>
+        /// <returns></returns>
+        IServiceCollection AddXscfModule(IServiceCollection services);
     }
 }

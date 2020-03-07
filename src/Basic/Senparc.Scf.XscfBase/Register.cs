@@ -21,6 +21,10 @@ namespace Senparc.Scf.XscfBase
         /// 模块和方法集合 TODO：可放置到缓存中
         /// </summary>
         public static List<IXscfRegister> RegisterList { get; set; } = new List<IXscfRegister>();
+        /// <summary>
+        /// 带有数据库的模块 TODO：可放置到缓存中
+        /// </summary>
+        public static List<IXscfDatabase> XscfDatabaseList => RegisterList.Where(z => z is IXscfDatabase).Select(z => z as IXscfDatabase).ToList();
 
         /// <summary>
         /// 初始化扫描
@@ -108,6 +112,15 @@ namespace Senparc.Scf.XscfBase
                 }
             }
             sb.AppendLine($"[{SystemTime.Now}] 初始化扫描结束，共扫描 {scanTypesCount} 个程序集");
+
+
+            //微模块进行 Service 注册
+            foreach (var xscfRegister in RegisterList)
+            {
+                xscfRegister.AddXscfModule(services);
+                sb.AppendLine($"[{SystemTime.Now}] 完成模块 services.AddXscfModule() 注册：共扫描 {scanTypesCount} 个程序集");
+            }
+
             return sb.ToString();
         }
 
