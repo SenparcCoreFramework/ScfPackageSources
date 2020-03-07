@@ -23,13 +23,13 @@ namespace Senparc.Scf.XscfBase.Tests
 
         public override IList<Type> Functions => new List<Type>() { typeof(FunctionBaseTest_Function) };
 
-        public override Task InstallOrUpdateAsync(InstallOrUpdate installOrUpdate)
+        public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             Console.WriteLine(installOrUpdate);
             return Task.CompletedTask;
         }
 
-        public override async Task UninstallAsync(Func<Task> unsinstallFunc)
+        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             Console.WriteLine("Uninstall");
             await unsinstallFunc().ConfigureAwait(false);

@@ -48,14 +48,14 @@ namespace Senparc.Scf.XscfBase
         /// <summary>
         /// 安装代码
         /// </summary>
-        public virtual Task InstallOrUpdateAsync(InstallOrUpdate installOrUpdate)
+        public virtual Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             return Task.CompletedTask;
         }
         /// <summary>
         /// 卸载代码
         /// </summary>
-        public virtual async Task UninstallAsync(Func<Task> unsinstallFunc)
+        public virtual async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             await unsinstallFunc().ConfigureAwait(false);
         }

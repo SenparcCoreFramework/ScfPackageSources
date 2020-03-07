@@ -171,7 +171,7 @@ namespace Senparc.Scf.XscfBase
                         updatedCount++;
 
                         //执行安装程序
-                        await register.InstallOrUpdateAsync(installOrUpdate.Value).ConfigureAwait(false);
+                        await register.InstallOrUpdateAsync(serviceProvider, installOrUpdate.Value).ConfigureAwait(false);
 
                         await afterInstalledOrUpdated?.Invoke(register, installOrUpdate.Value);
                     }
