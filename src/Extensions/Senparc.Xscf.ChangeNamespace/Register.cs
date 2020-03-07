@@ -33,12 +33,12 @@ namespace Senparc.Xscf.ChangeNamespace
             typeof(Functions.DownloadSourceCode),
         };
 
-        public override Task InstallOrUpdateAsync(InstallOrUpdate installOrUpdate)
+        public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             return Task.CompletedTask;
         }
 
-        public override async Task UninstallAsync(Func<Task> unsinstallFunc)
+        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             await unsinstallFunc().ConfigureAwait(false);
         }

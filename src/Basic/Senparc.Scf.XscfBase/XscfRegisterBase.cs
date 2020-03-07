@@ -1,4 +1,5 @@
-﻿using Senparc.Scf.Core.Areas;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Senparc.Scf.Core.Areas;
 using Senparc.Scf.Core.Enums;
 using System;
 using System.Collections.Generic;
@@ -47,14 +48,14 @@ namespace Senparc.Scf.XscfBase
         /// <summary>
         /// 安装代码
         /// </summary>
-        public virtual Task InstallOrUpdateAsync(InstallOrUpdate installOrUpdate)
+        public virtual Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             return Task.CompletedTask;
         }
         /// <summary>
         /// 卸载代码
         /// </summary>
-        public virtual async Task UninstallAsync(Func<Task> unsinstallFunc)
+        public virtual async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             await unsinstallFunc().ConfigureAwait(false);
         }
@@ -93,6 +94,11 @@ namespace Senparc.Scf.XscfBase
                 return path;
             }
             return null;
+        }
+
+        public virtual IServiceCollection AddXscfModule(IServiceCollection services)
+        {
+            return services;
         }
     }
 }
