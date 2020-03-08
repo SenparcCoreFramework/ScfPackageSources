@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.Scf.Core.Areas;
 using Senparc.Scf.Core.Enums;
+using Senparc.Scf.XscfBase.Database;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -45,6 +48,20 @@ namespace Senparc.Scf.XscfBase
         /// 如果提供了 UI 界面，必须指定一个首页
         /// </summary>
         public virtual string HomeUrl => null;
+
+        /// <summary>
+        /// 执行 Migrate 更新数据
+        /// </summary>
+        /// <typeparam name="TSenparcEntities"></typeparam>
+        /// <param name="serviceProvider"></param>
+        /// <returns></returns>
+        protected virtual async Task MigrateDatabaseAsync<TSenparcEntities>(IServiceProvider serviceProvider)
+            where TSenparcEntities : XscfDatabaseDbContext
+        {
+            var mySenparcEntities = serviceProvider.GetService<TSenparcEntities>();
+            await mySenparcEntities.Database.MigrateAsync().ConfigureAwait(false);//更新数据库
+        }
+
         /// <summary>
         /// 安装代码
         /// </summary>
@@ -99,6 +116,20 @@ namespace Senparc.Scf.XscfBase
         public virtual IServiceCollection AddXscfModule(IServiceCollection services)
         {
             return services;
+        }
+
+        public virtual void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction)
+        {
+            if (this is IXscfDatabase databaseRegiser)
+            {
+                if (dbContextOptionsAction is SqlServerDbContextOptionsBuilder sqlServerOptionsAction)
+                {
+                    sqlServerOptionsAction.MigrationsAssembly(databaseRegiser.SenparcEntitiesAssemblyName)
+                  .MigrationsHistoryTable("__" + databaseRegiser.DatabaseUniquePrefix + "_EFMigrationsHistory");
+                }
+
+                //可以支持其他跟他多数据库
+            }
         }
     }
 }

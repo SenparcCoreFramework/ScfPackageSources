@@ -6,6 +6,7 @@ using Senparc.Scf.Core.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace Senparc.Scf.XscfBase.Database
@@ -14,8 +15,9 @@ namespace Senparc.Scf.XscfBase.Database
     /// 提供给数据库 Migration 使用的 DesignTimeDbContextFactory
     /// </summary>
     /// <typeparam name="TSenparcEntities"></typeparam>
-    public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities> : IDesignTimeDbContextFactory<TSenparcEntities>
-         where TSenparcEntities : DbContext
+    public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TXscfDatabase> : IDesignTimeDbContextFactory<TSenparcEntities>
+         where TSenparcEntities : XscfDatabaseDbContext
+        where TXscfDatabase : class, IXscfDatabase, new()
     {
         public virtual string RootDictionaryPath => Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\");
 
@@ -23,19 +25,21 @@ namespace Senparc.Scf.XscfBase.Database
 
         public virtual string SqlConnectionStr => SenparcDatabaseConfigs.ClientConnectionString ?? "Server=.\\;Database=SCF;Trusted_Connection=True;integrated security=True;";
 
-        public abstract string AssemblyName { get; }
-
         public abstract TSenparcEntities GetInstance(DbContextOptions<TSenparcEntities> dbContextOptions);
 
-        public TSenparcEntities CreateDbContext(string[] args)
+        public virtual TSenparcEntities CreateDbContext(string[] args)
         {
             //修复 https://github.com/SenparcCoreFramework/SCF/issues/13 发现的问题（在非Web环境下无法得到网站根目录路径）
-            IRegisterService register = RegisterService.Start(SenparcSetting);
+            IRegisterService co2netRegister = RegisterService.Start(SenparcSetting);
             CO2NET.Config.RootDictionaryPath = RootDictionaryPath;
 
-            var builder = new DbContextOptionsBuilder<TSenparcEntities>();
+            var register = System.Activator.CreateInstance<TXscfDatabase>() as TXscfDatabase;
 
-            builder.UseSqlServer(SqlConnectionStr, b => b.MigrationsAssembly(AssemblyName));
+            //配置数据库
+            var builder = new DbContextOptionsBuilder<TSenparcEntities>();
+            builder.UseSqlServer(SqlConnectionStr, b => register.DbContextOptionsAction(b));
+
+            //还可以补充更多的数据库类型
 
             return GetInstance(builder.Options);
         }
