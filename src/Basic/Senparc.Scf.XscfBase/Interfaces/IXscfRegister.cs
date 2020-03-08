@@ -68,5 +68,11 @@ namespace Senparc.Scf.XscfBase
         /// <param name="services">IServiceCollection</param>
         /// <returns></returns>
         IServiceCollection AddXscfModule(IServiceCollection services);
+
+        /// <summary>
+        /// 获取 EF Code First MigrationHistory 数据库表名
+        /// </summary>
+        /// <returns></returns>
+        string GetDatabaseMigrationHistoryTableName();
     }
 }

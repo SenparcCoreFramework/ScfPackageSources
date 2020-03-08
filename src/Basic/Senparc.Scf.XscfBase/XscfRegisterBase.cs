@@ -128,9 +128,9 @@ namespace Senparc.Scf.XscfBase
         /// <returns></returns>
         public virtual IServiceCollection AddXscfModule(IServiceCollection services)
         {
-            //TODO：自动搜索符合条件的DB
             if (this is IXscfDatabase databaseRegister)
             {
+                //定义 XscfSenparcEntities 实例生成
                 Func<IServiceProvider, object> implementationFactory = s =>
                 {
                     //DbContextOptionsBuilder
@@ -143,14 +143,28 @@ namespace Senparc.Scf.XscfBase
                     var xscfSenparcEntities = Activator.CreateInstance(databaseRegister.XscfDatabaseDbContextType, new object[] { dbOptionBuilder.Options });
                     return xscfSenparcEntities;
                 };
-
+                //添加 XscfSenparcEntities 依赖注入配置
                 services.AddScoped(databaseRegister.XscfDatabaseDbContextType, implementationFactory);
-
+                //
                 EntitySetKeys.GetEntitySetKeys(databaseRegister.XscfDatabaseDbContextType);//注册当前数据库的对象（必须）
 
+                //添加数据库相关
                 databaseRegister.AddXscfDatabaseModule(services);
             }
             return services;
+        }
+
+        /// <summary>
+        /// 获取 EF Code First MigrationHistory 数据库表名
+        /// </summary>
+        /// <returns></returns>
+        public virtual string GetDatabaseMigrationHistoryTableName()
+        {
+            if (this is IXscfDatabase databaseRegiser)
+            {
+                return "__" + databaseRegiser.DatabaseUniquePrefix + "_EFMigrationsHistory";
+            }
+            return null;
         }
 
         public virtual void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction)
@@ -160,8 +174,11 @@ namespace Senparc.Scf.XscfBase
                 if (dbContextOptionsAction is SqlServerDbContextOptionsBuilder sqlServerOptionsAction)
                 {
                     var senparcEntitiesAssemblyName = databaseRegiser.XscfDatabaseDbContextType.Assembly.FullName;
-                    sqlServerOptionsAction.MigrationsAssembly(senparcEntitiesAssemblyName)
-                  .MigrationsHistoryTable("__" + databaseRegiser.DatabaseUniquePrefix + "_EFMigrationsHistory");
+                    var databaseMigrationHistoryTableName = GetDatabaseMigrationHistoryTableName();
+
+                    sqlServerOptionsAction
+                        .MigrationsAssembly(senparcEntitiesAssemblyName)
+                        .MigrationsHistoryTable(databaseMigrationHistoryTableName);
                 }
 
                 //可以支持其他跟他多数据库

@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 
 namespace Senparc.Scf.Core.Models
 {
     /// <summary>
-    /// 
+    /// 所有 EntityFramework 中 Entitey 的 SetKey 的集合
     /// </summary>
     public static class EntitySetKeys
     {
@@ -16,25 +17,31 @@ namespace Senparc.Scf.Core.Models
 
         internal static object DbContextStoreLock = new object();
 
-        public static EntitySetKeysDictionary GetEntitySetKeys(Type tryLoadDbContextType)
+        /// <summary>
+        /// 获取 Entity SetKey 集合
+        /// </summary>
+        /// <param name="tryLoadDbContextType">DbContext 类型</param>
+        /// <param name="includeOtherEntityKeys">是否包含所有 DbContext 的 SetKeys</param>
+        /// <returns></returns>
+        public static EntitySetKeysDictionary GetEntitySetKeys(Type tryLoadDbContextType, bool includeOtherEntityKeys = false)
         {
-            var keysDic = new EntitySetKeysDictionary();//当前类型内包含的 SetKeys
-            var keys = keysDic.GetKeys(tryLoadDbContextType);
-            if (keys.Count > 0)
+            var setKeysDic = new EntitySetKeysDictionary();//当前类型内包含的 SetKeys
+            setKeysDic.GetKeys(tryLoadDbContextType);
+            foreach (var setKey in setKeysDic)
             {
-                foreach (var key in keys)
-                {
-                    AllKeys[key.Key] = key.Value;//添加到全局的序列中
-                }
+                AllKeys[setKey.Key] = setKey.Value;//添加到全局的序列中
             }
-            return keysDic;
+            if (includeOtherEntityKeys)
+            {
+                return AllKeys;
+            }
+            return setKeysDic;
         }
     }
-
     /// <summary>
     /// 与ORM实体类对应的实体集
     /// </summary>
-    public class EntitySetKeysDictionary : Dictionary<Type, string>
+    public class EntitySetKeysDictionary : ConcurrentDictionary<Type, string>
     {
         public EntitySetKeysDictionary GetKeys(Type tryLoadDbContextType)
         {
@@ -88,7 +95,7 @@ namespace Senparc.Scf.Core.Models
             {
                 if (!base.ContainsKey(entityType))
                 {
-                    throw new Exception("未找到实体类型");
+                    throw new Exception($"未找到实体类型：{entityType.FullName}");
                 }
                 return base[entityType];
             }
