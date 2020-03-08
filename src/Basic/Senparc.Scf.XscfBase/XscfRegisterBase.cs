@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Scf.Core.Areas;
 using Senparc.Scf.Core.Enums;
+using Senparc.Scf.Core.Models;
 using Senparc.Scf.XscfBase.Database;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -113,8 +115,44 @@ namespace Senparc.Scf.XscfBase
             return null;
         }
 
+        /// <summary>
+        /// 添加模块
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public virtual IServiceCollection AddXscfModule(IServiceCollection services)
         {
+            //TODO：自动搜索符合条件的DB
+            if (this is IXscfDatabase databaseRegiser)
+            {
+                Func<IServiceProvider, object> implementationFactory = s =>
+                {
+                    //DbContextOptionsBuilder
+                    var dbOptionBuilderType = typeof(DbContextOptionsBuilder<>);
+                    dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(databaseRegiser.XscfDatabaseDbContextType);
+                    object dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType);
+
+                    Action<SqlServerDbContextOptionsBuilder> sqlServerOptionsAction = b => databaseRegiser.DbContextOptionsAction(b);
+
+
+                    var builder = dbOptionBuilderType.InvokeMember("UseSqlServer", BindingFlags.Default | BindingFlags.InvokeMethod,
+                                                         null, dbOptionBuilder,
+                                                         new object[] {
+                                                        Scf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString,
+                                                        sqlServerOptionsAction
+                                                         });
+                    builder = dbOptionBuilderType.InvokeMember("Options", BindingFlags.Default | BindingFlags.Public, null, dbOptionBuilder, null);
+
+                    var xscfSenparcEntities = Activator.CreateInstance(databaseRegiser.XscfDatabaseDbContextType, new object[] { builder });
+                    return xscfSenparcEntities;
+                };
+
+                services.AddScoped(databaseRegiser.XscfDatabaseDbContextType, implementationFactory);
+
+                EntitySetKeys.GetEntitySetKeys(databaseRegiser.XscfDatabaseDbContextType);//注册当前数据库的对象（必须）
+
+                databaseRegiser.AddXscfDatabaseModule(services);
+            }
             return services;
         }
 

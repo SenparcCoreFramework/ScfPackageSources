@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.Scf.XscfBase.Database;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -28,5 +30,16 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         /// <param name="dbContextOptionsAction"></param>
         void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction);
+
+        /// <summary>
+        /// XscfDatabaseDbContext 类型
+        /// </summary>
+        public Type XscfDatabaseDbContextType { get; }
+
+        /// <summary>
+        /// 添加数据库模块
+        /// </summary>
+        /// <param name="services"></param>
+        void AddXscfDatabaseModule(IServiceCollection services);
     }
 }
