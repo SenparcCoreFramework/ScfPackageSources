@@ -25,12 +25,14 @@ namespace Senparc.Scf.XscfBase
         /// 设置数据库，主要提供给使用
         /// </summary>
         /// <param name="dbContextOptionsAction"></param>
-        void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction);
+        /// <param name="assemblyName">MigrationsAssembly 的程序集名称，如果为 null，为默认使用当前 XscfDatabaseDbContextType 所在的程序集</param>
+        void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction,
+                                    string assemblyName = null);
 
         /// <summary>
         /// XscfDatabaseDbContext 类型
         /// </summary>
-        public Type XscfDatabaseDbContextType { get; }
+        Type XscfDatabaseDbContextType { get; }
 
         /// <summary>
         /// 添加数据库模块

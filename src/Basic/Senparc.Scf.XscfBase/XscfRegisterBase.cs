@@ -188,7 +188,7 @@ namespace Senparc.Scf.XscfBase
                     //创建 DbContextOptionsBuilder 实例
                     DbContextOptionsBuilder dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
                     //继续定义配置
-                    dbOptionBuilder = SqlServerDbContextOptionsExtensions.UseSqlServer(dbOptionBuilder, Scf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString, databaseRegister.DbContextOptionsAction);
+                    dbOptionBuilder = SqlServerDbContextOptionsExtensions.UseSqlServer(dbOptionBuilder, Scf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString, b => databaseRegister.DbContextOptionsAction(b, null));
                     //创建 SenparcEntities 实例
                     var xscfSenparcEntities = Activator.CreateInstance(databaseRegister.XscfDatabaseDbContextType, new object[] { dbOptionBuilder.Options });
                     return xscfSenparcEntities;
@@ -217,13 +217,19 @@ namespace Senparc.Scf.XscfBase
             return null;
         }
 
-        public virtual void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction)
+        /// <summary>
+        /// 数据库 DbContext 选项配置
+        /// </summary>
+        /// <param name="dbContextOptionsAction"></param>
+        /// <param name="assemblyName">MigrationsAssembly 的程序集名称，如果为 null，为默认使用当前 XscfDatabaseDbContextType 所在的程序集</param>
+        public virtual void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction,
+                                                   string assemblyName = null)
         {
             if (this is IXscfDatabase databaseRegiser)
             {
                 if (dbContextOptionsAction is SqlServerDbContextOptionsBuilder sqlServerOptionsAction)
                 {
-                    var senparcEntitiesAssemblyName = databaseRegiser.XscfDatabaseDbContextType.Assembly.FullName;
+                    var senparcEntitiesAssemblyName = assemblyName ?? databaseRegiser.XscfDatabaseDbContextType.Assembly.FullName;
                     var databaseMigrationHistoryTableName = GetDatabaseMigrationHistoryTableName();
 
                     sqlServerOptionsAction

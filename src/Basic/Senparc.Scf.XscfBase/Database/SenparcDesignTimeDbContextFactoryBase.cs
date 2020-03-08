@@ -15,7 +15,7 @@ namespace Senparc.Scf.XscfBase.Database
     /// 提供给数据库 Migration 使用的 DesignTimeDbContextFactory
     /// </summary>
     /// <typeparam name="TSenparcEntities"></typeparam>
-    public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TXscfDatabase> 
+    public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TXscfDatabase>
         : IDesignTimeDbContextFactory<TSenparcEntities>
             where TSenparcEntities : XscfDatabaseDbContext
             where TXscfDatabase : class, IXscfDatabase, new()
@@ -46,7 +46,7 @@ namespace Senparc.Scf.XscfBase.Database
 
             //配置数据库
             var builder = new DbContextOptionsBuilder<TSenparcEntities>();
-            builder.UseSqlServer(SqlConnectionStr, register.DbContextOptionsAction);
+            builder.UseSqlServer(SqlConnectionStr, b => register.DbContextOptionsAction(b, null));
 
             //还可以补充更多的数据库类型
 
