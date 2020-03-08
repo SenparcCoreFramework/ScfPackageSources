@@ -10,7 +10,7 @@ namespace Senparc.Scf.Core.Models
     /// </summary>
     public static class EntitySetKeys
     {
-        private static EntitySetKeysDictionary Keys = new EntitySetKeysDictionary();
+        private static EntitySetKeysDictionary AllKeys = new EntitySetKeysDictionary();
 
         internal static List<Type> DbContextStore { get; set; } = new List<Type>();
 
@@ -18,7 +18,16 @@ namespace Senparc.Scf.Core.Models
 
         public static EntitySetKeysDictionary GetEntitySetKeys(Type tryLoadDbContextType)
         {
-            return Keys.GetKeys(tryLoadDbContextType);
+            var keysDic = new EntitySetKeysDictionary();//当前类型内包含的 SetKeys
+            var keys = keysDic.GetKeys(tryLoadDbContextType);
+            if (keys.Count > 0)
+            {
+                foreach (var key in keys)
+                {
+                    AllKeys[key.Key] = key.Value;//添加到全局的序列中
+                }
+            }
+            return keysDic;
         }
     }
 
@@ -36,7 +45,7 @@ namespace Senparc.Scf.Core.Models
 
             lock (EntitySetKeys.DbContextStoreLock)
             {
-                if (!tryLoadDbContextType.IsSubclassOf(typeof(DbContext) ))
+                if (!tryLoadDbContextType.IsSubclassOf(typeof(DbContext)))
                 {
                     throw new ArgumentException($"{nameof(tryLoadDbContextType)}不是 DbContext 的子类！", nameof(tryLoadDbContextType));
                 }

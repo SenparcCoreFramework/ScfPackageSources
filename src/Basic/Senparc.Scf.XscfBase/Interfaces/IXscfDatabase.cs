@@ -14,10 +14,6 @@ namespace Senparc.Scf.XscfBase
     public interface IXscfDatabase
     {
         /// <summary>
-        /// 扩展 SenparcEntities 的程序集名称
-        /// </summary>
-        string SenparcEntitiesAssemblyName { get; }
-        /// <summary>
         /// 全局唯一的前缀，务必避免和其他模块重复
         /// </summary>
         string DatabaseUniquePrefix { get; }

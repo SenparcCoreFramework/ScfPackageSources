@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Scf.Core.Areas;
 using Senparc.Scf.Core.Enums;
+using Senparc.Scf.Core.Exceptions;
 using Senparc.Scf.Core.Models;
 using Senparc.Scf.XscfBase.Database;
 using System;
@@ -62,6 +63,11 @@ namespace Senparc.Scf.XscfBase
         {
             var mySenparcEntities = serviceProvider.GetService<TSenparcEntities>();
             await mySenparcEntities.Database.MigrateAsync().ConfigureAwait(false);//更新数据库
+
+            if (!await mySenparcEntities.Database.EnsureCreatedAsync().ConfigureAwait(false))
+            {
+                throw new ScfModuleException($"更新数据库失败：{typeof(TSenparcEntities).Name}");
+            }
         }
 
         /// <summary>
@@ -123,35 +129,26 @@ namespace Senparc.Scf.XscfBase
         public virtual IServiceCollection AddXscfModule(IServiceCollection services)
         {
             //TODO：自动搜索符合条件的DB
-            if (this is IXscfDatabase databaseRegiser)
+            if (this is IXscfDatabase databaseRegister)
             {
                 Func<IServiceProvider, object> implementationFactory = s =>
                 {
                     //DbContextOptionsBuilder
                     var dbOptionBuilderType = typeof(DbContextOptionsBuilder<>);
-                    dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(databaseRegiser.XscfDatabaseDbContextType);
-                    object dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType);
+                    dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(databaseRegister.XscfDatabaseDbContextType);
+                    DbContextOptionsBuilder dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
 
-                    Action<SqlServerDbContextOptionsBuilder> sqlServerOptionsAction = b => databaseRegiser.DbContextOptionsAction(b);
+                    dbOptionBuilder = SqlServerDbContextOptionsExtensions.UseSqlServer(dbOptionBuilder, Scf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString, databaseRegister.DbContextOptionsAction);
 
-
-                    var builder = dbOptionBuilderType.InvokeMember("UseSqlServer", BindingFlags.Default | BindingFlags.InvokeMethod,
-                                                         null, dbOptionBuilder,
-                                                         new object[] {
-                                                        Scf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString,
-                                                        sqlServerOptionsAction
-                                                         });
-                    builder = dbOptionBuilderType.InvokeMember("Options", BindingFlags.Default | BindingFlags.Public, null, dbOptionBuilder, null);
-
-                    var xscfSenparcEntities = Activator.CreateInstance(databaseRegiser.XscfDatabaseDbContextType, new object[] { builder });
+                    var xscfSenparcEntities = Activator.CreateInstance(databaseRegister.XscfDatabaseDbContextType, new object[] { dbOptionBuilder.Options });
                     return xscfSenparcEntities;
                 };
 
-                services.AddScoped(databaseRegiser.XscfDatabaseDbContextType, implementationFactory);
+                services.AddScoped(databaseRegister.XscfDatabaseDbContextType, implementationFactory);
 
-                EntitySetKeys.GetEntitySetKeys(databaseRegiser.XscfDatabaseDbContextType);//注册当前数据库的对象（必须）
+                EntitySetKeys.GetEntitySetKeys(databaseRegister.XscfDatabaseDbContextType);//注册当前数据库的对象（必须）
 
-                databaseRegiser.AddXscfDatabaseModule(services);
+                databaseRegister.AddXscfDatabaseModule(services);
             }
             return services;
         }
@@ -162,7 +159,8 @@ namespace Senparc.Scf.XscfBase
             {
                 if (dbContextOptionsAction is SqlServerDbContextOptionsBuilder sqlServerOptionsAction)
                 {
-                    sqlServerOptionsAction.MigrationsAssembly(databaseRegiser.SenparcEntitiesAssemblyName)
+                    var senparcEntitiesAssemblyName = databaseRegiser.XscfDatabaseDbContextType.Assembly.FullName;
+                    sqlServerOptionsAction.MigrationsAssembly(senparcEntitiesAssemblyName)
                   .MigrationsHistoryTable("__" + databaseRegiser.DatabaseUniquePrefix + "_EFMigrationsHistory");
                 }
 
