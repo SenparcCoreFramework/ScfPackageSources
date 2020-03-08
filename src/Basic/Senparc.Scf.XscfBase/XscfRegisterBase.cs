@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.Trace;
 using Senparc.Scf.Core.Areas;
 using Senparc.Scf.Core.Enums;
 using Senparc.Scf.Core.Exceptions;
@@ -8,6 +10,7 @@ using Senparc.Scf.Core.Models;
 using Senparc.Scf.XscfBase.Database;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +22,8 @@ namespace Senparc.Scf.XscfBase
     /// </summary>
     public abstract class XscfRegisterBase : IXscfRegister
     {
+        private object serviceProvider;
+
         /// <summary>
         /// 模块名称，要求全局唯一
         /// </summary>
@@ -83,6 +88,51 @@ namespace Senparc.Scf.XscfBase
         public virtual async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             await unsinstallFunc().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// 删除表（此方法请慎重使用！）
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <param name="databaseDbContext"></param>
+        /// <param name="entityType">需要删除的表所对应的实体类型</param>
+        /// <returns></returns>
+        public virtual async Task DropTables(IServiceProvider serviceProvider, XscfDatabaseDbContext databaseDbContext, Type[] entityType)
+        {
+            SenparcTrace.SendCustomLog("开始删除应用表格", MenuName + ", " + Name);
+            var appliedMigrations = databaseDbContext.Database.GetAppliedMigrations();
+            if (appliedMigrations.Count() > 0)
+            {
+                using (await databaseDbContext.Database.BeginTransactionAsync())
+                {
+                    //mySenparcEntities.Database.GetService<>
+                }
+                //var databaseCreator = mySenparcEntities.Database.GetService<IRelationalDatabaseCreator>();
+
+
+                foreach (var type in entityType)
+                {
+                    var schma = databaseDbContext.Model.FindEntityType(type).GetSchema();
+                    var tableName = databaseDbContext.Model.FindEntityType(type).GetTableName();
+                    SenparcTrace.SendCustomLog("开始删除表格", $"[schma].[tableName]：[{schma}].[{tableName}]");
+                    //mySenparcEntities.Colors.FromSqlRaw($"DELETE FROM [{key}]");
+
+                    string fullTableName = $"[{tableName}]";
+                    if (!schma.IsNullOrEmpty())
+                    {
+                        fullTableName = $"[{schma}].{fullTableName}";
+                    }
+
+                    int keyExeCount = await databaseDbContext.Database.ExecuteSqlRawAsync($"DROP TABLE {fullTableName}");
+                    SenparcTrace.SendCustomLog("影响行数", keyExeCount + " 行");
+                }
+
+                //删除 Migration 记录
+                var migrationHistoryTableName = GetDatabaseMigrationHistoryTableName();
+                SenparcTrace.SendCustomLog("开始删除 DatabaseMigrationHistory 表格", $"[{migrationHistoryTableName}]");
+                int historyExeCount = await databaseDbContext.Database.ExecuteSqlRawAsync($"DROP TABLE [{migrationHistoryTableName}]");
+                SenparcTrace.SendCustomLog("影响行数", historyExeCount + " 行");
+            }
         }
 
         /// <summary>
