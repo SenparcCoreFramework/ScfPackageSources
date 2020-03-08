@@ -1,8 +1,17 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.Trace;
 using Senparc.Scf.Core.Areas;
 using Senparc.Scf.Core.Enums;
+using Senparc.Scf.Core.Exceptions;
+using Senparc.Scf.Core.Models;
+using Senparc.Scf.XscfBase.Database;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +22,8 @@ namespace Senparc.Scf.XscfBase
     /// </summary>
     public abstract class XscfRegisterBase : IXscfRegister
     {
+        private object serviceProvider;
+
         /// <summary>
         /// 模块名称，要求全局唯一
         /// </summary>
@@ -45,6 +56,25 @@ namespace Senparc.Scf.XscfBase
         /// 如果提供了 UI 界面，必须指定一个首页
         /// </summary>
         public virtual string HomeUrl => null;
+
+        /// <summary>
+        /// 执行 Migrate 更新数据
+        /// </summary>
+        /// <typeparam name="TSenparcEntities"></typeparam>
+        /// <param name="serviceProvider"></param>
+        /// <returns></returns>
+        protected virtual async Task MigrateDatabaseAsync<TSenparcEntities>(IServiceProvider serviceProvider)
+            where TSenparcEntities : XscfDatabaseDbContext
+        {
+            var mySenparcEntities = serviceProvider.GetService<TSenparcEntities>();
+            await mySenparcEntities.Database.MigrateAsync().ConfigureAwait(false);//更新数据库
+
+            //if (!await mySenparcEntities.Database.EnsureCreatedAsync().ConfigureAwait(false))
+            //{
+            //    throw new ScfModuleException($"更新数据库失败：{typeof(TSenparcEntities).Name}");
+            //}
+        }
+
         /// <summary>
         /// 安装代码
         /// </summary>
@@ -58,6 +88,51 @@ namespace Senparc.Scf.XscfBase
         public virtual async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             await unsinstallFunc().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// 删除表（此方法请慎重使用！）
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <param name="databaseDbContext"></param>
+        /// <param name="entityType">需要删除的表所对应的实体类型</param>
+        /// <returns></returns>
+        protected virtual async Task DropTablesAsync(IServiceProvider serviceProvider, XscfDatabaseDbContext databaseDbContext, Type[] entityType)
+        {
+            SenparcTrace.SendCustomLog("开始删除应用表格", MenuName + ", " + Name);
+            var appliedMigrations = databaseDbContext.Database.GetAppliedMigrations();
+            if (appliedMigrations.Count() > 0)
+            {
+                using (await databaseDbContext.Database.BeginTransactionAsync())
+                {
+                    //mySenparcEntities.Database.GetService<>
+                }
+                //var databaseCreator = mySenparcEntities.Database.GetService<IRelationalDatabaseCreator>();
+
+
+                foreach (var type in entityType)
+                {
+                    var schma = databaseDbContext.Model.FindEntityType(type).GetSchema();
+                    var tableName = databaseDbContext.Model.FindEntityType(type).GetTableName();
+                    SenparcTrace.SendCustomLog("开始删除表格", $"[schma].[tableName]：[{schma}].[{tableName}]");
+                    //mySenparcEntities.Colors.FromSqlRaw($"DELETE FROM [{key}]");
+
+                    string fullTableName = $"[{tableName}]";
+                    if (!schma.IsNullOrEmpty())
+                    {
+                        fullTableName = $"[{schma}].{fullTableName}";
+                    }
+
+                    int keyExeCount = await databaseDbContext.Database.ExecuteSqlRawAsync($"DROP TABLE {fullTableName}");
+                    SenparcTrace.SendCustomLog("影响行数", keyExeCount + " 行");
+                }
+
+                //删除 Migration 记录
+                var migrationHistoryTableName = GetDatabaseMigrationHistoryTableName();
+                SenparcTrace.SendCustomLog("开始删除 DatabaseMigrationHistory 表格", $"[{migrationHistoryTableName}]");
+                int historyExeCount = await databaseDbContext.Database.ExecuteSqlRawAsync($"DROP TABLE [{migrationHistoryTableName}]");
+                SenparcTrace.SendCustomLog("影响行数", historyExeCount + " 行");
+            }
         }
 
         /// <summary>
@@ -96,9 +171,70 @@ namespace Senparc.Scf.XscfBase
             return null;
         }
 
+        /// <summary>
+        /// 添加模块
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public virtual IServiceCollection AddXscfModule(IServiceCollection services)
         {
+            if (this is IXscfDatabase databaseRegister)
+            {
+                //定义 XscfSenparcEntities 实例生成
+                Func<IServiceProvider, object> implementationFactory = s =>
+                {
+                    //准备创建 DbContextOptionsBuilder 实例，定义类型
+                    var dbOptionBuilderType = typeof(DbContextOptionsBuilder<>);
+                    //获取泛型对象类型，如：DbContextOptionsBuilder<SenparcEntity>
+                    dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(databaseRegister.XscfDatabaseDbContextType);
+                    //创建 DbContextOptionsBuilder 实例
+                    DbContextOptionsBuilder dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
+                    //继续定义配置
+                    dbOptionBuilder = SqlServerDbContextOptionsExtensions.UseSqlServer(dbOptionBuilder, Scf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString, databaseRegister.DbContextOptionsAction);
+                    //创建 SenparcEntities 实例
+                    var xscfSenparcEntities = Activator.CreateInstance(databaseRegister.XscfDatabaseDbContextType, new object[] { dbOptionBuilder.Options });
+                    return xscfSenparcEntities;
+                };
+                //添加 XscfSenparcEntities 依赖注入配置
+                services.AddScoped(databaseRegister.XscfDatabaseDbContextType, implementationFactory);
+                //注册当前数据库的对象（必须）
+                EntitySetKeys.TryLoadSetInfo(databaseRegister.XscfDatabaseDbContextType);
+
+                //添加数据库相关注册过程
+                databaseRegister.AddXscfDatabaseModule(services);
+            }
             return services;
+        }
+
+        /// <summary>
+        /// 获取 EF Code First MigrationHistory 数据库表名
+        /// </summary>
+        /// <returns></returns>
+        public virtual string GetDatabaseMigrationHistoryTableName()
+        {
+            if (this is IXscfDatabase databaseRegiser)
+            {
+                return "__" + databaseRegiser.DatabaseUniquePrefix + "_EFMigrationsHistory";
+            }
+            return null;
+        }
+
+        public virtual void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction)
+        {
+            if (this is IXscfDatabase databaseRegiser)
+            {
+                if (dbContextOptionsAction is SqlServerDbContextOptionsBuilder sqlServerOptionsAction)
+                {
+                    var senparcEntitiesAssemblyName = databaseRegiser.XscfDatabaseDbContextType.Assembly.FullName;
+                    var databaseMigrationHistoryTableName = GetDatabaseMigrationHistoryTableName();
+
+                    sqlServerOptionsAction
+                        .MigrationsAssembly(senparcEntitiesAssemblyName)
+                        .MigrationsHistoryTable(databaseMigrationHistoryTableName);
+                }
+
+                //可以支持其他跟他多数据库
+            }
         }
     }
 }

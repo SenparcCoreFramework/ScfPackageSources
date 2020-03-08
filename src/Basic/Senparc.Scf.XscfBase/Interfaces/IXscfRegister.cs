@@ -33,6 +33,7 @@ namespace Senparc.Scf.XscfBase
         /// 说明
         /// </summary>
         string Description { get; }
+
         /// <summary>
         /// 注册方法，注册的顺序决定了界面中排列的顺序
         /// </summary>
@@ -67,5 +68,11 @@ namespace Senparc.Scf.XscfBase
         /// <param name="services">IServiceCollection</param>
         /// <returns></returns>
         IServiceCollection AddXscfModule(IServiceCollection services);
+
+        /// <summary>
+        /// 获取 EF Code First MigrationHistory 数据库表名
+        /// </summary>
+        /// <returns></returns>
+        string GetDatabaseMigrationHistoryTableName();
     }
 }
