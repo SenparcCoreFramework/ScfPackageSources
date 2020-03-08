@@ -22,8 +22,6 @@ namespace Senparc.Scf.XscfBase
     /// </summary>
     public abstract class XscfRegisterBase : IXscfRegister
     {
-        private object serviceProvider;
-
         /// <summary>
         /// 模块名称，要求全局唯一
         /// </summary>
