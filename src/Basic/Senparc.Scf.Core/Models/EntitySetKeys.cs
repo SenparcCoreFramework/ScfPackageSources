@@ -22,7 +22,6 @@ namespace Senparc.Scf.Core.Models
         }
     }
 
-
     /// <summary>
     /// 与ORM实体类对应的实体集
     /// </summary>

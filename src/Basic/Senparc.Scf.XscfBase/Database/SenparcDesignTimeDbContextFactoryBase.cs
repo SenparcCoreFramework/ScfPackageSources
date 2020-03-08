@@ -14,7 +14,7 @@ namespace Senparc.Scf.XscfBase.Database
     /// 提供给数据库 Migration 使用的 DesignTimeDbContextFactory
     /// </summary>
     /// <typeparam name="TSenparcEntities"></typeparam>
-    public abstract class SenparcDbContextFactoryBase<TSenparcEntities> : IDesignTimeDbContextFactory<TSenparcEntities>
+    public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities> : IDesignTimeDbContextFactory<TSenparcEntities>
          where TSenparcEntities : DbContext
     {
         public virtual string RootDictionaryPath => Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\");
