@@ -44,12 +44,15 @@ namespace Senparc.Scf.Core.Config
 
         public static Dictionary<string, int> _memcachedAddressesDic;
         public const string WEIXIN_FILTER_IGNORE = "senparcnofilter1";
-        public const string WEIXIN_OFFICIAL_AVATAR_KEY = "WXoDDIC8A"; //将取前8位
-        public const string WEIXIN_OFFICIAL_QR_CODE_KEY = "WX2EDIC8A"; //将取前8位
-        public const string WEIXIN_APP_TOKEN_KEY = "WEIXIN_APP_TOKEN_KEY"; //微信APP Token加密
+        public const string WEIXIN_OFFICIAL_AVATAR_KEY = "WXoDOkC8A"; //将取前8位
+        public const string WEIXIN_OFFICIAL_QR_CODE_KEY = "WX631IC8A"; //将取前8位
+        public const string WEIXIN_APP_TOKEN_KEY = "WEIXIN_APP_TOKEN_KEY_FOR_SCF"; //微信APP Token加密
         public const long MIN_WEIXINUSERINFO_ID = 10000000000000; //最小自定义WeixinUserInfo的Id
         public const decimal PROJECTDMANDDEPOSIT = 1000; //任务默认押金
         public const string CERT_P12_ADDRESS = @"E:\";//微信支付数字证书存放地址
+
+        public const string SYSTEM_XSCF_MODULE_UID = "00000000-0000-0000-0000-000000000001";
+
         /// <summary>
         /// 开发者收入比例
         /// </summary>
