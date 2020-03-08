@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Senparc.Scf.Core.Models
@@ -13,43 +14,17 @@ namespace Senparc.Scf.Core.Models
     {
         private static EntitySetKeysDictionary AllKeys = new EntitySetKeysDictionary();
 
-        internal static List<Type> DbContextStore { get; set; } = new List<Type>();
+        internal static ConcurrentBag<Type> DbContextStore { get; set; } = new ConcurrentBag<Type>();
 
         internal static object DbContextStoreLock = new object();
 
         /// <summary>
-        /// 获取 Entity SetKey 集合
+        /// 加载制定 DbContext 中的 SetKey
         /// </summary>
-        /// <param name="tryLoadDbContextType">DbContext 类型</param>
-        /// <param name="includeOtherEntityKeys">是否包含所有 DbContext 的 SetKeys</param>
+        /// <param name="tryLoadDbContextType"></param>
         /// <returns></returns>
-        public static EntitySetKeysDictionary GetEntitySetKeys(Type tryLoadDbContextType, bool includeOtherEntityKeys = false)
+        public static EntitySetKeysDictionary TryLoadSetInfo(Type tryLoadDbContextType)
         {
-            var setKeysDic = new EntitySetKeysDictionary();//当前类型内包含的 SetKeys
-            setKeysDic.GetKeys(tryLoadDbContextType);
-            foreach (var setKey in setKeysDic)
-            {
-                AllKeys[setKey.Key] = setKey.Value;//添加到全局的序列中
-            }
-            if (includeOtherEntityKeys)
-            {
-                return AllKeys;
-            }
-            return setKeysDic;
-        }
-    }
-    /// <summary>
-    /// 与ORM实体类对应的实体集
-    /// </summary>
-    public class EntitySetKeysDictionary : ConcurrentDictionary<Type, string>
-    {
-        public EntitySetKeysDictionary GetKeys(Type tryLoadDbContextType)
-        {
-            //if (tryLoadDbContextType)
-            //{
-            //}
-            //TODO:判断必须是是DbContext类型
-
             lock (EntitySetKeys.DbContextStoreLock)
             {
                 if (!tryLoadDbContextType.IsSubclassOf(typeof(DbContext)))
@@ -59,10 +34,10 @@ namespace Senparc.Scf.Core.Models
 
                 if (EntitySetKeys.DbContextStore.Contains(tryLoadDbContextType))
                 {
-                    return this;
+                    return AllKeys;
                 }
-                EntitySetKeys.DbContextStore.Add(tryLoadDbContextType);
 
+                EntitySetKeys.DbContextStore.Add(tryLoadDbContextType);
 
                 //初始化的时候从ORM中自动读取实体集名称及实体类别名称
                 var clientProperties = tryLoadDbContextType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty);
@@ -77,7 +52,8 @@ namespace Senparc.Scf.Core.Models
                         //ObjectQuery，ObjectSet for EF4，DbSet for EF Code First
                         if (prop.PropertyType.Name.IndexOf("DbSet") != -1 && prop.PropertyType.GetGenericArguments().Length > 0)
                         {
-                            this[prop.PropertyType.GetGenericArguments()[0]] = prop.Name;//获取第一个泛型
+                            var dbSetType = prop.PropertyType.GetGenericArguments()[0];
+                            AllKeys[dbSetType] = new SetKeyInfo(prop.Name, dbSetType, tryLoadDbContextType);//获取第一个泛型
                         }
                     }
                     catch
@@ -85,11 +61,64 @@ namespace Senparc.Scf.Core.Models
                     }
                 }
             }
-
-            return this;
+            return AllKeys;
         }
 
-        public new string this[Type entityType]
+        /// <summary>
+        /// 获取 Entity SetKey 集合
+        /// </summary>
+        /// <param name="dbContextType">DbContext 类型</param>
+        /// <returns></returns>
+        public static EntitySetKeysDictionary GetEntitySetInfo(Type dbContextType)
+        {
+            EntitySetKeysDictionary dic = new EntitySetKeysDictionary();
+            foreach (var setKeyInfo in AllKeys.Values.Where(z => z.SenparcEntityType == dbContextType))
+            {
+                dic.TryAdd(setKeyInfo.DbSetType, setKeyInfo);
+            }
+            return dic;
+        }
+
+        /// <summary>
+        /// 获取所有 Entity 的 SetKey
+        /// </summary>
+        /// <returns></returns>
+        public static EntitySetKeysDictionary GetAllEntitySetKeys()
+        {
+            return AllKeys;
+        }
+    }
+
+
+    public class SetKeyInfo
+    {
+        /// <summary>
+        /// SetKey 属性名称
+        /// </summary>
+        public string SetName { get; set; }
+        /// <summary>
+        /// DbSet 属性类型
+        /// </summary>
+        public Type DbSetType { get; set; }
+        /// <summary>
+        /// SenparcEntity 类型
+        /// </summary>
+        public Type SenparcEntityType { get; set; }
+
+        public SetKeyInfo(string setName, Type dbSetType, Type senparcEntityType)
+        {
+            SetName = setName;
+            DbSetType = dbSetType;
+            SenparcEntityType = senparcEntityType;
+        }
+    }
+
+    /// <summary>
+    /// 与ORM实体类对应的实体集
+    /// </summary>
+    public class EntitySetKeysDictionary : ConcurrentDictionary<Type, SetKeyInfo>
+    {
+        public new SetKeyInfo this[Type entityType]
         {
             get
             {

@@ -24,8 +24,8 @@ namespace Senparc.Scf.Repository
         public ClientRepositoryBase(ISqlBaseFinanceData db) : base(db)
         {
             //System.Web.HttpContext.Current.Response.Write("-"+this.GetType().Name + "<br />");
-            var keys = EntitySetKeys.GetEntitySetKeys(base.BaseDB.BaseDataContext.GetType());
-            _entitySetName = keys[typeof(T)];
+            var keys = EntitySetKeys.GetEntitySetInfo(base.BaseDB.BaseDataContext.GetType());
+            _entitySetName = keys[typeof(T)].SetName;
         }
 
 

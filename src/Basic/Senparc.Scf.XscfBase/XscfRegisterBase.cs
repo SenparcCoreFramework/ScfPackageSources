@@ -64,10 +64,10 @@ namespace Senparc.Scf.XscfBase
             var mySenparcEntities = serviceProvider.GetService<TSenparcEntities>();
             await mySenparcEntities.Database.MigrateAsync().ConfigureAwait(false);//更新数据库
 
-            if (!await mySenparcEntities.Database.EnsureCreatedAsync().ConfigureAwait(false))
-            {
-                throw new ScfModuleException($"更新数据库失败：{typeof(TSenparcEntities).Name}");
-            }
+            //if (!await mySenparcEntities.Database.EnsureCreatedAsync().ConfigureAwait(false))
+            //{
+            //    throw new ScfModuleException($"更新数据库失败：{typeof(TSenparcEntities).Name}");
+            //}
         }
 
         /// <summary>
@@ -133,22 +133,24 @@ namespace Senparc.Scf.XscfBase
                 //定义 XscfSenparcEntities 实例生成
                 Func<IServiceProvider, object> implementationFactory = s =>
                 {
-                    //DbContextOptionsBuilder
+                    //准备创建 DbContextOptionsBuilder 实例，定义类型
                     var dbOptionBuilderType = typeof(DbContextOptionsBuilder<>);
+                    //获取泛型对象类型，如：DbContextOptionsBuilder<SenparcEntity>
                     dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(databaseRegister.XscfDatabaseDbContextType);
+                    //创建 DbContextOptionsBuilder 实例
                     DbContextOptionsBuilder dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
-
+                    //继续定义配置
                     dbOptionBuilder = SqlServerDbContextOptionsExtensions.UseSqlServer(dbOptionBuilder, Scf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString, databaseRegister.DbContextOptionsAction);
-
+                    //创建 SenparcEntities 实例
                     var xscfSenparcEntities = Activator.CreateInstance(databaseRegister.XscfDatabaseDbContextType, new object[] { dbOptionBuilder.Options });
                     return xscfSenparcEntities;
                 };
                 //添加 XscfSenparcEntities 依赖注入配置
                 services.AddScoped(databaseRegister.XscfDatabaseDbContextType, implementationFactory);
-                //
-                EntitySetKeys.GetEntitySetKeys(databaseRegister.XscfDatabaseDbContextType);//注册当前数据库的对象（必须）
+                //注册当前数据库的对象（必须）
+                EntitySetKeys.TryLoadSetInfo(databaseRegister.XscfDatabaseDbContextType);
 
-                //添加数据库相关
+                //添加数据库相关注册过程
                 databaseRegister.AddXscfDatabaseModule(services);
             }
             return services;
