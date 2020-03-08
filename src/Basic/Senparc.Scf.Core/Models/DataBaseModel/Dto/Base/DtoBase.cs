@@ -18,5 +18,15 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         /// </summary>
         [MaxLength(150)]
         public string Remark { get; set; }
+
+        /// <summary>
+        /// 添加时间
+        /// </summary>
+        public DateTime AddTime { get; set; }
+        /// <summary>
+        /// 上次更新时间
+        /// </summary>
+        public DateTime LastUpdateTime { get; set; }
+
     }
 }

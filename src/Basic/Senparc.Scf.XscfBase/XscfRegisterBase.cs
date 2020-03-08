@@ -97,7 +97,7 @@ namespace Senparc.Scf.XscfBase
         /// <param name="databaseDbContext"></param>
         /// <param name="entityType">需要删除的表所对应的实体类型</param>
         /// <returns></returns>
-        public virtual async Task DropTables(IServiceProvider serviceProvider, XscfDatabaseDbContext databaseDbContext, Type[] entityType)
+        protected virtual async Task DropTablesAsync(IServiceProvider serviceProvider, XscfDatabaseDbContext databaseDbContext, Type[] entityType)
         {
             SenparcTrace.SendCustomLog("开始删除应用表格", MenuName + ", " + Name);
             var appliedMigrations = databaseDbContext.Database.GetAppliedMigrations();
