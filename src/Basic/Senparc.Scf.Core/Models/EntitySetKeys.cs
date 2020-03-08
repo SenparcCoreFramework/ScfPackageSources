@@ -83,7 +83,7 @@ namespace Senparc.Scf.Core.Models
         /// 获取所有 Entity 的 SetKey
         /// </summary>
         /// <returns></returns>
-        public static EntitySetKeysDictionary GetAllEntitySetKeys()
+        public static EntitySetKeysDictionary GetAllEntitySetInfo()
         {
             return AllKeys;
         }

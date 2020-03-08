@@ -31,7 +31,7 @@ namespace Senparc.Scf.Repository
             base.BaseDB = db;
             // ObjectFactory.GetInstance<ISqlClientFinanceData>();
 
-            EntitySetKeysDictionary keys = EntitySetKeys.GetEntitySetInfo(base.BaseDB.BaseDataContext.GetType());
+            EntitySetKeysDictionary keys = EntitySetKeys.GetAllEntitySetInfo();
             _entitySetName = keys[typeof(T)].SetName;
         }
 
