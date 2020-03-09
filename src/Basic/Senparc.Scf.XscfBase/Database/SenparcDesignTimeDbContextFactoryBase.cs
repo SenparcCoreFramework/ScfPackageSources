@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Scf.Core.Config;
@@ -33,6 +35,23 @@ namespace Senparc.Scf.XscfBase.Database
             //获取 XscfSenparcEntities 实例
             var xscfSenparcEntities = Activator.CreateInstance(databaseRegister.XscfDatabaseDbContextType, new object[] { dbContextOptions }) as TSenparcEntities;
             return xscfSenparcEntities;
+        }
+
+        public SenparcDesignTimeDbContextFactoryBase()
+        {
+            if (!Senparc.CO2NET.RegisterServices.RegisterServiceExtension.SenparcGlobalServicesRegistered)
+            {
+                //未执行 AddSenparcGlobalServices 注册，执行注册过程
+                Host.CreateDefaultBuilder()
+                  .ConfigureWebHostDefaults(webBuilder =>
+                  {
+                      webBuilder.ConfigureServices((hostBuilder, services) =>
+                      {
+                          services.AddMemoryCache();//使用本地缓需要添加
+                          services.AddSenparcGlobalServices(hostBuilder.Configuration);
+                      });
+                  }).Build();
+            }
         }
 
         public virtual TSenparcEntities CreateDbContext(string[] args)
