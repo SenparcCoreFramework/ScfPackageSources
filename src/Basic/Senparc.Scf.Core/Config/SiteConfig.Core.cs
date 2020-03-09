@@ -21,16 +21,17 @@ namespace Senparc.Scf.Core.Config
 
         /// <summary>
         /// 设置
+        /// <para>需要在系统启动时注入</para>
         /// </summary>
-        public static SenparcCoreSetting SenparcCoreSetting
-        {
-            get
-            {
-                IServiceProvider serviceProvider = SenparcDI.GlobalServiceCollection.BuildServiceProvider();
-                var scs = serviceProvider.GetService<IOptions<SenparcCoreSetting>>();
-                return scs.Value;
-            }
-        }
+        public static SenparcCoreSetting SenparcCoreSetting { get; set; } = new SenparcCoreSetting();
+        //{
+        //    get
+        //    {
+        //        IServiceProvider serviceProvider = SenparcDI.GlobalServiceCollection.BuildServiceProvider();
+        //        var scs = serviceProvider.GetService<IOptions<SenparcCoreSetting>>();
+        //        return scs.Value;
+        //    }
+        //}
 
         /// <summary>
         /// 是否处于Debug状态（人为手动定义）
