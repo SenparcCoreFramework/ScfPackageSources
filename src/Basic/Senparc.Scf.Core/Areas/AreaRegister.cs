@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Trace;
 using Senparc.Scf.Core.AssembleScan;
@@ -22,8 +23,9 @@ namespace Senparc.Scf.Core.Areas
         /// 自动注册所有 Area
         /// </summary>
         /// <param name="builder"></param>
+        /// <param name="env"></param>
         /// <returns></returns>
-        public static IMvcBuilder AddScfAreas(this IMvcBuilder builder)
+        public static IMvcBuilder AddScfAreas(this IMvcBuilder builder, IWebHostEnvironment env)
         {
             AssembleScanHelper.AddAssembleScanItem(assembly =>
             {
@@ -36,7 +38,7 @@ namespace Senparc.Scf.Core.Areas
                     foreach (var registerType in areaRegisterTypes)
                     {
                         var register = Activator.CreateInstance(registerType, true) as IAreaRegister;
-                        register.AuthorizeConfig(builder);//进行注册
+                        register.AuthorizeConfig(builder, env);//进行注册
                     }
                 }
                 catch (Exception ex)
