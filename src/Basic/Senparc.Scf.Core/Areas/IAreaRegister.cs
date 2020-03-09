@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,8 +15,9 @@ namespace Senparc.Scf.Core.Areas
         /// 
         /// </summary>
         /// <param name="builder"></param>
+        /// <param name="env"></param>
         /// <returns></returns>
-        IMvcBuilder AuthorizeConfig(IMvcBuilder builder);
+        IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IWebHostEnvironment env);
 
         /// <summary>
         /// 如果提供了 UI 界面，必须指定一个首页，如：Admin/
