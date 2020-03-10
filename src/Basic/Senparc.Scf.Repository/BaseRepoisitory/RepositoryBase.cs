@@ -216,7 +216,7 @@ namespace Senparc.Scf.Repository
             return count;
         }
 
-        public virtual decimal GetSum(Expression<Func<T, bool>> where, Func<T, decimal> sum, params string[] includes)
+        public virtual decimal GetSum(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, params string[] includes)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
             decimal result = BaseDB.BaseDataContext
@@ -331,6 +331,53 @@ namespace Senparc.Scf.Repository
                  //.CreateQuery<T>(sql)
                  .Includes(includes).FirstOrDefaultAsync(where);
         }
+
+        public virtual async Task<T> GetFirstOrDefaultObjectAsync<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
+        {
+            //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
+            return await BaseDB.BaseDataContext
+                 .Set<T>()
+                 //.CreateQuery<T>(sql)
+                 .Includes(includes).Where(where).OrderBy(orderBy, orderingType).FirstOrDefaultAsync();
+        }
+
+
+        public virtual async Task<int> ObjectCountAsync(Expression<Func<T, bool>> where, params string[] includes)
+        {
+            string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
+            int count = 0;
+            IQueryable<T> query = BaseDB.BaseDataContext
+                 .Set<T>()
+                 //.CreateQuery<T>(sql)
+                 .Includes(includes);
+            //try
+            {
+                count = await query.CountAsync(where).ConfigureAwait(false);
+            }
+            //catch (NotSupportedException ex)
+            //{
+            //    count = query.Count(where.Compile());
+            //}
+            //catch (Exception ex)
+            //{
+            //    count = query.Count(where.Compile());
+            //    throw;
+            //}
+            return count;
+        }
+
+        public virtual async Task<decimal> GetSumAsync(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, params string[] includes)
+        {
+            //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
+            var query = BaseDB.BaseDataContext
+                 .Set<T>()
+                 //.CreateQuery<T>(sql)
+                 .Includes(includes);
+
+            decimal result = await query.Where(where).SumAsync(sum);
+            return result;
+        }
+
 
         public virtual async Task AddAsync(T obj)
         {

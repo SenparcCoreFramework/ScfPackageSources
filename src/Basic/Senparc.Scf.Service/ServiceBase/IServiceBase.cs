@@ -32,7 +32,7 @@ namespace Senparc.Scf.Service
 
         int GetCount(Expression<Func<T, bool>> where,params string[] includes);
 
-        decimal GetSum(Expression<Func<T, bool>> where, Func<T, decimal> sum,params string[] includes);
+        decimal GetSum(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum,params string[] includes);
 
         /// <summary>
         /// 强制将实体设置为Modified状态
@@ -47,5 +47,14 @@ namespace Senparc.Scf.Service
         void DeleteObject(T obj);
 
         void DeleteAll(IEnumerable<T> objects);
+
+        #region 异步方法
+
+        Task<T> GetObjectAsync<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes);
+
+        //TODO: 待补全
+
+
+        #endregion
     }
 }

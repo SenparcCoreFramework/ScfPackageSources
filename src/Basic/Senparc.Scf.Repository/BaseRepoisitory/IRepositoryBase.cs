@@ -14,7 +14,7 @@ namespace Senparc.Scf.Repository
     {
         bool IsInsert(T obj);
 
-        IQueryable<T> GeAll<TK>(Expression<Func<T, TK>> orderBy, OrderingType orderingType,params string[] includes);
+        IQueryable<T> GeAll<TK>(Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes);
 
         /// <summary>
         /// 获取分页列表
@@ -23,20 +23,20 @@ namespace Senparc.Scf.Repository
         /// <param name="pageIndex"></param>
         /// <param name="pageCount">当pageCount小于等于0时不分页</param>
         /// <returns></returns>
-        PagedList<T> GetObjectList<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, int pageIndex, int pageCount,params string[] includes);
+        PagedList<T> GetObjectList<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, int pageIndex, int pageCount, params string[] includes);
 
         Task<PagedList<T>> GetObjectListAsync<TK>(Expression<Func<T, bool>> where,
           Expression<Func<T, TK>> orderBy, OrderingType orderingType, int pageIndex, int pageCount,
          params string[] includes);
 
 
-        T GetFirstOrDefaultObject(Expression<Func<T, bool>> where,params string[] includes);
+        T GetFirstOrDefaultObject(Expression<Func<T, bool>> where, params string[] includes);
 
-        T GetFirstOrDefaultObject<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType,params string[] includes);
+        T GetFirstOrDefaultObject<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes);
 
-        int ObjectCount(Expression<Func<T, bool>> where,params string[] includes);
+        int ObjectCount(Expression<Func<T, bool>> where, params string[] includes);
 
-        decimal GetSum(Expression<Func<T, bool>> where, Func<T, decimal> sum,params string[] includes);
+        decimal GetSum(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, params string[] includes);
 
         void Add(T obj);
 
@@ -75,7 +75,12 @@ namespace Senparc.Scf.Repository
         /// <param name="where"></param>
         /// <param name="includes"></param>
         /// <returns></returns>
-        Task<T> GetFirstOrDefaultObjectAsync(Expression<Func<T, bool>> where,params string[] includes);
+        Task<T> GetFirstOrDefaultObjectAsync(Expression<Func<T, bool>> where, params string[] includes);
+        Task<T> GetFirstOrDefaultObjectAsync<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes);
+
+        Task<int> ObjectCountAsync(Expression<Func<T, bool>> where, params string[] includes);
+
+        Task<decimal> GetSumAsync(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, params string[] includes);
 
         /// <summary>
         /// 批量删除
@@ -102,7 +107,7 @@ namespace Senparc.Scf.Repository
         /// <param name="pageCount"></param>
         /// <param name="includes"></param>
         /// <returns></returns>
-        Task<PagedList<T>> GetObjectListAsync(Expression<Func<T, bool>> where, string OrderbyField, int pageIndex, int pageCount,params string[] includes);
+        Task<PagedList<T>> GetObjectListAsync(Expression<Func<T, bool>> where, string OrderbyField, int pageIndex, int pageCount, params string[] includes);
 
         /// <summary>
         /// 
