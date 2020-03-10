@@ -18,7 +18,7 @@ namespace Senparc.Scf.XscfBase.Database
         public XscfDatabaseDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
         { }
 
-        protected virtual void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             if (XscfDatabaseRegister == null)
             {
