@@ -99,7 +99,7 @@ namespace Senparc.Scf.Service
             return RepositoryBase.ObjectCount(where, includes);
         }
 
-        public virtual decimal GetSum(Expression<Func<T, bool>> where, Func<T, decimal> sum,params string[] includes)
+        public virtual decimal GetSum(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum,params string[] includes)
         {
             return RepositoryBase.GetSum(where, sum, includes);
         }
@@ -152,10 +152,27 @@ namespace Senparc.Scf.Service
         /// <param name="where"></param>
         /// <param name="includes"></param>
         /// <returns></returns>
-        public async Task<T> GetObjectAsync(Expression<Func<T, bool>> where,params string[] includes)
+        public virtual async Task<T> GetObjectAsync(Expression<Func<T, bool>> where,params string[] includes)
         {
             return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, includes);
         }
+
+        public virtual async Task<T> GetObjectAsync<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
+        {
+            return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, orderBy, orderingType, includes);
+        }
+
+        public virtual async Task<int> GetCountAsync(Expression<Func<T, bool>> where, params string[] includes)
+        {
+            return await RepositoryBase.ObjectCountAsync(where, includes);
+        }
+
+        public virtual async Task<decimal> GetSumAsync(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, params string[] includes)
+        {
+            return await RepositoryBase.GetSumAsync(where, sum, includes);
+        }
+
+
 
         public async Task SaveObjectAsync(T obj)
         {

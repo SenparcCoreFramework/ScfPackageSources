@@ -81,7 +81,7 @@ namespace Senparc.Scf.Service.ServiceBase
             return RepositoryBase.ObjectCount(where, includes);
         }
 
-        public override decimal GetSum(Expression<Func<TEntity, bool>> where, Func<TEntity, decimal> sum,params string[] includes)
+        public override decimal GetSum(Expression<Func<TEntity, bool>> where, Expression<Func<TEntity, decimal>> sum,params string[] includes)
         {
             return RepositoryBase.GetSum(where, sum, includes);
         }

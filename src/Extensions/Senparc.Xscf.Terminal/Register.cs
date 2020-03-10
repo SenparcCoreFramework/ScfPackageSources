@@ -18,7 +18,7 @@ namespace Senparc.Xscf.Terminal
 
         public override string Name => "Senparc.Xscf.Terminal";
         public override string Uid => "600C608A-F99A-4B1B-A18E-8CE69BE8DA92";//必须确保全局唯一，生成后必须固定
-        public override string Version => "0.1.5.5";//必须填写版本号
+        public override string Version => "0.1.6";//必须填写版本号
 
         public override string MenuName => "终端模块";
         public override string Icon => "fa fa-terminal";

@@ -30,6 +30,10 @@ namespace Senparc.Scf.AreaBase.Admin
                 return _xscfModuleDto;
             }
         }
+        /// <summary>
+        /// XscfModuleDto.Uid
+        /// </summary>
+        public string XscfModuleUid => XscfModuleDto?.Uid;
 
         /// <summary>
         /// 当前正在操作的 XscfRegister
