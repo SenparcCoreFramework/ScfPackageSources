@@ -6,15 +6,6 @@ namespace Senparc.Scf.Core.Models
 {
     public interface IEntityBase : ISoftDelete
     {
-
-    }
-
-    public interface IEntityBase<TKey> : IEntityBase
-    {
-        /// <summary>
-        /// 主键
-        /// </summary>
-        TKey Id { get; set; }
         /// <summary>
         /// 添加时间
         /// </summary>
@@ -23,5 +14,13 @@ namespace Senparc.Scf.Core.Models
         /// 更新时间
         /// </summary>
         DateTime LastUpdateTime { get; set; }
+    }
+
+    public interface IEntityBase<TKey> : IEntityBase
+    {
+        /// <summary>
+        /// 主键
+        /// </summary>
+        TKey Id { get; set; }
     }
 }
