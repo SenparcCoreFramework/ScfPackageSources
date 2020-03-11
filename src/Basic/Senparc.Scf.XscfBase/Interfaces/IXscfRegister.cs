@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Scf.Core.Enums;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,6 +43,11 @@ namespace Senparc.Scf.XscfBase
         IList<Type> Functions { get; }
 
         /// <summary>
+        /// 添加 AutoMap 映射
+        /// </summary>
+        ConcurrentBag<Action<Profile>> AutoMapMappingConfigs { get; set; }
+
+        /// <summary>
         /// 安装代码
         /// </summary>
         Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate);
@@ -71,6 +78,12 @@ namespace Senparc.Scf.XscfBase
         IServiceCollection AddXscfModule(IServiceCollection services);
 
         /// <summary>
+        /// 添加AutoMap的映射关系
+        /// </summary>
+        /// <param name="mapping"></param>
+        void AddAutoMapMapping(Action<Profile> mapping);
+
+        /// <summary>
         /// 在 startup.cs 的 Configure() 方法中执行配置
         /// </summary>
         /// <param name="app"></param>
@@ -82,5 +95,7 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         /// <returns></returns>
         string GetDatabaseMigrationHistoryTableName();
+
+      
     }
 }

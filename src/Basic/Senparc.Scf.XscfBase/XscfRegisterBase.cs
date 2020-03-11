@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,7 @@ using Senparc.Scf.Core.Exceptions;
 using Senparc.Scf.Core.Models;
 using Senparc.Scf.XscfBase.Database;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -51,6 +53,12 @@ namespace Senparc.Scf.XscfBase
         /// 注册方法，注册的顺序决定了界面中排列的顺序
         /// </summary>
         public abstract IList<Type> Functions { get; }
+
+        /// <summary>
+        /// 添加 AutoMap 映射
+        /// </summary>
+        public virtual ConcurrentBag<Action<Profile>> AutoMapMappingConfigs { get; set; }
+
 
         /// <summary>
         /// 执行 Migrate 更新数据
@@ -211,6 +219,21 @@ namespace Senparc.Scf.XscfBase
             return app;
         }
 
+        public static object AddAutoMapMappingLock = new object();
+        public virtual void AddAutoMapMapping(Action<Profile> mapping)
+        {
+            if (AutoMapMappingConfigs == null)
+            {
+                lock (AddAutoMapMappingLock)
+                {
+                    if (AutoMapMappingConfigs == null)
+                    {
+                        AutoMapMappingConfigs = new ConcurrentBag<Action<Profile>>();
+                    }
+                }
+            }
+            AutoMapMappingConfigs.Add(mapping);
+        }
 
         /// <summary>
         /// 获取 EF Code First MigrationHistory 数据库表名
@@ -224,6 +247,7 @@ namespace Senparc.Scf.XscfBase
             }
             return null;
         }
+
 
         /// <summary>
         /// 数据库 DbContext 选项配置

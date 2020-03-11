@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Helpers;
@@ -121,6 +122,12 @@ namespace Senparc.Scf.XscfBase
                 xscfRegister.AddXscfModule(services);
                 sb.AppendLine($"[{SystemTime.Now}] 完成模块 services.AddXscfModule() 注册：共扫描 {scanTypesCount} 个程序集");
             }
+
+            //支持 AutoMapper
+            //引入当前系统
+            services.AddAutoMapper(z => z.AddProfile<Core.AutoMapper.SystemProfile>());
+            //引入所有模块
+            services.AddAutoMapper(z => z.AddProfile<AutoMapper.XscfModuleProfile>());
 
             return sb.ToString();
         }
