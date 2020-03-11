@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Trace;
@@ -180,6 +181,15 @@ namespace Senparc.Scf.XscfBase
 
             sb.AppendLine($"[{SystemTime.Now}] 扫描结束，共新增或更新 {updatedCount} 个程序集");
             return sb.ToString();
+        }
+
+        public static IApplicationBuilder UseScfModules(IApplicationBuilder app)
+        {
+            foreach (var register in RegisterList)
+            {
+                register.UseXscfModule(app);
+            }
+            return app;
         }
     }
 }

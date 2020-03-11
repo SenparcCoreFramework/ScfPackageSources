@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -27,6 +28,7 @@ namespace Senparc.Scf.Core.Models
         [MaxLength(150)]
         public string Remark { get; set; }
 
+        [IgnoreMap]
         /// <summary>
         /// 添加时间
         /// </summary>

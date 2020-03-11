@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
@@ -199,6 +200,17 @@ namespace Senparc.Scf.XscfBase
             }
             return services;
         }
+
+        /// <summary>
+        /// 在 startup.cs 的 Configure() 方法中执行配置
+        /// </summary>
+        /// <param name="app"></param>
+        /// <returns></returns>
+        public virtual IApplicationBuilder UseXscfModule(IApplicationBuilder app)
+        {
+            return app;
+        }
+
 
         /// <summary>
         /// 获取 EF Code First MigrationHistory 数据库表名

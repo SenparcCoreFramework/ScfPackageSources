@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.Scf.Core.Enums;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,13 @@ namespace Senparc.Scf.XscfBase
         /// <param name="services">IServiceCollection</param>
         /// <returns></returns>
         IServiceCollection AddXscfModule(IServiceCollection services);
+
+        /// <summary>
+        /// 在 startup.cs 的 Configure() 方法中执行配置
+        /// </summary>
+        /// <param name="app"></param>
+        /// <returns></returns>
+        IApplicationBuilder UseXscfModule(IApplicationBuilder app);
 
         /// <summary>
         /// 获取 EF Code First MigrationHistory 数据库表名
