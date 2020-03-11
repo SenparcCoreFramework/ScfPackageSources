@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Senparc.Scf.Core.Dto;
 using Senparc.Scf.Core.Enums;
 using Senparc.Scf.Core.Models;
 using Senparc.Scf.Repository;
