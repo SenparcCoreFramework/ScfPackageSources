@@ -29,7 +29,7 @@ namespace Senparc.Scf.XscfBase
         public static List<IXscfDatabase> XscfDatabaseList => RegisterList.Where(z => z is IXscfDatabase).Select(z => z as IXscfDatabase).ToList();
 
         /// <summary>
-        /// 初始化扫描
+        /// 启动 XSCF 模块引擎，包括初始化扫描和注册等过程
         /// </summary>
         /// <returns></returns>
         public static string StartEngine(this IServiceCollection services)
@@ -190,11 +190,21 @@ namespace Senparc.Scf.XscfBase
             return sb.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="app"></param>
+        /// <returns></returns>
         public static IApplicationBuilder UseScfModules(IApplicationBuilder app)
         {
             foreach (var register in RegisterList)
             {
                 register.UseXscfModule(app);
+
+                if (register is IXscfMiddleware middlewareRegister)
+                {
+                    middlewareRegister.UseMiddleware(app);
+                }
             }
             return app;
         }
