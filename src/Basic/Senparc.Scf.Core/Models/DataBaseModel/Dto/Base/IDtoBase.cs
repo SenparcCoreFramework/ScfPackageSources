@@ -6,34 +6,34 @@ using System.Text;
 namespace Senparc.Scf.Core.Models
 {
     /// <summary>
-    /// 数据库 Dto 基类
+    /// 所有 DTO 接口或类的基类
     /// </summary>
-    public class DtoBase: IDtoBase
+    public interface IDtoBase
     {
         /// <summary>
         /// 是否软删除
         /// </summary>
-        public bool Flag { get; set; }
+        bool Flag { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         [MaxLength(150)]
-        public string AdminRemark { get; set; }
+        string AdminRemark { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         [MaxLength(150)]
-        public string Remark { get; set; }
+        string Remark { get; set; }
 
         /// <summary>
         /// 添加时间
         /// </summary>
-        public DateTime AddTime { get; set; }
+        DateTime AddTime { get; set; }
         /// <summary>
         /// 上次更新时间
         /// </summary>
-        public DateTime LastUpdateTime { get; set; }
+        DateTime LastUpdateTime { get; set; }
     }
 }
