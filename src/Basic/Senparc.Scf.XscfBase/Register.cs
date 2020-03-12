@@ -199,11 +199,23 @@ namespace Senparc.Scf.XscfBase
         {
             foreach (var register in RegisterList)
             {
-                register.UseXscfModule(app);
+                try
+                {
+                    register.UseXscfModule(app);
+                }
+                catch
+                {
+                }
 
                 if (register is IXscfMiddleware middlewareRegister)
                 {
-                    middlewareRegister.UseMiddleware(app);
+                    try
+                    {
+                        middlewareRegister.UseMiddleware(app);
+                    }
+                    catch
+                    {
+                    }
                 }
             }
             return app;
