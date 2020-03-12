@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Scf.Core.Areas;
 using Senparc.Scf.Core.Enums;
@@ -219,7 +220,7 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
-        public virtual IApplicationBuilder UseXscfModule(IApplicationBuilder app)
+        public virtual IApplicationBuilder UseXscfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             return app;
         }

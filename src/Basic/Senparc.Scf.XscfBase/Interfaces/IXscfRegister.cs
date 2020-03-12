@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.RegisterServices;
 using Senparc.Scf.Core.Enums;
 using System;
 using System.Collections.Concurrent;
@@ -91,8 +92,9 @@ namespace Senparc.Scf.XscfBase
         /// 在 startup.cs 的 Configure() 方法中执行配置
         /// </summary>
         /// <param name="app"></param>
+        /// <param name="registerService">CO2NET 注册对象</param>
         /// <returns></returns>
-        IApplicationBuilder UseXscfModule(IApplicationBuilder app);
+        IApplicationBuilder UseXscfModule(IApplicationBuilder app, IRegisterService registerService);
 
         /// <summary>
         /// 获取 EF Code First MigrationHistory 数据库表名
