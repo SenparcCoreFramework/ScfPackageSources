@@ -18,6 +18,9 @@ using System.Threading.Tasks;
 
 namespace Senparc.Scf.XscfBase
 {
+    /// <summary>
+    /// Xscf 全局注册类
+    /// </summary>
     public static class Register
     {
         /// <summary>
@@ -76,10 +79,9 @@ namespace Senparc.Scf.XscfBase
                 {
                     sb.AppendLine($"[{SystemTime.Now}] 满足条件对象：{types.Count()}");
 
-                    //先注册
+                    //先注册 XscfRegister
 
-                    //排序
-
+                    //筛选
                     var allTypes = types.Where(z => z != null && z.GetInterfaces().Contains(typeof(IXscfRegister)));
                     //按照优先级进行排序
                     var orderedTypes = allTypes.OrderByDescending(z =>
@@ -226,7 +228,7 @@ namespace Senparc.Scf.XscfBase
         /// <param name="app"></param>
         /// <param name="registerService">CO2NET 注册对象</param>
         /// <returns></returns>
-        public static IApplicationBuilder UseXscfModule(IApplicationBuilder app, IRegisterService registerService)
+        public static IApplicationBuilder UseXscfModules(IApplicationBuilder app, IRegisterService registerService)
         {
             foreach (var register in RegisterList)
             {
