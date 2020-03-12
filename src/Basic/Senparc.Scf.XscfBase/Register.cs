@@ -75,7 +75,22 @@ namespace Senparc.Scf.XscfBase
                     sb.AppendLine($"[{SystemTime.Now}] 满足条件对象：{types.Count()}");
 
                     //先注册
-                    foreach (var type in types.Where(z => z != null && z.GetInterfaces().Contains(typeof(IXscfRegister))))
+
+                    //排序
+
+                    var allTypes = types.Where(z => z != null && z.GetInterfaces().Contains(typeof(IXscfRegister)));
+                    //按照优先级进行排序
+                    var orderedTypes = allTypes.OrderByDescending(z =>
+                    {
+                        var orderAttribute = z.GetCustomAttributes(true).FirstOrDefault(z => z is XscfOrderAttribute) as XscfOrderAttribute;
+                        if (orderAttribute != null)
+                        {
+                            return orderAttribute.Order;
+                        }
+                        return 0;
+                    });
+
+                    foreach (var type in orderedTypes)
                     {
                         sb.AppendLine($"[{SystemTime.Now}] 扫描到 IXscfRegister：{type.FullName}");
 

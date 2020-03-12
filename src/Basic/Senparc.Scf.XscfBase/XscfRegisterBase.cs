@@ -26,6 +26,11 @@ namespace Senparc.Scf.XscfBase
     public abstract class XscfRegisterBase : IXscfRegister
     {
         /// <summary>
+        /// 是否可安装（但不影响执行注册代码），默认为 true
+        /// </summary>
+        public virtual bool CanInstall => true;
+
+        /// <summary>
         /// 模块名称，要求全局唯一
         /// </summary>
         public abstract string Name { get; }
