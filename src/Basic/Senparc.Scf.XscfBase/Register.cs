@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Helpers;
+using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Scf.Core.Enums;
 using Senparc.Scf.Core.Exceptions;
@@ -17,6 +18,9 @@ using System.Threading.Tasks;
 
 namespace Senparc.Scf.XscfBase
 {
+    /// <summary>
+    /// Xscf 全局注册类
+    /// </summary>
     public static class Register
     {
         /// <summary>
@@ -37,6 +41,7 @@ namespace Senparc.Scf.XscfBase
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"[{SystemTime.Now}] 开始初始化扫描 XscfModules");
             var scanTypesCount = 0;
+            var hideTypeCount = 0;
             IEnumerable<Type> types = null;
             //var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
             //using (cache.BeginCacheLock("Senparc.Scf.XscfBase.Register", "Scan")) //在注册阶段还未完成缓存配置
@@ -74,8 +79,22 @@ namespace Senparc.Scf.XscfBase
                 {
                     sb.AppendLine($"[{SystemTime.Now}] 满足条件对象：{types.Count()}");
 
-                    //先注册
-                    foreach (var type in types.Where(z => z != null && z.GetInterfaces().Contains(typeof(IXscfRegister))))
+                    //先注册 XscfRegister
+
+                    //筛选
+                    var allTypes = types.Where(z => z != null && z.GetInterfaces().Contains(typeof(IXscfRegister)));
+                    //按照优先级进行排序
+                    var orderedTypes = allTypes.OrderByDescending(z =>
+                    {
+                        var orderAttribute = z.GetCustomAttributes(true).FirstOrDefault(z => z is XscfOrderAttribute) as XscfOrderAttribute;
+                        if (orderAttribute != null)
+                        {
+                            return orderAttribute.Order;
+                        }
+                        return 0;
+                    });
+
+                    foreach (var type in orderedTypes)
                     {
                         sb.AppendLine($"[{SystemTime.Now}] 扫描到 IXscfRegister：{type.FullName}");
 
@@ -88,11 +107,18 @@ namespace Senparc.Scf.XscfBase
                                 throw new XscfFunctionException("已经存在相同 Uid 的模块：" + register.Uid);
                             }
 
-                            RegisterList.Add(register);
-                            services.AddScoped(type);//DI 中注册
-                            foreach (var functionType in register.Functions)
+                            if (!register.IgnoreInstall)
                             {
-                                services.AddScoped(functionType);//DI 中注册
+                                RegisterList.Add(register);//只有允许安装的才进行注册，否则执行完即结束
+                                services.AddScoped(type);//DI 中注册
+                                foreach (var functionType in register.Functions)
+                                {
+                                    services.AddScoped(functionType);//DI 中注册
+                                }
+                            }
+                            else
+                            {
+                                hideTypeCount++;
                             }
                         }
                     }
@@ -113,7 +139,13 @@ namespace Senparc.Scf.XscfBase
                     //}
                 }
             }
-            sb.AppendLine($"[{SystemTime.Now}] 初始化扫描结束，共扫描 {scanTypesCount} 个程序集");
+
+            var scanResult = "初始化扫描结束，共扫描 {scanTypesCount} 个程序集";
+            if (hideTypeCount>0)
+            {
+                scanResult += $"。其中 {hideTypeCount} 个程序集为非安装程序集，不会被缓存";
+            }
+            sb.AppendLine($"[{SystemTime.Now}] {scanResult}");
 
 
             //微模块进行 Service 注册
@@ -194,14 +226,15 @@ namespace Senparc.Scf.XscfBase
         /// 
         /// </summary>
         /// <param name="app"></param>
+        /// <param name="registerService">CO2NET 注册对象</param>
         /// <returns></returns>
-        public static IApplicationBuilder UseScfModules(IApplicationBuilder app)
+        public static IApplicationBuilder UseXscfModules(IApplicationBuilder app, IRegisterService registerService)
         {
             foreach (var register in RegisterList)
             {
                 try
                 {
-                    register.UseXscfModule(app);
+                    register.UseXscfModule(app, registerService);
                 }
                 catch
                 {
