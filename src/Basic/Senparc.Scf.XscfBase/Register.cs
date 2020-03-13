@@ -107,7 +107,7 @@ namespace Senparc.Scf.XscfBase
                                 throw new XscfFunctionException("已经存在相同 Uid 的模块：" + register.Uid);
                             }
 
-                            if (register.CanInstall)
+                            if (!register.IgnoreInstall)
                             {
                                 RegisterList.Add(register);//只有允许安装的才进行注册，否则执行完即结束
                                 services.AddScoped(type);//DI 中注册

@@ -14,9 +14,9 @@ namespace Senparc.Scf.XscfBase
     public interface IXscfRegister
     {
         /// <summary>
-        /// 是否可安装（但不影响执行注册代码）
+        /// 是否忽略安装（但不影响执行注册代码）
         /// </summary>
-        bool CanInstall { get; }
+        bool IgnoreInstall { get; }
         /// <summary>
         /// 模块名称，要求全局唯一
         /// </summary>
