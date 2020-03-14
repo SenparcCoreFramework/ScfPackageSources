@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Scf.Core.Enums;
@@ -79,8 +80,9 @@ namespace Senparc.Scf.XscfBase
         /// 在 ConfigureServices 启动时注册当前模块
         /// </summary>
         /// <param name="services">IServiceCollection</param>
+        /// <param name="configuration">Configuration</param>
         /// <returns></returns>
-        IServiceCollection AddXscfModule(IServiceCollection services);
+        IServiceCollection AddXscfModule(IServiceCollection services, IConfiguration configuration);
 
         /// <summary>
         /// 添加AutoMap的映射关系

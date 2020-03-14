@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
@@ -185,7 +186,7 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public virtual IServiceCollection AddXscfModule(IServiceCollection services)
+        public virtual IServiceCollection AddXscfModule(IServiceCollection services, IConfiguration configuration)
         {
             if (this is IXscfDatabase databaseRegister)
             {

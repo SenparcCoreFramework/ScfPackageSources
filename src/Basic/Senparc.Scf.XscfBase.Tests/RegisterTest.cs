@@ -18,7 +18,7 @@ namespace Senparc.Scf.XscfBase.Tests
 
         public override string MenuName => "测试模块";
         public override string Icon => "fa fa-space-shuttle";//参考如：https://colorlib.com/polygon/gentelella/icons.html
-       
+
         public override string Description => "这是测试模块的介绍";
 
         public override IList<Type> Functions => new List<Type>() { typeof(FunctionBaseTest_Function) };
@@ -42,7 +42,7 @@ namespace Senparc.Scf.XscfBase.Tests
         [TestMethod]
         public void StartEngineTest()
         {
-            var result = base.ServiceCollection.StartEngine();
+            var result = base.ServiceCollection.StartEngine(TestBase.Configuration);
             Console.WriteLine(result);
             Assert.IsTrue(Senparc.Scf.XscfBase.Register.RegisterList.Count > 0);
         }
