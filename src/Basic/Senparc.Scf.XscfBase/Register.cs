@@ -1,16 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Cache;
-using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Scf.Core.Enums;
-using Senparc.Scf.Core.Exceptions;
 using Senparc.Scf.Core.Models.DataBaseModel;
 using Senparc.Scf.Service;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +22,7 @@ namespace Senparc.Scf.XscfBase
     public static class Register
     {
         /// <summary>
-        /// 模块和方法集合 TODO：可放置到缓存中
+        /// 模块和方法集合。 TODO：可放置到缓存中
         /// </summary>
         public static List<IXscfRegister> RegisterList { get; set; } = new List<IXscfRegister>();
         /// <summary>
@@ -36,13 +34,15 @@ namespace Senparc.Scf.XscfBase
         /// 启动 XSCF 模块引擎，包括初始化扫描和注册等过程
         /// </summary>
         /// <returns></returns>
-        public static string StartEngine(this IServiceCollection services)
+        public static string StartEngine(this IServiceCollection services, IConfiguration configuration)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"[{SystemTime.Now}] 开始初始化扫描 XscfModules");
             var scanTypesCount = 0;
             var hideTypeCount = 0;
             IEnumerable<Type> types = null;
+
+            //所有 XSCF 模块，包括被忽略的。
             //var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
             //using (cache.BeginCacheLock("Senparc.Scf.XscfBase.Register", "Scan")) //在注册阶段还未完成缓存配置
             {
@@ -107,18 +107,16 @@ namespace Senparc.Scf.XscfBase
                                 throw new XscfFunctionException("已经存在相同 Uid 的模块：" + register.Uid);
                             }
 
-                            if (!register.IgnoreInstall)
-                            {
-                                RegisterList.Add(register);//只有允许安装的才进行注册，否则执行完即结束
-                                services.AddScoped(type);//DI 中注册
-                                foreach (var functionType in register.Functions)
-                                {
-                                    services.AddScoped(functionType);//DI 中注册
-                                }
-                            }
-                            else
+                            if (register.IgnoreInstall)
                             {
                                 hideTypeCount++;
+
+                            }
+                            RegisterList.Add(register);//只有允许安装的才进行注册，否则执行完即结束
+                            services.AddScoped(type);//DI 中注册
+                            foreach (var functionType in register.Functions)
+                            {
+                                services.AddScoped(functionType);//DI 中注册
                             }
                         }
                     }
@@ -141,7 +139,7 @@ namespace Senparc.Scf.XscfBase
             }
 
             var scanResult = "初始化扫描结束，共扫描 {scanTypesCount} 个程序集";
-            if (hideTypeCount>0)
+            if (hideTypeCount > 0)
             {
                 scanResult += $"。其中 {hideTypeCount} 个程序集为非安装程序集，不会被缓存";
             }
@@ -151,9 +149,9 @@ namespace Senparc.Scf.XscfBase
             //微模块进行 Service 注册
             foreach (var xscfRegister in RegisterList)
             {
-                xscfRegister.AddXscfModule(services);
-                sb.AppendLine($"[{SystemTime.Now}] 完成模块 services.AddXscfModule() 注册：共扫描 {scanTypesCount} 个程序集");
+                xscfRegister.AddXscfModule(services, configuration);
             }
+            sb.AppendLine($"[{SystemTime.Now}] 完成模块 services.AddXscfModule()：共扫描 {scanTypesCount} 个程序集");
 
             //支持 AutoMapper
             //引入当前系统
@@ -188,6 +186,12 @@ namespace Senparc.Scf.XscfBase
                 foreach (var register in RegisterList)
                 {
                     sb.AppendLine($"[{SystemTime.Now}] 扫描到 IXscfRegister：{register.GetType().FullName}");
+                    if (register.IgnoreInstall)
+                    {
+                        sb.AppendLine($"[{SystemTime.Now}] 当前模块要求忽略安装 uid：[{justScanThisUid}]，此模块跳过");
+                        continue;
+                    }
+
                     if (justScanThisUid != null && register.Uid != justScanThisUid)
                     {
                         sb.AppendLine($"[{SystemTime.Now}] 由于只要求更新 uid：[{justScanThisUid}]，此模块跳过");

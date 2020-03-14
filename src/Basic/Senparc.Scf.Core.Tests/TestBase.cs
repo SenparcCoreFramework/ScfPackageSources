@@ -12,6 +12,7 @@ namespace Senparc.Scf.Core.Tests
     public class TestBase
     {
         public IServiceCollection ServiceCollection { get; } = new ServiceCollection();
+        public static IConfiguration Configuration { get; set; }
 
         protected static IRegisterService registerService;
         protected static SenparcSetting _senparcSetting;
@@ -31,6 +32,7 @@ namespace Senparc.Scf.Core.Tests
             var configBuilder = new ConfigurationBuilder();
             configBuilder.AddJsonFile("appsettings.json", false, false);
             var config = configBuilder.Build();
+            Configuration = config;
 
             _senparcSetting = new SenparcSetting() { IsDebug = true };
             config.GetSection("SenparcSetting").Bind(_senparcSetting);
