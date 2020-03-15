@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.3.119-beta1</Version>
+    <Version>0.3.200-beta1</Version>
     <AssemblyName>Senparc.Scf.Repository</AssemblyName>
     <RootNamespace>Senparc.Scf.Repository</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -32,7 +32,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET" Version="1.3.101" />
+    <PackageReference Include="Senparc.CO2NET" Version="1.3.104" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Scf.Core\Senparc.Scf.Core.csproj" />
