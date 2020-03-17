@@ -276,7 +276,7 @@ namespace Senparc.Scf.XscfBase
                         .MigrationsHistoryTable(databaseMigrationHistoryTableName);
                 }
 
-                //可以支持其他跟他多数据库
+                //可以支持其他更多数据库
             }
         }
     }

@@ -17,7 +17,7 @@ namespace Senparc.Scf.XscfBase.Functions
         /// <param name="func"></param>
         /// <returns></returns>
         public static FunctionResult RunFunction<T>(IFunctionParameter param, Func<T, StringBuilder, FunctionResult, FunctionResult> func)
-        where T : IFunctionParameter
+            where T : IFunctionParameter
         {
             var typeParam = (T)param;
             StringBuilder sb = new StringBuilder();
@@ -55,14 +55,13 @@ namespace Senparc.Scf.XscfBase.Functions
         /// <param name="action"></param>
         /// <returns></returns>
         public static FunctionResult RunFunction<T>(IFunctionParameter param, Action<T, StringBuilder, FunctionResult> action)
-where T : IFunctionParameter
+            where T : IFunctionParameter
         {
             return RunFunction<T>(param, (typeParam, sb, result) =>
-             {
-                 action(typeParam, sb, result);
-                 return null;
-
-             });
+            {
+                action(typeParam, sb, result);
+                return null;
+            });
         }
 
 
