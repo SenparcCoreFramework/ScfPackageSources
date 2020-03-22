@@ -130,7 +130,7 @@ namespace Senparc.Scf.Repository
         Task BeginTransactionAsync(System.Data.IsolationLevel isolationLevel);
 
         /// <summary>
-        /// 开启事物
+        /// 开启事务
         /// </summary>
         /// <returns></returns>
         void BeginTransaction();
