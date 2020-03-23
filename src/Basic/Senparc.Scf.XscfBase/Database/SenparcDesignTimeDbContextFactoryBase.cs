@@ -65,7 +65,14 @@ namespace Senparc.Scf.XscfBase.Database
 
             //配置数据库
             var builder = new DbContextOptionsBuilder<TSenparcEntities>();
-            builder.UseSqlServer(SqlConnectionStr, b => register.DbContextOptionsAction(b, null));
+            builder.UseSqlServer(SqlConnectionStr, b =>
+            {
+                register.DbContextOptionsAction(b, null);
+                b.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(5),
+                    errorNumbersToAdd: new int[] { 2 });
+            });
 
             //还可以补充更多的数据库类型
 

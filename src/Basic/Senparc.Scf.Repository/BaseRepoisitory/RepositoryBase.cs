@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Storage;
 using Senparc.CO2NET;
 using Senparc.Scf.Core.Enums;
@@ -22,8 +23,7 @@ namespace Senparc.Scf.Repository
         //{
         //}
 
-        public RepositoryBase(ISqlBaseFinanceData db) :
-            base(db)
+        public RepositoryBase(ISqlBaseFinanceData db) : base(db)
         {
             //System.Web.HttpContext.Current.Response.Write("-"+this.GetType().Name + "<br />");
             //DB = db ?? ObjectFactory.GetInstance<ISqlClientFinanceData>();//如果没有定义，取默认数据库
@@ -50,7 +50,7 @@ namespace Senparc.Scf.Repository
             //entry.IsKeySet
         }
 
-        public virtual IQueryable<T> GeAll<TK>(Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
+        public virtual IQueryable<T> GeAll<TOrderProperty>(Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, params string[] includes)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
             return BaseDB.BaseDataContext.Set<T>()
@@ -60,7 +60,18 @@ namespace Senparc.Scf.Repository
                         .OrderBy(orderBy, orderingType).AsQueryable();
         }
 
-        public virtual PagedList<T> GetObjectList<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, int pageIndex, int pageCount, params string[] includes)
+        public virtual IQueryable<T> GeAll<TOrderProperty, TIncludesProperty>(Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType,
+            /*[JetBrains.Annotations.NotNull]*/Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            //Expression<Func<TEntity, TIncludesProperty>> navigationPropertyPath
+
+            //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
+            return includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>())
+                          .OrderBy(orderBy, orderingType).AsQueryable();
+        }
+
+
+        public virtual PagedList<T> GetObjectList<TOrderProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, int pageIndex, int pageCount, params string[] includes)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
             int skipCount = Senparc.Scf.Core.Utility.Extensions.GetSkipRecord(pageIndex, pageCount);
@@ -115,10 +126,61 @@ namespace Senparc.Scf.Repository
             PagedList<T> list = new PagedList<T>(result, pageIndex, pageCount, totalCount, skipCount);
             return list;
         }
+        public virtual PagedList<T> GetObjectList<TOrderProperty, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, int pageIndex, int pageCount, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
+            int skipCount = Senparc.Scf.Core.Utility.Extensions.GetSkipRecord(pageIndex, pageCount);
+            int totalCount = -1;
+            List<T> result = null;
+            //var query = BaseDB.BaseDataContext.CreateQuery<T>(sql).Includes(includes).OrderBy(orderBy, orderingType);//.Includes(includes);
+            IQueryable<T> resultList = includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>())
+                                        .OrderBy(orderBy, orderingType)
+                                        .Where(where)
+                                        .OrderBy(orderBy, orderingType);//.Includes(includes);
 
+            if (pageCount > 0 && pageIndex > 0)
+            {
+                resultList = resultList.Skip(skipCount).Take(pageCount);
+                totalCount = this.ObjectCount(where, null); //whereList.Count();
+            }
+            //else
+            //{
+            //    resultList = query.;
+            //}
 
+            //try
+            {
+                result = resultList.ToList();
+            }
+            //catch (ArgumentException ex)//DbArithmeticExpression 参数必须具有数值通用类型。
+            //{
+            //    //通常是ordery by的问题 TODO:重新整理是否需要Skip等操作
+            //    //result = query.Includes(includes)
+            //    //            .OrderByIEnumerable(orderBy.Compile(), orderingType)//改用非延时地方法，效率最低
+            //    //            .Skip(skipCount).Take(pageCount)
+            //    //            .Where(where.Compile())//保险起见用where.Compile()，但是会影响效率
+            //    //            .ToList();
+            //    AdminLogUtility.WebLogger.Warn("EF ArgumentException", ex);
+            //    throw;
+            //}
+            //catch (NotSupportedException ex)//System.Reflection.TargetException
+            //{
+            //    result = resultList.Where(where.Compile()).ToList();
+            //    AdminLogUtility.WebLogger.Warn("EF NotSupportedException", ex);
+            //    throw;
+            //}
+            //catch (Exception ex)
+            //{
+            //    result = resultList.Where(where.Compile()).ToList();
+            //    AdminLogUtility.WebLogger.Warn("EF Exception", ex);
+            //    throw;
+            //}
 
-        public virtual async Task<PagedList<T>> GetObjectListAsync<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, int pageIndex, int pageCount, params string[] includes)
+            PagedList<T> list = new PagedList<T>(result, pageIndex, pageCount, totalCount, skipCount);
+            return list;
+        }
+
+        public virtual async Task<PagedList<T>> GetObjectListAsync<TOrderProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, int pageIndex, int pageCount, params string[] includes)
         {
             int skipCount = Senparc.Scf.Core.Utility.Extensions.GetSkipRecord(pageIndex, pageCount);
             int totalCount = -1;
@@ -140,8 +202,26 @@ namespace Senparc.Scf.Repository
             return list;
         }
 
+        public virtual async Task<PagedList<T>> GetObjectListAsync<TOrderProperty, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, int pageIndex, int pageCount, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            int skipCount = Senparc.Scf.Core.Utility.Extensions.GetSkipRecord(pageIndex, pageCount);
+            int totalCount = -1;
+            List<T> result = null;
+            IQueryable<T> resultList = includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>())
+                                               .OrderBy(orderBy, orderingType)
+                                               .Where(where)
+                                               .OrderBy(orderBy, orderingType);//.Includes(includes);
+            if (pageCount > 0 && pageIndex > 0)
+            {
+                resultList = resultList.Skip(skipCount).Take(pageCount);
+                totalCount = this.ObjectCount(where, null);
+            }
 
+            result = await resultList.ToListAsync();
 
+            PagedList<T> list = new PagedList<T>(result, pageIndex, pageCount, totalCount, skipCount);
+            return list;
+        }
 
 
         public virtual T GetFirstOrDefaultObject(Expression<Func<T, bool>> where, params string[] includes)
@@ -153,13 +233,28 @@ namespace Senparc.Scf.Repository
                  .Includes(includes).FirstOrDefault(where);
         }
 
-        public virtual T GetFirstOrDefaultObject<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
+        public virtual T GetFirstOrDefaultObject<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
+            return includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>())
+                       .FirstOrDefault(where);
+        }
+
+        public virtual T GetFirstOrDefaultObject<TOrderProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, params string[] includes)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
             return BaseDB.BaseDataContext
                  .Set<T>()
                  //.CreateQuery<T>(sql)
                  .Includes(includes).Where(where).OrderBy(orderBy, orderingType).FirstOrDefault();
+        }
+
+        public virtual T GetFirstOrDefaultObject<TOrderProperty, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
+            return includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>())
+                                        .OrderBy(orderBy, orderingType)
+                                        .Where(where).OrderBy(orderBy, orderingType).FirstOrDefault();
         }
 
         public virtual T GetObjectById(int id)
@@ -216,6 +311,27 @@ namespace Senparc.Scf.Repository
             return count;
         }
 
+        public virtual int ObjectCount<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
+            int count = 0;
+            IQueryable<T> query = includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>());
+            //try
+            {
+                count = query.Count(where);
+            }
+            //catch (NotSupportedException ex)
+            //{
+            //    count = query.Count(where.Compile());
+            //}
+            //catch (Exception ex)
+            //{
+            //    count = query.Count(where.Compile());
+            //    throw;
+            //}
+            return count;
+        }
+
         public virtual decimal GetSum(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, params string[] includes)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -226,6 +342,13 @@ namespace Senparc.Scf.Repository
             return result;
         }
 
+        public virtual decimal GetSum<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
+            decimal result = includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>())
+                                        .Where(where).Sum(sum);
+            return result;
+        }
         //public virtual object ObjectSum(Expression<Func<T, bool>> where, Func<T,object> sumBy, string[] includes)
         //{
         //    string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -332,13 +455,27 @@ namespace Senparc.Scf.Repository
                  .Includes(includes).FirstOrDefaultAsync(where);
         }
 
-        public virtual async Task<T> GetFirstOrDefaultObjectAsync<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
+        public async Task<T> GetFirstOrDefaultObjectAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            return await includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>())
+                                        .FirstOrDefaultAsync(where);
+        }
+
+        public virtual async Task<T> GetFirstOrDefaultObjectAsync<TOrderProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, params string[] includes)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
             return await BaseDB.BaseDataContext
                  .Set<T>()
                  //.CreateQuery<T>(sql)
                  .Includes(includes).Where(where).OrderBy(orderBy, orderingType).FirstOrDefaultAsync();
+        }
+
+        public virtual async Task<T> GetFirstOrDefaultObjectAsync<TOrderProperty, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
+            return await includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>())
+                                        .OrderBy(orderBy, orderingType)
+                                        .Where(where).OrderBy(orderBy, orderingType).FirstOrDefaultAsync();
         }
 
 
@@ -366,6 +503,27 @@ namespace Senparc.Scf.Repository
             return count;
         }
 
+        public virtual async Task<int> ObjectCountAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
+            int count = 0;
+            IQueryable<T> query = includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>());
+            //try
+            {
+                count = await query.CountAsync(where).ConfigureAwait(false);
+            }
+            //catch (NotSupportedException ex)
+            //{
+            //    count = query.Count(where.Compile());
+            //}
+            //catch (Exception ex)
+            //{
+            //    count = query.Count(where.Compile());
+            //    throw;
+            //}
+            return count;
+        }
+
         public virtual async Task<decimal> GetSumAsync(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, params string[] includes)
         {
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
@@ -373,6 +531,15 @@ namespace Senparc.Scf.Repository
                  .Set<T>()
                  //.CreateQuery<T>(sql)
                  .Includes(includes);
+
+            decimal result = await query.Where(where).SumAsync(sum);
+            return result;
+        }
+
+        public virtual async Task<decimal> GetSumAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
+            var query = includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>());
 
             decimal result = await query.Where(where).SumAsync(sum);
             return result;
@@ -469,6 +636,26 @@ namespace Senparc.Scf.Repository
                                                .Set<T>()
                                                .Includes(includes)
                                                .Where(where);
+            resultList = resultList.OrderByExtension(OrderbyField);
+            if (pageCount > 0 && pageIndex > 0)
+            {
+                resultList = resultList.Skip(skipCount).Take(pageCount);
+                totalCount = this.ObjectCount(where, null);
+            }
+
+            result = await resultList.ToListAsync();
+
+            PagedList<T> list = new PagedList<T>(result, pageIndex, pageCount, totalCount, skipCount);
+            return list;
+        }
+
+        public virtual async Task<PagedList<T>> GetObjectListAsync<TIncludesProperty>(Expression<Func<T, bool>> where, string OrderbyField, int pageIndex, int pageCount, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            int skipCount = Senparc.Scf.Core.Utility.Extensions.GetSkipRecord(pageIndex, pageCount);
+            int totalCount = -1;
+            List<T> result = null;
+            IQueryable<T> resultList = includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>())
+                                        .Where(where);
             resultList = resultList.OrderByExtension(OrderbyField);
             if (pageCount > 0 && pageIndex > 0)
             {
