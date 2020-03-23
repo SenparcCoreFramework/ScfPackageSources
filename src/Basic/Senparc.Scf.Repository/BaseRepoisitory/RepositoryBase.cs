@@ -23,8 +23,7 @@ namespace Senparc.Scf.Repository
         //{
         //}
 
-        public RepositoryBase(ISqlBaseFinanceData db) :
-            base(db)
+        public RepositoryBase(ISqlBaseFinanceData db) : base(db)
         {
             //System.Web.HttpContext.Current.Response.Write("-"+this.GetType().Name + "<br />");
             //DB = db ?? ObjectFactory.GetInstance<ISqlClientFinanceData>();//如果没有定义，取默认数据库
@@ -32,7 +31,7 @@ namespace Senparc.Scf.Repository
             base.BaseDB = db;
             // ObjectFactory.GetInstance<ISqlClientFinanceData>();
 
-            EntitySeTOrderPropertyeysDictionary keys = EntitySeTOrderPropertyeys.GetAllEntitySetInfo();
+            EntitySetKeysDictionary keys = EntitySetKeys.GetAllEntitySetInfo();
             _entitySetName = keys[typeof(T)].SetName;
         }
 
