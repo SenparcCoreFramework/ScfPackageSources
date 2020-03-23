@@ -60,7 +60,10 @@ namespace Senparc.Scf.Service
         bool IsInsert(T obj);
         void RollbackTransaction();
         void SaveObject(T obj);
+        void SaveChanges();
+
         Task SaveObjectAsync(T obj);
+        Task SaveChangesAsync();
         Task SaveObjectListAsync(IEnumerable<T> objs);
         void TryDetectChange(T obj);
     }

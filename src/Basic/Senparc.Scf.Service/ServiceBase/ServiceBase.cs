@@ -180,6 +180,11 @@ namespace Senparc.Scf.Service
             RepositoryBase.Save(obj);
         }
 
+        public virtual void SaveChanges()
+        {
+            RepositoryBase.SaveChanges();
+        }
+
         public virtual void DeleteObject(Expression<Func<T, bool>> predicate)
         {
             T obj = GetObject(predicate);
@@ -252,6 +257,11 @@ namespace Senparc.Scf.Service
                 TryDetectChange(obj);
             }
             await RepositoryBase.SaveAsync(obj).ConfigureAwait(false);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await RepositoryBase.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public virtual async Task DeleteObjectAsync(Expression<Func<T, bool>> predicate)
