@@ -200,7 +200,15 @@ namespace Senparc.Scf.XscfBase
                     //创建 DbContextOptionsBuilder 实例
                     DbContextOptionsBuilder dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
                     //继续定义配置
-                    dbOptionBuilder = SqlServerDbContextOptionsExtensions.UseSqlServer(dbOptionBuilder, Scf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString, b => databaseRegister.DbContextOptionsAction(b, null));
+                    dbOptionBuilder = SqlServerDbContextOptionsExtensions.UseSqlServer(dbOptionBuilder, Scf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString,
+                        b =>
+                        {
+                            databaseRegister.DbContextOptionsAction(b, null);
+                            b.EnableRetryOnFailure(
+                                maxRetryCount: 5,
+                                maxRetryDelay: TimeSpan.FromSeconds(5),
+                                errorNumbersToAdd: new int[] { 2 });
+                        });
                     //创建 SenparcEntities 实例
                     var xscfSenparcEntities = Activator.CreateInstance(databaseRegister.XscfDatabaseDbContextType, new object[] { dbOptionBuilder.Options });
                     return xscfSenparcEntities;
