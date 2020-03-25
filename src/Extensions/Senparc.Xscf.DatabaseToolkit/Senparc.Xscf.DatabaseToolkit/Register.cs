@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xscf.DatabaseToolkit
 {
     [XscfRegister]
-    public class Register : XscfRegisterBase, IXscfRegister
+    public partial class Register : XscfRegisterBase, IXscfRegister
     {
         public Register()
         { }
@@ -18,7 +18,7 @@ namespace Senparc.Xscf.DatabaseToolkit
         public override string Name => "Senparc.Xscf.DatabaseToolkit"
             ;
         public override string Uid => "3019CCBE-0739-43D5-9DED-027A0B26745E";//必须确保全局唯一，生成后必须固定
-        public override string Version => "0.2.2";//必须填写版本号
+        public override string Version => "0.3.0";//必须填写版本号
 
         public override string MenuName => "数据库工具包";
         public override string Icon => "fa fa-database";
@@ -28,6 +28,7 @@ namespace Senparc.Xscf.DatabaseToolkit
         /// 注册当前模块需要支持的功能模块
         /// </summary>
         public override IList<Type> Functions => new[] {
+            typeof(Functions.SetConfig),
             typeof(Functions.BackupDatabase),
             typeof(Functions.ExportSQL),
             typeof(Functions.CheckUpdate),
