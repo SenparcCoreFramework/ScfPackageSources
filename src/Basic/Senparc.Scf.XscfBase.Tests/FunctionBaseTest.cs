@@ -53,10 +53,10 @@ namespace Senparc.Scf.XscfBase.Tests
     public class FunctionBaseTest : TestBase
     {
         [TestMethod]
-        public void GetFunctionParammeterInfo()
+        public void GetFunctionParameterInfo()
         {
             FunctionBaseTest_Function function = new FunctionBaseTest_Function(null);
-            var paraInfo = function.GetFunctionParammeterInfo().ToList();
+            var paraInfo = function.GetFunctionParameterInfo().ToList();
 
             Assert.AreEqual(3, paraInfo.Count);
 
@@ -65,14 +65,14 @@ namespace Senparc.Scf.XscfBase.Tests
             Assert.AreEqual("本地物理路径，如：E:\\Senparc\\Scf\\", paraInfo[0].Description);
             Assert.AreEqual(true, paraInfo[0].IsRequired);
             Assert.AreEqual("String", paraInfo[0].SystemType);
-            Assert.AreEqual(ParammeterType.Text, paraInfo[0].ParammeterType);
+            Assert.AreEqual(ParameterType.Text, paraInfo[0].ParameterType);
 
             Assert.AreEqual("NewNamespace", paraInfo[1].Name);
             Assert.AreEqual("新命名空间", paraInfo[1].Title);
-            Assert.AreEqual(ParammeterType.Text, paraInfo[1].ParammeterType);
+            Assert.AreEqual(ParameterType.Text, paraInfo[1].ParameterType);
             Assert.AreEqual("命名空间根，必须以.结尾，用于替换[Senparc.Scf.]", paraInfo[1].Description);
 
-            Assert.AreEqual(ParammeterType.SingleSelection, paraInfo[2].ParammeterType);
+            Assert.AreEqual(ParameterType.SingleSelection, paraInfo[2].ParameterType);
             Assert.AreEqual("Site", paraInfo[2].Name);
             Assert.AreEqual("网站", paraInfo[2].Title);
             Assert.AreEqual("选择需要下载的网站", paraInfo[2].Description);
