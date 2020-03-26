@@ -66,7 +66,7 @@ namespace Senparc.Scf.XscfBase
         /// 获取所有参数的信息列表
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<FunctionParammeterInfo> GetFunctionParammeterInfo()
+        public IEnumerable<FunctionParameterInfo> GetFunctionParammeterInfo()
         {
             var props = FunctionParameterType.GetProperties();
             ParammeterType parammeterType = ParammeterType.Text;
@@ -107,7 +107,7 @@ namespace Senparc.Scf.XscfBase
                 }
                 var systemType = prop.PropertyType.Name;
 
-                yield return new FunctionParammeterInfo(name, title, description, isRequired, systemType, parammeterType, selectionItems?.ToArray());
+                yield return new FunctionParameterInfo(name, title, description, isRequired, systemType, parammeterType, selectionItems?.ToArray());
             }
         }
     }
