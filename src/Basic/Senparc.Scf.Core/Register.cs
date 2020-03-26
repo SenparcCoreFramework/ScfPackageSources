@@ -80,7 +80,7 @@ namespace Senparc.Scf.Core
             return services;
         }
 
-#if DEBUG
+        #region TryRegisterMiniCore
         /// <summary>
         /// 以最小化的过程进行自动注册，适用于缺少环境的单元测试、Code First 命令等。请勿在生产环境中使用此命令！
         /// <para>如果已经注册过，则返回 null</para>
@@ -124,6 +124,6 @@ namespace Senparc.Scf.Core
             var senparcSetting = CreateSenparcSetting();
             return Senparc.CO2NET.Register.UseSenparcGlobal(senparcSetting, reg => { });
         }
-#endif
+        #endregion
     }
 }
