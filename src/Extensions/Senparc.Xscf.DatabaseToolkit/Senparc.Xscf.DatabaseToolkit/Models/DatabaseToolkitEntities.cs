@@ -9,10 +9,11 @@ namespace Senparc.Xscf.DatabaseToolkit
 {
     public class DatabaseToolkitEntities : XscfDatabaseDbContext
     {
+        public override IXscfDatabase XscfDatabaseRegister => new Register();
         public DatabaseToolkitEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
         }
 
-        public override IXscfDatabase XscfDatabaseRegister => new Register();
+        public DbSet<DbConfig> DbConfigs { get; set; }
     }
 }

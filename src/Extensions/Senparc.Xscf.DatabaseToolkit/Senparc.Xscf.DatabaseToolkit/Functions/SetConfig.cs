@@ -5,15 +5,27 @@ using Senparc.Scf.XscfBase.Functions;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Scf.Service;
+using System.Threading.Tasks;
 
 namespace Senparc.Xscf.DatabaseToolkit.Functions
 {
     public class SetConfig : FunctionBase
     {
-        public class SetConfig_Parameters : IFunctionParameter
+        public class SetConfig_Parameters : FunctionParameterLoadDataBase, IFunctionParameter
         {
             public int BackupCycleMinutes { get; set; }
-            public string BackupPath { get; private set; }
+            public string BackupPath { get; set; }
+
+            public override async Task LoadData(IServiceProvider serviceProvider)
+            {
+                var configService = serviceProvider.GetService<ServiceBase<DbConfig>>();
+                var config = await configService.GetObjectAsync(z => true);
+                if (config != null)
+                {
+                    BackupCycleMinutes = config.BackupCycleMinutes;
+                    BackupPath = config.BackuPath;
+                }
+            }
         }
 
         //注意：Name 必须在单个 Xscf 模块中唯一！
