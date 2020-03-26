@@ -59,3 +59,4 @@ obj/
 /src/BuildOutPut
 /src/.vs
 /src/Basic/.vs/ScfPackageSources.Basic/DesignTimeBuild
+/src/Extensions/Senparc.Xscf.DatabaseToolkit/Senparc.Xscf.DatabaseToolkit/App_Data/SenparcTraceLog
