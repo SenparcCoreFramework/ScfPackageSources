@@ -39,19 +39,21 @@ namespace Senparc.Scf.XscfBase.Database
 
         public SenparcDesignTimeDbContextFactoryBase()
         {
-            if (!Senparc.CO2NET.RegisterServices.RegisterServiceExtension.SenparcGlobalServicesRegistered)
-            {
-                //未执行 AddSenparcGlobalServices 注册，执行注册过程
-                Host.CreateDefaultBuilder()
-                  .ConfigureWebHostDefaults(webBuilder =>
-                  {
-                      webBuilder.ConfigureServices((hostBuilder, services) =>
-                      {
-                          services.AddMemoryCache();//使用本地缓需要添加
-                          services.AddSenparcGlobalServices(hostBuilder.Configuration);
-                      });
-                  }).Build();
-            }
+            //if (!Senparc.CO2NET.RegisterServices.RegisterServiceExtension.SenparcGlobalServicesRegistered)
+            //{
+            //    //未执行 AddSenparcGlobalServices 注册，执行注册过程
+            //    Host.CreateDefaultBuilder()
+            //      .ConfigureWebHostDefaults(webBuilder =>
+            //      {
+            //          webBuilder.ConfigureServices((hostBuilder, services) =>
+            //          {
+            //              services.AddMemoryCache();//使用本地缓需要添加
+            //          services.AddSenparcGlobalServices(hostBuilder.Configuration);
+            //          });
+            //      }).Build();
+            //}
+
+            Senparc.Scf.Core.Register.TryRegisterMiniCore();
         }
 
         public virtual TSenparcEntities CreateDbContext(string[] args)

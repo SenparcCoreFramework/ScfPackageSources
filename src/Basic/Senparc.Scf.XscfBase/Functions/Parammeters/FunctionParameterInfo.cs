@@ -14,7 +14,7 @@ namespace Senparc.Scf.XscfBase
     /// <summary>
     /// FunctionParammeter 信息
     /// </summary>
-    public class FunctionParammeterInfo
+    public class FunctionParameterInfo
     {
         public string Name { get; set; }
         public string Title { get; set; }
@@ -32,11 +32,11 @@ namespace Senparc.Scf.XscfBase
         /// </summary>
         public string[] SelectionItems { get; set; }
 
-        public FunctionParammeterInfo()
+        public FunctionParameterInfo()
         {
         }
 
-        public FunctionParammeterInfo(string name, string title, string description,
+        public FunctionParameterInfo(string name, string title, string description,
             bool isRequired, string systemType, ParammeterType parammeterType, string[] selectionItems)
         {
             Name = name;

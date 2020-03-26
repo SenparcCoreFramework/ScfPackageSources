@@ -19,6 +19,7 @@ using System.Text.Unicode;
 using AutoMapper;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET;
+using log4net;
 
 namespace Senparc.Scf.Core
 {
@@ -36,7 +37,7 @@ namespace Senparc.Scf.Core
             AssembleScanHelper.AddAssembleScanItem(assembly =>
             {
                 var areaRegisterTypes = assembly.GetTypes() //.GetExportedTypes()
-                               .Where(z => !z.IsAbstract && !z.IsInterface && z.GetInterface("IAutoDI") != null)
+                               .Where(z => !z.IsAbstract && !z.IsInterface && z.GetInterface(nameof(IAutoDI)) != null)
                                .ToArray();
 
                 DILifecycleType dILifecycleType = DILifecycleType.Scoped;
@@ -78,5 +79,51 @@ namespace Senparc.Scf.Core
 
             return services;
         }
+
+        #region TryRegisterMiniCore
+        /// <summary>
+        /// 以最小化的过程进行自动注册，适用于缺少环境的单元测试、Code First 命令等。请勿在生产环境中使用此命令！
+        /// <para>如果已经注册过，则返回 null</para>
+        /// </summary>
+        public static IRegisterService TryRegisterMiniCore()
+        {
+            //初始化项目
+            if (!Senparc.CO2NET.RegisterServices.RegisterServiceExtension.SenparcGlobalServicesRegistered)
+            {
+                var repository = LogManager.CreateRepository("NETCoreRepository");//读取Log配置文件
+                RegisterServiceCollection();
+                return RegisterServiceStart();
+            }
+            return null;
+        }
+
+        private static SenparcSetting CreateSenparcSetting()
+        {
+            return new SenparcSetting() { IsDebug = true };
+        }
+
+        /// <summary>
+        /// 注册 IServiceCollection 和 MemoryCache
+        /// </summary>
+        private static void RegisterServiceCollection()
+        {
+            var serviceCollection = new ServiceCollection();
+            var configBuilder = new ConfigurationBuilder();
+            var config = configBuilder.Build();
+            serviceCollection.AddSenparcGlobalServices(config);
+            serviceCollection.AddMemoryCache();//使用内存缓存
+        }
+
+
+        /// <summary>
+        /// 注册 RegisterService.Start()
+        /// </summary>
+        private static IRegisterService RegisterServiceStart(bool autoScanExtensionCacheStrategies = false)
+        {
+            //注册
+            var senparcSetting = CreateSenparcSetting();
+            return Senparc.CO2NET.Register.UseSenparcGlobal(senparcSetting, reg => { });
+        }
+        #endregion
     }
 }
