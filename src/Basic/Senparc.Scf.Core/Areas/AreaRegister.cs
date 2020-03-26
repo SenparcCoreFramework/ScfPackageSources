@@ -32,7 +32,7 @@ namespace Senparc.Scf.Core.Areas
                 try
                 {
                     var areaRegisterTypes = assembly.GetTypes()
-                                .Where(z => z.GetInterface("IAreaRegister") != null)
+                                .Where(z => z.GetInterface(nameof(IAreaRegister)) != null)
                                 .ToArray();
 
                     foreach (var registerType in areaRegisterTypes)

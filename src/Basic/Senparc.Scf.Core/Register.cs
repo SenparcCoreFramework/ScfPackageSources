@@ -37,7 +37,7 @@ namespace Senparc.Scf.Core
             AssembleScanHelper.AddAssembleScanItem(assembly =>
             {
                 var areaRegisterTypes = assembly.GetTypes() //.GetExportedTypes()
-                               .Where(z => !z.IsAbstract && !z.IsInterface && z.GetInterface("IAutoDI") != null)
+                               .Where(z => !z.IsAbstract && !z.IsInterface && z.GetInterface(nameof(IAutoDI)) != null)
                                .ToArray();
 
                 DILifecycleType dILifecycleType = DILifecycleType.Scoped;
