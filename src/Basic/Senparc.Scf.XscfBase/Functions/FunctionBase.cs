@@ -66,17 +66,17 @@ namespace Senparc.Scf.XscfBase
         /// 获取所有参数的信息列表
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<FunctionParameterInfo> GetFunctionParameterInfo()
+        public IEnumerable<FunctionParameterInfo> GetFunctionParameterInfo(IServiceProvider serviceProvider)
         {
             var props = FunctionParameterType.GetProperties();
             ParameterType parameterType = ParameterType.Text;
             foreach (var prop in props)
             {
                 List<string> selectionItems = null;
+                var obj = GenerateParameterInstance();
                 //判断是否存在选项
                 if (prop.PropertyType.IsArray)
                 {
-                    var obj = GenerateParameterInstance();
                     var selection = prop.GetValue(obj, null);
                     if (selection == null)
                     {
@@ -107,7 +107,14 @@ namespace Senparc.Scf.XscfBase
                 }
                 var systemType = prop.PropertyType.Name;
 
-                yield return new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType, selectionItems?.ToArray());
+                object value = null;
+                if (obj is IFunctionParameterLoadDataBase loadDataParam)
+                {
+                    loadDataParam.LoadData(serviceProvider);//载入参数
+                    value = prop.GetValue(obj);
+                }
+
+                yield return new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType, selectionItems?.ToArray(), null);
             }
         }
     }

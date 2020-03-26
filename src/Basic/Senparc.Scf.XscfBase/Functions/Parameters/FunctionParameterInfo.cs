@@ -21,6 +21,7 @@ namespace Senparc.Scf.XscfBase
         public string Description { get; set; }
         public bool IsRequired { get; set; }
         public string SystemType { get; set; }
+        public object Value { get; set; }
 
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace Senparc.Scf.XscfBase
         }
 
         public FunctionParameterInfo(string name, string title, string description,
-            bool isRequired, string systemType, ParameterType parameterType, string[] selectionItems)
+            bool isRequired, string systemType, ParameterType parameterType, string[] selectionItems, object value)
         {
             Name = name;
             Title = title;
@@ -46,6 +47,7 @@ namespace Senparc.Scf.XscfBase
             SystemType = systemType;
             SelectionItems = selectionItems;
             ParameterType = parameterType;
+            Value = value;
         }
     }
 }
