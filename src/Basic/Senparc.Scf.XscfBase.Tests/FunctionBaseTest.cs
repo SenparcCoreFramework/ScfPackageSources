@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Scf.Core.Tests;
 using Senparc.Scf.XscfBase.Functions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Senparc.Scf.XscfBase.Tests
 {
@@ -56,7 +57,7 @@ namespace Senparc.Scf.XscfBase.Tests
         public void GetFunctionParameterInfo()
         {
             FunctionBaseTest_Function function = new FunctionBaseTest_Function(null);
-            var paraInfo = function.GetFunctionParameterInfo().ToList();
+            var paraInfo = function.GetFunctionParameterInfo(base.ServiceCollection.BuildServiceProvider()).ToList();
 
             Assert.AreEqual(3, paraInfo.Count);
 
