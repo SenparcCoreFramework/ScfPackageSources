@@ -56,9 +56,9 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
         {
             return FunctionHelper.RunFunction<SetConfig_Parameters>(param, (typeParam, sb, result) =>
              {
-                 RecordLog(sb, "开始获取 ISenparcEntities 对象");
-                 var senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntities)) as SenparcEntitiesBase;
-                 RecordLog(sb, "获取 ISenparcEntities 对象成功");
+                 //RecordLog(sb, "开始获取 ISenparcEntities 对象");
+                 //var senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntities)) as SenparcEntitiesBase;
+                 //RecordLog(sb, "获取 ISenparcEntities 对象成功");
 
                  var configService = base.ServiceProvider.GetService<ServiceBase<DbConfig>>();
                  var config = configService.GetObject(z => true);

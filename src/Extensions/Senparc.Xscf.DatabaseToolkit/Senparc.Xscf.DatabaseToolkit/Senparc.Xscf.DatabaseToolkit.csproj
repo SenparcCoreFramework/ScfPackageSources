@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.4.1-beta1</Version>
+    <Version>0.4.5-beta1</Version>
     <AssemblyName>Senparc.Xscf.DatabaseToolkit</AssemblyName>
     <RootNamespace>Senparc.Xscf.DatabaseToolkit</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
