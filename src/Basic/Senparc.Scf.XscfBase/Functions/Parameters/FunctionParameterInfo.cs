@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Senparc.Scf.XscfBase
 {
-    public enum ParammeterType
+    public enum ParameterType
     {
         Text,
         SingleSelection,
@@ -12,7 +12,7 @@ namespace Senparc.Scf.XscfBase
     }
 
     /// <summary>
-    /// FunctionParammeter 信息
+    /// FunctionParameter 信息
     /// </summary>
     public class FunctionParameterInfo
     {
@@ -21,12 +21,13 @@ namespace Senparc.Scf.XscfBase
         public string Description { get; set; }
         public bool IsRequired { get; set; }
         public string SystemType { get; set; }
+        public object Value { get; set; }
 
 
         /// <summary>
         /// 参数类型
         /// </summary>
-        public ParammeterType ParammeterType { get; set; } = ParammeterType.Text;
+        public ParameterType ParameterType { get; set; } = ParameterType.Text;
         /// <summary>
         /// 选项
         /// </summary>
@@ -37,7 +38,7 @@ namespace Senparc.Scf.XscfBase
         }
 
         public FunctionParameterInfo(string name, string title, string description,
-            bool isRequired, string systemType, ParammeterType parammeterType, string[] selectionItems)
+            bool isRequired, string systemType, ParameterType parameterType, string[] selectionItems, object value)
         {
             Name = name;
             Title = title;
@@ -45,7 +46,8 @@ namespace Senparc.Scf.XscfBase
             IsRequired = isRequired;
             SystemType = systemType;
             SelectionItems = selectionItems;
-            ParammeterType = parammeterType;
+            ParameterType = parameterType;
+            Value = value;
         }
     }
 }

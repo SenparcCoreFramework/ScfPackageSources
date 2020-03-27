@@ -1,10 +1,12 @@
-﻿using Senparc.Scf.XscfBase.Functions;
+﻿using Senparc.CO2NET.Trace;
+using Senparc.Scf.XscfBase.Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Senparc.Scf.XscfBase
 {
@@ -65,18 +67,28 @@ namespace Senparc.Scf.XscfBase
         /// <summary>
         /// 获取所有参数的信息列表
         /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <param name="tryLoadData">是否尝试载入数据（参数必须实现 IFunctionParameterLoadDataBase 接口）</param>
         /// <returns></returns>
-        public IEnumerable<FunctionParameterInfo> GetFunctionParammeterInfo()
+        public async Task<List<FunctionParameterInfo>> GetFunctionParameterInfoAsync(IServiceProvider serviceProvider, bool tryLoadData)
         {
+            var obj = GenerateParameterInstance();
+
+            //预载入参数
+            if (tryLoadData && obj is IFunctionParameterLoadDataBase loadDataParam)
+            {
+                await loadDataParam.LoadData(serviceProvider);//载入参数
+            }
+
             var props = FunctionParameterType.GetProperties();
-            ParammeterType parammeterType = ParammeterType.Text;
+            ParameterType parameterType = ParameterType.Text;
+            List<FunctionParameterInfo> result = new List<FunctionParameterInfo>();
             foreach (var prop in props)
             {
                 List<string> selectionItems = null;
                 //判断是否存在选项
                 if (prop.PropertyType.IsArray)
                 {
-                    var obj = GenerateParameterInstance();
                     var selection = prop.GetValue(obj, null);
                     if (selection == null)
                     {
@@ -84,7 +96,7 @@ namespace Senparc.Scf.XscfBase
                     }
 
                     selectionItems = new List<string>();
-                    parammeterType = ParammeterType.SingleSelection;//TODO:根据其他条件（如创建一个新的Attribute）判断多选
+                    parameterType = ParameterType.SingleSelection;//TODO:根据其他条件（如创建一个新的Attribute）判断多选
                     foreach (var item in (Array)selection)
                     {
                         selectionItems.Add(item.ToString());
@@ -98,6 +110,7 @@ namespace Senparc.Scf.XscfBase
                 var descriptionAttr = prop.GetCustomAttribute<DescriptionAttribute>();
                 if (descriptionAttr != null && descriptionAttr.Description != null)
                 {
+                    //分割：名称||说明
                     var descriptionAttrArr = descriptionAttr.Description.Split(new[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
                     title = descriptionAttrArr[0];
                     if (descriptionAttrArr.Length > 1)
@@ -107,8 +120,21 @@ namespace Senparc.Scf.XscfBase
                 }
                 var systemType = prop.PropertyType.Name;
 
-                yield return new FunctionParameterInfo(name, title, description, isRequired, systemType, parammeterType, selectionItems?.ToArray());
+                object value = null;
+                try
+                {
+                    value = prop.GetValue(obj);
+                }
+                catch(Exception ex)
+                {
+                    SenparcTrace.BaseExceptionLog(ex);
+                }
+
+                var functionParamInfo = new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType, 
+                                            selectionItems?.ToArray(), value);
+                result.Add(functionParamInfo);
             }
+            return result;
         }
     }
 }

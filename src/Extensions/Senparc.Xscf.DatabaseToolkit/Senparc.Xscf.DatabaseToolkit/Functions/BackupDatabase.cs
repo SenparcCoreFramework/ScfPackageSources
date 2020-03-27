@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Senparc.Scf.Core.Models;
+using Senparc.Scf.Service;
 using Senparc.Scf.XscfBase;
 using Senparc.Scf.XscfBase.Functions;
 using System;
@@ -9,17 +10,29 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Senparc.Xscf.DatabaseToolkit.Functions
 {
     public class BackupDatabase : FunctionBase
     {
-        public class BackupDatabase_Parameters : IFunctionParameter
+        public class BackupDatabase_Parameters : FunctionParameterLoadDataBase
         {
             [Required]
             [MaxLength(300)]
             [Description("路径||本地物理路径，如：E:\\Senparc\\Database-Backup\\SCF.bak，必须包含文件名。请确保此路径有网站程序访问权限！")]
             public string Path { get; set; }
+
+            public override async Task LoadData(IServiceProvider serviceProvider)
+            {
+                var configService = serviceProvider.GetService<ServiceBase<DbConfig>>();
+                var config = await configService.GetObjectAsync(z => true);
+                if (config != null)
+                {
+                    Path = config.BackuPath;
+                }
+            }
         }
 
         //注意：Name 必须在单个 Xscf 模块中唯一！
