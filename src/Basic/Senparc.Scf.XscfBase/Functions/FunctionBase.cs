@@ -1,4 +1,5 @@
-﻿using Senparc.Scf.XscfBase.Functions;
+﻿using Senparc.CO2NET.Trace;
+using Senparc.Scf.XscfBase.Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -65,18 +66,24 @@ namespace Senparc.Scf.XscfBase
         /// <summary>
         /// 获取所有参数的信息列表
         /// </summary>
+        /// <param name="serviceProvider"></param>
         /// <param name="tryLoadData">是否尝试载入数据（参数必须实现 IFunctionParameterLoadDataBase 接口）</param>
         /// <returns></returns>
         public IEnumerable<FunctionParameterInfo> GetFunctionParameterInfo(IServiceProvider serviceProvider, bool tryLoadData)
         {
-            //TODO:提供自动载入数据的可选项
+            var obj = GenerateParameterInstance();
+
+            //预载入参数
+            if (tryLoadData && obj is IFunctionParameterLoadDataBase loadDataParam)
+            {
+                loadDataParam.LoadData(serviceProvider);//载入参数
+            }
 
             var props = FunctionParameterType.GetProperties();
             ParameterType parameterType = ParameterType.Text;
             foreach (var prop in props)
             {
                 List<string> selectionItems = null;
-                var obj = GenerateParameterInstance();
                 //判断是否存在选项
                 if (prop.PropertyType.IsArray)
                 {
@@ -101,6 +108,7 @@ namespace Senparc.Scf.XscfBase
                 var descriptionAttr = prop.GetCustomAttribute<DescriptionAttribute>();
                 if (descriptionAttr != null && descriptionAttr.Description != null)
                 {
+                    //分割：名称||说明
                     var descriptionAttrArr = descriptionAttr.Description.Split(new[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
                     title = descriptionAttrArr[0];
                     if (descriptionAttrArr.Length > 1)
@@ -110,12 +118,8 @@ namespace Senparc.Scf.XscfBase
                 }
                 var systemType = prop.PropertyType.Name;
 
-                object value = null;
-                if (tryLoadData && obj is IFunctionParameterLoadDataBase loadDataParam)
-                {
-                    loadDataParam.LoadData(serviceProvider);//载入参数
-                    value = prop.GetValue(obj);
-                }
+                object value = prop.GetValue(obj);
+                SenparcTrace.SendCustomLog("获取Value", value?.ToString());
 
                 yield return new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType, selectionItems?.ToArray(), null);
             }

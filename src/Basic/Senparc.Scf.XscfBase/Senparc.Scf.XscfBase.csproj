@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.3.302.2-beta1</Version>
+    <Version>0.3.302.4-beta1</Version>
     <AssemblyName>Senparc.Scf.XscfBase</AssemblyName>
     <RootNamespace>Senparc.Scf.XscfBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -12,7 +12,7 @@
     <Owners>SenparcCoreFramework</Owners>
     <PackageLicenseUrl>https://github.com/SenparcCoreFramework/ScfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
     <Title>XSCF 模块基础库</Title>
-    <ProjectUrl> https://github.com/SenparcCoreFramework/SCF</ProjectUrl>
+    <ProjectUrl>https://github.com/SenparcCoreFramework/SCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/SenparcCoreFramework/ScfPackageSources</PackageProjectUrl>
     <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-scf.jpg</PackageIconUrl>
     <PackageReleaseNotes>
@@ -20,7 +20,7 @@
       v0.2.100 完成基础架构，功能跑通
       v0.3.100 优化 Function 返回值
 </PackageReleaseNotes>
-    <RepositoryUrl> https://github.com/SenparcCoreFramework/ScfPackageSources</RepositoryUrl>
+    <RepositoryUrl>https://github.com/SenparcCoreFramework/ScfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

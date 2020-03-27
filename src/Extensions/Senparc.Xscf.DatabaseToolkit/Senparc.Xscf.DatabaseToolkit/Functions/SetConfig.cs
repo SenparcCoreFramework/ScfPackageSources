@@ -8,6 +8,7 @@ using Senparc.Scf.Service;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using Senparc.CO2NET.Trace;
 
 namespace Senparc.Xscf.DatabaseToolkit.Functions
 {
@@ -32,6 +33,7 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                 {
                     BackupCycleMinutes = config.BackupCycleMinutes;
                     BackupPath = config.BackuPath;
+
                 }
             }
         }
