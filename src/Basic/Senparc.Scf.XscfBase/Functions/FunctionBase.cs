@@ -65,9 +65,12 @@ namespace Senparc.Scf.XscfBase
         /// <summary>
         /// 获取所有参数的信息列表
         /// </summary>
+        /// <param name="tryLoadData">是否尝试载入数据（参数必须实现 IFunctionParameterLoadDataBase 接口）</param>
         /// <returns></returns>
-        public IEnumerable<FunctionParameterInfo> GetFunctionParameterInfo(IServiceProvider serviceProvider)
+        public IEnumerable<FunctionParameterInfo> GetFunctionParameterInfo(IServiceProvider serviceProvider, bool tryLoadData)
         {
+            //TODO:提供自动载入数据的可选项
+
             var props = FunctionParameterType.GetProperties();
             ParameterType parameterType = ParameterType.Text;
             foreach (var prop in props)
@@ -108,7 +111,7 @@ namespace Senparc.Scf.XscfBase
                 var systemType = prop.PropertyType.Name;
 
                 object value = null;
-                if (obj is IFunctionParameterLoadDataBase loadDataParam)
+                if (tryLoadData && obj is IFunctionParameterLoadDataBase loadDataParam)
                 {
                     loadDataParam.LoadData(serviceProvider);//载入参数
                     value = prop.GetValue(obj);
