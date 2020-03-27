@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Senparc.Scf.XscfBase
 {
@@ -69,18 +70,19 @@ namespace Senparc.Scf.XscfBase
         /// <param name="serviceProvider"></param>
         /// <param name="tryLoadData">是否尝试载入数据（参数必须实现 IFunctionParameterLoadDataBase 接口）</param>
         /// <returns></returns>
-        public IEnumerable<FunctionParameterInfo> GetFunctionParameterInfo(IServiceProvider serviceProvider, bool tryLoadData)
+        public async Task<List<FunctionParameterInfo>> GetFunctionParameterInfoAsync(IServiceProvider serviceProvider, bool tryLoadData)
         {
             var obj = GenerateParameterInstance();
 
             //预载入参数
             if (tryLoadData && obj is IFunctionParameterLoadDataBase loadDataParam)
             {
-                loadDataParam.LoadData(serviceProvider);//载入参数
+                await loadDataParam.LoadData(serviceProvider);//载入参数
             }
 
             var props = FunctionParameterType.GetProperties();
             ParameterType parameterType = ParameterType.Text;
+            List<FunctionParameterInfo> result = new List<FunctionParameterInfo>();
             foreach (var prop in props)
             {
                 List<string> selectionItems = null;
@@ -118,11 +120,21 @@ namespace Senparc.Scf.XscfBase
                 }
                 var systemType = prop.PropertyType.Name;
 
-                object value = prop.GetValue(obj);
-                SenparcTrace.SendCustomLog("获取Value", value?.ToString());
+                object value = null;
+                try
+                {
+                    value = prop.GetValue(obj);
+                }
+                catch(Exception ex)
+                {
+                    SenparcTrace.BaseExceptionLog(ex);
+                }
 
-                yield return new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType, selectionItems?.ToArray(), null);
+                var functionParamInfo = new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType, 
+                                            selectionItems?.ToArray(), value);
+                result.Add(functionParamInfo);
             }
+            return result;
         }
     }
 }
