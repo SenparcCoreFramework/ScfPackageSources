@@ -55,42 +55,51 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
         {
             return FunctionHelper.RunFunction<BackupDatabase_Parameters>(param, (typeParam, sb, result) =>
             {
-                var path = typeParam.Path;
-                if (File.Exists(path))
+                try
                 {
-                    var copyPath = path + ".last.bak";
-                    RecordLog(sb, "检测到同名文件，已经移动到（并覆盖）：" + copyPath);
-                    File.Move(path, copyPath, true);
-                }
-
-                RecordLog(sb, "开始获取 ISenparcEntities 对象");
-                var senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntities)) as SenparcEntitiesBase;
-                RecordLog(sb, "获取 ISenparcEntities 对象成功");
-                var sql = $@"Backup Database {senparcEntities.Database.GetDbConnection().Database} To disk='{path}'";
-                RecordLog(sb, "准备执行 SQL：" + sql);
-                int affectRows = senparcEntities.Database.ExecuteSqlRaw(sql);
-                RecordLog(sb, "执行完毕，备份结束。affectRows：" + affectRows);
-
-                RecordLog(sb, "检查备份文件：" + path);
-                if (File.Exists(path))
-                {
-                    var modifyTime = File.GetLastWriteTimeUtc(path);
-                    if ((SystemTime.UtcDateTime - modifyTime).TotalSeconds < 5/*5秒钟内创建的*/)
+                    var path = typeParam.Path;
+                    if (File.Exists(path))
                     {
-                        RecordLog(sb, "检查通过，备份成功！最后修改时间：" + modifyTime.ToString());
-                        result.Message = "备份完成！";
+                        var copyPath = path + ".last.bak";
+                        RecordLog(sb, "检测到同名文件，已经移动到（并覆盖）：" + copyPath);
+                        File.Move(path, copyPath, true);
+                    }
+
+                    RecordLog(sb, "开始获取 ISenparcEntities 对象");
+                    var senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntities)) as SenparcEntitiesBase;
+                    RecordLog(sb, "获取 ISenparcEntities 对象成功");
+                    var sql = $@"Backup Database {senparcEntities.Database.GetDbConnection().Database} To disk='{path}'";
+                    RecordLog(sb, "准备执行 SQL：" + sql);
+                    int affectRows = senparcEntities.Database.ExecuteSqlRaw(sql);
+                    RecordLog(sb, "执行完毕，备份结束。affectRows：" + affectRows);
+
+                    RecordLog(sb, "检查备份文件：" + path);
+                    if (File.Exists(path))
+                    {
+                        var modifyTime = File.GetLastWriteTimeUtc(path);
+                        if ((SystemTime.UtcDateTime - modifyTime).TotalSeconds < 5/*5秒钟内创建的*/)
+                        {
+                            RecordLog(sb, "检查通过，备份成功！最后修改时间：" + modifyTime.ToString());
+                            result.Message = "备份完成！";
+                        }
+                        else
+                        {
+                            result.Message = $"文件存在，但修改时间不符，可能未备份成功，请检查文件！文件最后修改时间：{modifyTime.ToString()}";
+                            RecordLog(sb, result.Message);
+                        }
                     }
                     else
                     {
-                        result.Message = $"文件存在，但修改时间不符，可能未备份成功，请检查文件！文件最后修改时间：{modifyTime.ToString()}";
+                        result.Message = "备份文件未生成，备份失败！";
                         RecordLog(sb, result.Message);
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    result.Message = "备份文件未生成，备份失败！";
-                    RecordLog(sb, result.Message);
+                    result.Message += ex.Message;
+                    throw;
                 }
+
             });
         }
     }
