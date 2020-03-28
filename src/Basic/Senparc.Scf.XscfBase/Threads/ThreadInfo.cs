@@ -38,7 +38,7 @@ namespace Senparc.Scf.XscfBase.Threads
         /// 获取故事 HTML代码
         /// </summary>
         /// <returns></returns>
-        public string StoryHtml => string.Join("<br /><br />", Stories.Select(z => z.Replace(Environment.NewLine,"<br />").HtmlEncode()).ToArray());
+        public string StoryHtml => string.Join("<br /><br />", Stories.Select(z => z.HtmlEncode()).ToArray());
 
         public ThreadInfo(string name, TimeSpan intervalTime, Func<IApplicationBuilder, ThreadInfo, Task> task, Func<Exception, Task> exceptionHandler = null)
         {
