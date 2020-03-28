@@ -1,4 +1,5 @@
-﻿using Senparc.CO2NET.Trace;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Trace;
 using Senparc.Scf.XscfBase;
 using Senparc.Scf.XscfBase.Threads;
 using Senparc.Xscf.DatabaseToolkit.Functions;
@@ -22,44 +23,49 @@ namespace Senparc.Xscf.DatabaseToolkit
                     {
                         SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.Register.ThreadConfig");
                         threadInfo.RecordStory("开始检测并备份");
-                        var serviceProvider = app.ApplicationServices;
-                        //初始化数据库备份方法
-                        BackupDatabase backupDatabase = new BackupDatabase(serviceProvider);
-                        //初始化参数
-                        var backupParam = new BackupDatabase.BackupDatabase_Parameters();
-                        var configParam = new SetConfig.SetConfig_Parameters();
-                        try
+
+                        using (var scope = app.ApplicationServices.CreateScope())
                         {
-                            //载入数据
-                            await configParam.LoadData(serviceProvider);
-                            if (configParam.BackupCycleMinutes > 0)
+                            var serviceProvider = scope.ServiceProvider;
+                            //初始化数据库备份方法
+                            BackupDatabase backupDatabase = new BackupDatabase(serviceProvider);
+                            //初始化参数
+                            var backupParam = new BackupDatabase.BackupDatabase_Parameters();
+                            var configParam = new SetConfig.SetConfig_Parameters();
+                            try
                             {
-                                await backupParam.LoadData(serviceProvider);
-                                threadInfo.RecordStory("完成备份设置数据载入");
+                                //载入数据
+                                await configParam.LoadData(serviceProvider);
+                                if (configParam.BackupCycleMinutes > 0)
+                                {
+                                    //TODO:判断上次备份时间
+                                    await backupParam.LoadData(serviceProvider);
+                                    threadInfo.RecordStory("完成备份设置数据载入");
+                                }
+                                else
+                                {
+                                    threadInfo.RecordStory("不需要备份，或没有设置，已忽略本次备份计划");
+                                    return;//不需要备份，或没有设置，返回
+                                }
                             }
-                            else
+                            catch (Exception ex)
                             {
-                                threadInfo.RecordStory("不需要备份，或没有设置，已忽略本次备份计划");
-                                return;//不需要备份，或没有设置，返回
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            threadInfo.RecordStory(@$"遇到异常，可能未配置数据库，已忽略本次备份计划。如需启动，请更新此模块到最新版本。
+                                threadInfo.RecordStory(@$"遇到异常，可能未配置数据库，已忽略本次备份计划。如需启动，请更新此模块到最新版本。
 异常信息：{ex.Message}
 {ex.StackTrace}");
-                            return;//可能没有配置数据库，返回
-                        }
+                                return;//可能没有配置数据库，返回
+                            }
 
-                        //执行备份方法
-                        var result = backupDatabase.Run(backupParam);
-                        if (!result.Success)
-                        {
-                            threadInfo.RecordStory("执行备份发生异常：" + result.Message);
-                            throw new Exception("执行备份发生异常");
+                            //执行备份方法
+                            var result = backupDatabase.Run(backupParam);
+                            if (!result.Success)
+                            {
+                                threadInfo.RecordStory("执行备份发生异常：" + result.Message);
+                                throw new Exception("执行备份发生异常");
+                            }
+                            threadInfo.RecordStory("完成数据库自动备份：" + result.Message);
+                            SenparcTrace.SendCustomLog("完成数据库自动备份", backupParam.Path);
                         }
-                        threadInfo.RecordStory("完成数据库自动备份：" + result.Message);
-                        SenparcTrace.SendCustomLog("完成数据库自动备份", backupParam.Path);
                     }
                     catch
                     {

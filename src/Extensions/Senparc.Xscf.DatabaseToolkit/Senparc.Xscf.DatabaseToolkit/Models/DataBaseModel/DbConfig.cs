@@ -20,14 +20,24 @@ namespace Senparc.Xscf.DatabaseToolkit
         /// 备份物理路径
         /// </summary>
         [MaxLength(300)]
-        public string BackuPath { get; private set; }
+        public string BackupPath { get; private set; }
+
+        /// <summary>
+        /// 上次备份时间
+        /// </summary>
+        public DateTime? LastBackupTime { get; private set; }
 
         private DbConfig() { }
 
-        public DbConfig(int backupCycleMinutes, string backuPath)
+        public DbConfig(int backupCycleMinutes, string backupPath)
         {
             BackupCycleMinutes = backupCycleMinutes;
-            BackuPath = backuPath;
+            BackupPath = backupPath;
+        }
+
+        public void RecordBackupTime()
+        {
+            LastBackupTime = SystemTime.Now.UtcDateTime;
         }
     }
 }

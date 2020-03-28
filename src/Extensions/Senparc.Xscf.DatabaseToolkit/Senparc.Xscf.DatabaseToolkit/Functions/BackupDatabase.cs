@@ -30,7 +30,7 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                 var config = await configService.GetObjectAsync(z => true);
                 if (config != null)
                 {
-                    Path = config.BackuPath;
+                    Path = config.BackupPath;
                 }
             }
         }
