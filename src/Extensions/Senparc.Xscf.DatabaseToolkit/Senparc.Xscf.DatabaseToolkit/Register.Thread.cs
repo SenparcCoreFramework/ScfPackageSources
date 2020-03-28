@@ -34,6 +34,7 @@ namespace Senparc.Xscf.DatabaseToolkit
                             var backupParam = new BackupDatabase.BackupDatabase_Parameters();
                             var dbConfigService = serviceProvider.GetService<ServiceBase<DbConfig>>();
                             var dbConfig = await dbConfigService.GetObjectAsync(z => true);
+                            var stopBackup = false;
                             try
                             {
                                 if (dbConfig != null && dbConfig.BackupCycleMinutes > 0)
@@ -48,7 +49,7 @@ namespace Senparc.Xscf.DatabaseToolkit
                                 else
                                 {
                                     threadInfo.RecordStory("不需要备份，或没有设置备份周期，已忽略本次备份计划");
-                                    return;//不需要备份，或没有设置，返回
+                                    stopBackup = true;//不需要备份，或没有设置，返回
                                 }
                             }
                             catch (Exception ex)
@@ -56,7 +57,12 @@ namespace Senparc.Xscf.DatabaseToolkit
                                 threadInfo.RecordStory(@$"遇到异常，可能未配置数据库，已忽略本次备份计划。如需启动，请更新此模块到最新版本。
 异常信息：{ex.Message}
 {ex.StackTrace}");
-                                return;//可能没有配置数据库，返回
+                                stopBackup = true;//可能没有配置数据库，返回
+                            }
+
+                            if (stopBackup)
+                            {
+                                return;
                             }
 
                             //执行备份方法
