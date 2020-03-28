@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xscf.DatabaseToolkit;
 
 namespace Senparc.Xscf.DatabaseToolkit.Migrations
 {
     [DbContext(typeof(DatabaseToolkitEntities))]
-    partial class DatabaseToolkitEntitiesModelSnapshot : ModelSnapshot
+    [Migration("20200328162338_Add_DbConfig_LastBackupTime")]
+    partial class Add_DbConfig_LastBackupTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

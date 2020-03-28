@@ -57,7 +57,7 @@ namespace Senparc.Scf.XscfBase.Tests
         public void GetFunctionParameterInfo()
         {
             FunctionBaseTest_Function function = new FunctionBaseTest_Function(null);
-            var paraInfo = function.GetFunctionParameterInfo(base.ServiceCollection.BuildServiceProvider()).ToList();
+            var paraInfo = function.GetFunctionParameterInfoAsync(base.ServiceCollection.BuildServiceProvider(), false).GetAwaiter().GetResult();
 
             Assert.AreEqual(3, paraInfo.Count);
 

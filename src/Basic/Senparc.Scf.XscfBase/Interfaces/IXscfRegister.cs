@@ -4,10 +4,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Scf.Core.Enums;
+using Senparc.Scf.XscfBase.Threads;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Scf.XscfBase
@@ -47,11 +49,17 @@ namespace Senparc.Scf.XscfBase
         /// 注册方法，注册的顺序决定了界面中排列的顺序
         /// </summary>
         IList<Type> Functions { get; }
+      
 
         /// <summary>
         /// 添加 AutoMap 映射
         /// </summary>
         ConcurrentBag<Action<Profile>> AutoMapMappingConfigs { get; set; }
+
+        /// <summary>
+        /// 获取当前模块的已注册线程信息
+        /// </summary>
+        IEnumerable<KeyValuePair<ThreadInfo, Thread>> RegisteredThreadInfo { get; }
 
         /// <summary>
         /// 安装代码
@@ -104,6 +112,5 @@ namespace Senparc.Scf.XscfBase
         /// <returns></returns>
         string GetDatabaseMigrationHistoryTableName();
 
-      
     }
 }

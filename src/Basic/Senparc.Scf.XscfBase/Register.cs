@@ -8,10 +8,13 @@ using Senparc.CO2NET.Trace;
 using Senparc.Scf.Core.Enums;
 using Senparc.Scf.Core.Models.DataBaseModel;
 using Senparc.Scf.Service;
+using Senparc.Scf.XscfBase.Threads;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Scf.XscfBase
@@ -29,9 +32,13 @@ namespace Senparc.Scf.XscfBase
         /// 带有数据库的模块 TODO：可放置到缓存中
         /// </summary>
         public static List<IXscfDatabase> XscfDatabaseList => RegisterList.Where(z => z is IXscfDatabase).Select(z => z as IXscfDatabase).ToList();
+        /// <summary>
+        /// 所有线程的集合
+        /// </summary>
+        public static ConcurrentDictionary<ThreadInfo, Thread> ThreadCollection = new ConcurrentDictionary<ThreadInfo, Thread>();
 
         /// <summary>
-        /// 启动 XSCF 模块引擎，包括初始化扫描和注册等过程
+        /// 启动 XSCF 模块引擎，包括初始化扫描和注册等过程，通常在 Startup.cs 中的 ConfigureServices() 方法中执行
         /// </summary>
         /// <returns></returns>
         public static string StartEngine(this IServiceCollection services, IConfiguration configuration)
@@ -226,7 +233,7 @@ namespace Senparc.Scf.XscfBase
         }
 
         /// <summary>
-        /// 
+        /// 通常在 Startup.cs 中的 Configure() 方法中执行
         /// </summary>
         /// <param name="app"></param>
         /// <param name="registerService">CO2NET 注册对象</param>
@@ -243,6 +250,7 @@ namespace Senparc.Scf.XscfBase
                 {
                 }
 
+                //执行中间件
                 if (register is IXscfMiddleware middlewareRegister)
                 {
                     try
@@ -251,6 +259,21 @@ namespace Senparc.Scf.XscfBase
                     }
                     catch
                     {
+                    }
+                }
+
+                //执行线程
+                if (register is IXscfThread threadRegister)
+                {
+                    try
+                    {
+                        XscfThreadBuilder xscfThreadBuilder = new XscfThreadBuilder();
+                        threadRegister.ThreadConfig(xscfThreadBuilder);
+                        xscfThreadBuilder.Build(app,register);
+                    }
+                    catch (Exception ex)
+                    {
+                        SenparcTrace.BaseExceptionLog(ex);
                     }
                 }
             }
