@@ -16,10 +16,11 @@ namespace Senparc.Xscf.DatabaseToolkit
             xscfThreadBuilder.AddThreadInfo(new Scf.XscfBase.Threads.ThreadInfo(
                 name: "定时备份",
                 intervalTime: TimeSpan.FromSeconds(10),
-                task: async app =>
+                task: async (app, threadInfo) =>
                 {
                     try
                     {
+                        threadInfo.RecordStory("开始检测并备份");
                         var serviceProvider = app.ApplicationServices;
                         //初始化数据库备份方法
                         BackupDatabase backupDatabase = new BackupDatabase(serviceProvider);
@@ -33,14 +34,17 @@ namespace Senparc.Xscf.DatabaseToolkit
                             if (configParam.BackupCycleMinutes > 0)
                             {
                                 await backupParam.LoadData(serviceProvider);
+                                threadInfo.RecordStory("完成备份设置数据载入");
                             }
                             else
                             {
+                                threadInfo.RecordStory("不需要备份，或没有设置，忽略备份计划");
                                 return;//不需要备份，或没有设置，返回
                             }
                         }
                         catch (Exception)
                         {
+                            threadInfo.RecordStory("可能未配置数据库，忽略备份计划，如需启动，请更新此模块到最新版本");
                             return;//可能没有配置数据库，返回
                         }
 
@@ -48,16 +52,19 @@ namespace Senparc.Xscf.DatabaseToolkit
                         var result = backupDatabase.Run(backupParam);
                         if (!result.Success)
                         {
+                            threadInfo.RecordStory("执行备份发生异常：" + result.Message);
                             throw new Exception("执行备份发生异常");
                         }
-
+                        threadInfo.RecordStory("完成数据库自动备份：" + result.Message);
                         SenparcTrace.SendCustomLog("完成数据库自动备份", backupParam.Path);
                     }
                     catch
                     {
                         throw;
                     }
-
+                    finally { 
+                        threadInfo.RecordStory("检测并备份结束");
+                    }
                 },
                 exceptionHandler: ex =>
                 {

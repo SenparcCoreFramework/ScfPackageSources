@@ -35,7 +35,7 @@ namespace Senparc.Scf.XscfBase
         /// <summary>
         /// 所有线程的集合
         /// </summary>
-        public static ConcurrentDictionary<ThreadInfo, Thread> ThreadList = new ConcurrentDictionary<ThreadInfo, Thread>();
+        public static ConcurrentDictionary<ThreadInfo, Thread> ThreadCollection = new ConcurrentDictionary<ThreadInfo, Thread>();
 
         /// <summary>
         /// 启动 XSCF 模块引擎，包括初始化扫描和注册等过程

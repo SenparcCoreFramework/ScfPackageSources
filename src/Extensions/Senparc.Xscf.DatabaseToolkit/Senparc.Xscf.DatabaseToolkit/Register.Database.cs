@@ -19,11 +19,13 @@ namespace Senparc.Xscf.DatabaseToolkit
         public void AddXscfDatabaseModule(IServiceCollection services)
         {
             services.AddScoped<SetConfig>();
+            services.AddScoped<SetConfig.SetConfig_Parameters>();
 
             //AutoMap映射
             base.AddAutoMapMapping(profile =>
             {
                 profile.CreateMap<SetConfig.SetConfig_Parameters, SetConfig>();
+                profile.CreateMap<SetConfig.SetConfig_Parameters, DbConfig>();
             });
         }
 

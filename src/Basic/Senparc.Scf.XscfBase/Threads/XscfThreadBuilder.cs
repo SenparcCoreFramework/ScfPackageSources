@@ -47,7 +47,7 @@ namespace Senparc.Scf.XscfBase.Threads
                         {
                             try
                             {
-                                await threadInfo.Task.Invoke(app);
+                                await threadInfo.Task.Invoke(app, threadInfo);
                                 // 建议开发者自己在内部做好线程内的异常处理
                             }
                             catch (Exception ex)
@@ -61,7 +61,7 @@ namespace Senparc.Scf.XscfBase.Threads
                     });
                     thread.Name = $"{register.Uid}-{threadInfo.Name ?? Guid.NewGuid().ToString()}";
                     thread.Start();//启动
-                    Register.ThreadList[threadInfo] = thread;
+                    Register.ThreadCollection[threadInfo] = thread;
                 }
                 catch (Exception ex)
                 {
