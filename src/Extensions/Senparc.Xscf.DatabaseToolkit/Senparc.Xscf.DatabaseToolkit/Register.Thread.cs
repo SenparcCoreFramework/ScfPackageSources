@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
 using Senparc.Scf.Service;
 using Senparc.Scf.XscfBase;
@@ -37,7 +38,7 @@ namespace Senparc.Xscf.DatabaseToolkit
                             var stopBackup = false;
                             try
                             {
-                                if (dbConfig != null && dbConfig.BackupCycleMinutes > 0)
+                                if (dbConfig != null && dbConfig.BackupCycleMinutes > 0 && !dbConfig.BackupPath.IsNullOrEmpty())
                                 {
                                     if (!dbConfig.LastBackupTime.HasValue || SystemTime.NowDiff(dbConfig.LastBackupTime.Value) > TimeSpan.FromMinutes(dbConfig.BackupCycleMinutes))
                                     {
@@ -45,10 +46,14 @@ namespace Senparc.Xscf.DatabaseToolkit
                                         //await backupParam.LoadData(serviceProvider);
                                         //threadInfo.RecordStory("完成备份设置数据载入");
                                     }
+                                    else
+                                    {
+                                        stopBackup = true;
+                                    }
                                 }
                                 else
                                 {
-                                    threadInfo.RecordStory("不需要备份，或没有设置备份周期，已忽略本次备份计划");
+                                    threadInfo.RecordStory("不需要备份，或没有设置备份周期/路径，已忽略本次备份计划");
                                     stopBackup = true;//不需要备份，或没有设置，返回
                                 }
                             }
@@ -64,6 +69,7 @@ namespace Senparc.Xscf.DatabaseToolkit
                             {
                                 return;
                             }
+
 
                             //执行备份方法
                             threadInfo.RecordStory("备份开始：" + backupParam.Path);
