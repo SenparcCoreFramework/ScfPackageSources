@@ -38,7 +38,7 @@ namespace Senparc.Scf.XscfBase
         public static ConcurrentDictionary<ThreadInfo, Thread> ThreadCollection = new ConcurrentDictionary<ThreadInfo, Thread>();
 
         /// <summary>
-        /// 启动 XSCF 模块引擎，包括初始化扫描和注册等过程
+        /// 启动 XSCF 模块引擎，包括初始化扫描和注册等过程，通常在 Startup.cs 中的 ConfigureServices() 方法中执行
         /// </summary>
         /// <returns></returns>
         public static string StartEngine(this IServiceCollection services, IConfiguration configuration)
@@ -233,7 +233,7 @@ namespace Senparc.Scf.XscfBase
         }
 
         /// <summary>
-        /// 
+        /// 通常在 Startup.cs 中的 Configure() 方法中执行
         /// </summary>
         /// <param name="app"></param>
         /// <param name="registerService">CO2NET 注册对象</param>
@@ -250,6 +250,7 @@ namespace Senparc.Scf.XscfBase
                 {
                 }
 
+                //执行中间件
                 if (register is IXscfMiddleware middlewareRegister)
                 {
                     try
@@ -261,6 +262,7 @@ namespace Senparc.Scf.XscfBase
                     }
                 }
 
+                //执行线程
                 if (register is IXscfThread threadRegister)
                 {
                     try
@@ -273,7 +275,6 @@ namespace Senparc.Scf.XscfBase
                     {
                         SenparcTrace.BaseExceptionLog(ex);
                     }
-
                 }
             }
             return app;

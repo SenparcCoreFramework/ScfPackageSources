@@ -38,13 +38,15 @@ namespace Senparc.Xscf.DatabaseToolkit
                             }
                             else
                             {
-                                threadInfo.RecordStory("不需要备份，或没有设置，忽略备份计划");
+                                threadInfo.RecordStory("不需要备份，或没有设置，已忽略本次备份计划");
                                 return;//不需要备份，或没有设置，返回
                             }
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
-                            threadInfo.RecordStory("可能未配置数据库，忽略备份计划，如需启动，请更新此模块到最新版本");
+                            threadInfo.RecordStory(@$"遇到异常，可能未配置数据库，已忽略本次备份计划。如需启动，请更新此模块到最新版本。
+异常信息：{ex.Message}
+{ex.StackTrace}");
                             return;//可能没有配置数据库，返回
                         }
 

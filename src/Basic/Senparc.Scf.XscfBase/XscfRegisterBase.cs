@@ -231,6 +231,7 @@ namespace Senparc.Scf.XscfBase
         /// 在 startup.cs 的 Configure() 方法中执行配置
         /// </summary>
         /// <param name="app"></param>
+        /// <param name="registerService"></param>
         /// <returns></returns>
         public virtual IApplicationBuilder UseXscfModule(IApplicationBuilder app, IRegisterService registerService)
         {

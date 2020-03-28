@@ -18,6 +18,7 @@ namespace Senparc.Xscf.DatabaseToolkit
 
         public void AddXscfDatabaseModule(IServiceCollection services)
         {
+            services.AddScoped<DbConfig>();
             services.AddScoped<SetConfig>();
             services.AddScoped<SetConfig.SetConfig_Parameters>();
 
