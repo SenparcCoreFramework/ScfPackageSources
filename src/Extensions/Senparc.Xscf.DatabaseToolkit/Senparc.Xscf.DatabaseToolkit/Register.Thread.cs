@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
+using Senparc.Scf.Service;
 using Senparc.Scf.XscfBase;
 using Senparc.Scf.XscfBase.Threads;
 using Senparc.Xscf.DatabaseToolkit.Functions;
@@ -31,20 +32,24 @@ namespace Senparc.Xscf.DatabaseToolkit
                             BackupDatabase backupDatabase = new BackupDatabase(serviceProvider);
                             //初始化参数
                             var backupParam = new BackupDatabase.BackupDatabase_Parameters();
-                            var configParam = new SetConfig.SetConfig_Parameters();
+                            var dbConfigService = serviceProvider.GetService<ServiceBase<DbConfig>>();
+                            var dbConfig = await dbConfigService.GetObjectAsync(z => true);
                             try
                             {
-                                //载入数据
-                                await configParam.LoadData(serviceProvider);
-                                if (configParam.BackupCycleMinutes > 0)
+                                if (dbConfig != null && dbConfig.BackupCycleMinutes > 0)
                                 {
-                                    //TODO:判断上次备份时间
-                                    await backupParam.LoadData(serviceProvider);
-                                    threadInfo.RecordStory("完成备份设置数据载入");
+                                    if (!dbConfig.LastBackupTime.HasValue || SystemTime.NowDiff(dbConfig.LastBackupTime.Value) > TimeSpan.FromMinutes(dbConfig.BackupCycleMinutes))
+                                    {
+                                        await backupParam.LoadData(serviceProvider);
+                                        threadInfo.RecordStory("完成备份设置数据载入");
+
+                                        dbConfig.RecordBackupTime();
+                                        await dbConfigService.SaveObjectAsync(dbConfig);
+                                    }
                                 }
                                 else
                                 {
-                                    threadInfo.RecordStory("不需要备份，或没有设置，已忽略本次备份计划");
+                                    threadInfo.RecordStory("不需要备份，或没有设置备份周期，已忽略本次备份计划");
                                     return;//不需要备份，或没有设置，返回
                                 }
                             }
