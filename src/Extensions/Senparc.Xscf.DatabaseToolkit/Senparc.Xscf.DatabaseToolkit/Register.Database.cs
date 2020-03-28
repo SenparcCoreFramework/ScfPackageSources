@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Trace;
 using Senparc.Scf.XscfBase;
 using Senparc.Xscf.DatabaseToolkit.Functions;
 using Senparc.Xscf.DatabaseToolkit.Models;
@@ -18,6 +19,7 @@ namespace Senparc.Xscf.DatabaseToolkit
 
         public void AddXscfDatabaseModule(IServiceCollection services)
         {
+            SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.AddXscfDatabaseModule");
             services.AddScoped<DbConfig>();
             services.AddScoped<SetConfig>();
             services.AddScoped<SetConfig.SetConfig_Parameters>();

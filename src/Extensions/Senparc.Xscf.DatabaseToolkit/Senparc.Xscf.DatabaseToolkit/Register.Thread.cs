@@ -20,6 +20,7 @@ namespace Senparc.Xscf.DatabaseToolkit
                 {
                     try
                     {
+                        SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.Register.ThreadConfig");
                         threadInfo.RecordStory("开始检测并备份");
                         var serviceProvider = app.ApplicationServices;
                         //初始化数据库备份方法
@@ -64,7 +65,8 @@ namespace Senparc.Xscf.DatabaseToolkit
                     {
                         throw;
                     }
-                    finally { 
+                    finally
+                    {
                         threadInfo.RecordStory("检测并备份结束");
                     }
                 },
