@@ -8,10 +8,13 @@ using Senparc.CO2NET.Trace;
 using Senparc.Scf.Core.Enums;
 using Senparc.Scf.Core.Models.DataBaseModel;
 using Senparc.Scf.Service;
+using Senparc.Scf.XscfBase.Threads;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Scf.XscfBase
@@ -29,6 +32,10 @@ namespace Senparc.Scf.XscfBase
         /// 带有数据库的模块 TODO：可放置到缓存中
         /// </summary>
         public static List<IXscfDatabase> XscfDatabaseList => RegisterList.Where(z => z is IXscfDatabase).Select(z => z as IXscfDatabase).ToList();
+        /// <summary>
+        /// 所有线程的集合
+        /// </summary>
+        public static ConcurrentDictionary<ThreadInfo, Thread> ThreadList = new ConcurrentDictionary<ThreadInfo, Thread>();
 
         /// <summary>
         /// 启动 XSCF 模块引擎，包括初始化扫描和注册等过程
@@ -252,6 +259,21 @@ namespace Senparc.Scf.XscfBase
                     catch
                     {
                     }
+                }
+
+                if (register is IXscfThread threadRegister)
+                {
+                    try
+                    {
+                        XscfThreadBuilder xscfThreadBuilder = new XscfThreadBuilder();
+                        threadRegister.ThreadConfig(xscfThreadBuilder);
+                        xscfThreadBuilder.Build(app,register);
+                    }
+                    catch (Exception ex)
+                    {
+                        SenparcTrace.BaseExceptionLog(ex);
+                    }
+
                 }
             }
             return app;
