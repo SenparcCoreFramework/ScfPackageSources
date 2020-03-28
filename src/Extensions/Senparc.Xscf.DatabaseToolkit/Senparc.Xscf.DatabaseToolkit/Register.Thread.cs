@@ -40,11 +40,9 @@ namespace Senparc.Xscf.DatabaseToolkit
                                 {
                                     if (!dbConfig.LastBackupTime.HasValue || SystemTime.NowDiff(dbConfig.LastBackupTime.Value) > TimeSpan.FromMinutes(dbConfig.BackupCycleMinutes))
                                     {
-                                        await backupParam.LoadData(serviceProvider);
-                                        threadInfo.RecordStory("完成备份设置数据载入");
-
-                                        dbConfig.RecordBackupTime();
-                                        await dbConfigService.SaveObjectAsync(dbConfig);
+                                        backupParam.Path = dbConfig.BackupPath;
+                                        //await backupParam.LoadData(serviceProvider);
+                                        //threadInfo.RecordStory("完成备份设置数据载入");
                                     }
                                 }
                                 else
@@ -62,12 +60,17 @@ namespace Senparc.Xscf.DatabaseToolkit
                             }
 
                             //执行备份方法
+                            threadInfo.RecordStory("备份开始：" + backupParam.Path);
                             var result = backupDatabase.Run(backupParam);
                             if (!result.Success)
                             {
                                 threadInfo.RecordStory("执行备份发生异常：" + result.Message);
                                 throw new Exception("执行备份发生异常");
                             }
+
+                            dbConfig.RecordBackupTime();
+                            await dbConfigService.SaveObjectAsync(dbConfig);
+
                             threadInfo.RecordStory("完成数据库自动备份：" + result.Message);
                             SenparcTrace.SendCustomLog("完成数据库自动备份", backupParam.Path);
                         }

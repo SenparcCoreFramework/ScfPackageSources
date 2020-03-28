@@ -37,7 +37,7 @@ namespace Senparc.Xscf.DatabaseToolkit
 
         public void RecordBackupTime()
         {
-            LastBackupTime = SystemTime.Now.UtcDateTime;
+            LastBackupTime = SystemTime.Now.DateTime;
         }
     }
 }
