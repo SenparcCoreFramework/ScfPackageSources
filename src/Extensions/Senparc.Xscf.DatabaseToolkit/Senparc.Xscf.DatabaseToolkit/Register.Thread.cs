@@ -23,7 +23,7 @@ namespace Senparc.Xscf.DatabaseToolkit
                 {
                     try
                     {
-                        SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.Register.ThreadConfig");
+                        //SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.Register.ThreadConfig");
                         threadInfo.RecordStory("开始检测并备份");
 
                         using (var scope = app.ApplicationServices.CreateScope())
