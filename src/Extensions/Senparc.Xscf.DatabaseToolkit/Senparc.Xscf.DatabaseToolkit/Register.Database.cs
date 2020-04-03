@@ -2,10 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Scf.XscfBase;
 using Senparc.Xscf.DatabaseToolkit.Functions;
-using Senparc.Xscf.DatabaseToolkit.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Senparc.Xscf.DatabaseToolkit
 {
@@ -29,7 +26,8 @@ namespace Senparc.Xscf.DatabaseToolkit
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
+            //实现 [XscfAutoConfigurationMapping] 特性之后，可以自动执行
+            //modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
         }
     }
 }

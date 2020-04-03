@@ -27,6 +27,7 @@ namespace Senparc.Scf.XscfBase.Database
 
             XscfDatabaseRegister.OnModelCreating(modelBuilder);
 
+
             base.OnModelCreating(modelBuilder);
         }
     }
