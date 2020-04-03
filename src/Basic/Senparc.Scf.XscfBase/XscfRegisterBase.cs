@@ -9,15 +9,14 @@ using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Scf.Core.Areas;
 using Senparc.Scf.Core.Enums;
-using Senparc.Scf.Core.Exceptions;
 using Senparc.Scf.Core.Models;
 using Senparc.Scf.XscfBase.Database;
+using Senparc.Scf.XscfBase.Threads;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Scf.XscfBase
@@ -65,6 +64,10 @@ namespace Senparc.Scf.XscfBase
         /// 添加 AutoMap 映射
         /// </summary>
         public virtual ConcurrentBag<Action<Profile>> AutoMapMappingConfigs { get; set; }
+        /// <summary>
+        /// 获取当前模块的已注册线程信息
+        /// </summary>
+        public IEnumerable<KeyValuePair<ThreadInfo, Thread>> RegisteredThreadInfo => Register.ThreadCollection.Where(z => z.Value.Name.StartsWith(Uid));
 
 
         /// <summary>
@@ -228,6 +231,7 @@ namespace Senparc.Scf.XscfBase
         /// 在 startup.cs 的 Configure() 方法中执行配置
         /// </summary>
         /// <param name="app"></param>
+        /// <param name="registerService"></param>
         /// <returns></returns>
         public virtual IApplicationBuilder UseXscfModule(IApplicationBuilder app, IRegisterService registerService)
         {

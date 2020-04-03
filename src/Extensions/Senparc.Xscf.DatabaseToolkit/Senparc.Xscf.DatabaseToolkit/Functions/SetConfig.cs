@@ -32,7 +32,7 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                 if (config != null)
                 {
                     BackupCycleMinutes = config.BackupCycleMinutes;
-                    BackupPath = config.BackuPath;
+                    BackupPath = config.BackupPath;
                 }
             }
         }

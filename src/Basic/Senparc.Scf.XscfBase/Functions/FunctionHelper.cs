@@ -38,7 +38,7 @@ namespace Senparc.Scf.XscfBase.Functions
             {
                 result.Success = false;
                 result.Exception = new XscfFunctionException(ex.Message, ex);
-                result.Message = "发生错误！";
+                result.Message = "发生错误！" + result.Message;
 
                 RecordLog(sb, "发生错误：" + ex.Message);
                 RecordLog(sb, ex.StackTrace.ToString());

@@ -19,7 +19,8 @@
       v0.1 创世
       v0.2.100 完成基础架构，功能跑通
       v0.3.100 优化 Function 返回值
-      v0.3.303 添加 XscfAutoConfigurationMapping 特性
+      v0.3.303 提供 IXscfThread 接口
+      v0.3.305 添加 XscfAutoConfigurationMapping 特性
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/SenparcCoreFramework/ScfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
