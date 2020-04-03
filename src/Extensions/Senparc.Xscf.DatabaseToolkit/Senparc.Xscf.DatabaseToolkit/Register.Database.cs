@@ -31,7 +31,7 @@ namespace Senparc.Xscf.DatabaseToolkit
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //实现 [XscfAutoConfigurationMapping] 特性之后，可以自动执行
+            //实现 [XscfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
             //modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
         }
     }
