@@ -43,7 +43,7 @@ namespace Senparc.Scf.XscfBase
         /// <summary>
         /// 所有自动注册 Xscf 的数据库的 ConfigurationMapping 对象
         /// </summary>
-        public static List<IEntityTypeConfiguration<IEntityBase>> XscfAutoConfigurationMappingList = new List<IEntityTypeConfiguration<IEntityBase>>();
+        public static List<IEntityTypeConfiguration<object>> XscfAutoConfigurationMappingList = new List<IEntityTypeConfiguration<object>>();
 
         /// <summary>
         /// 扫描程序集分类
@@ -177,7 +177,7 @@ namespace Senparc.Scf.XscfBase
                     var allTypes = types.Where(z => z.Value == ScanTypeKind.XscfAutoConfigurationMappingAttribute).Select(z => z.Key);
                     foreach (var type in allTypes)
                     {
-                        var obj = type.Assembly.CreateInstance(type.FullName) as IEntityTypeConfiguration<IEntityBase>;
+                        var obj = type.Assembly.CreateInstance(type.FullName) as IEntityTypeConfiguration<object>;
                         XscfAutoConfigurationMappingList.Add(obj);
                     }
                 }
@@ -191,6 +191,15 @@ namespace Senparc.Scf.XscfBase
             sb.AppendLine($"[{SystemTime.Now}] {scanResult}");
 
 
+            //Repository & Service
+            services.AddScoped(typeof(Senparc.Scf.Repository.IRepositoryBase<>), typeof(Senparc.Scf.Repository.RepositoryBase<>));
+            services.AddScoped(typeof(ServiceBase<>));
+            services.AddScoped(typeof(IServiceBase<>), typeof(ServiceBase<>));
+
+            //ConfigurationMapping
+            services.AddScoped(typeof(ConfigurationMappingWithIdBase<,>));
+            services.AddScoped(typeof(ConfigurationMappingWithIdBase<>));
+
             //微模块进行 Service 注册
             foreach (var xscfRegister in RegisterList)
             {
@@ -203,6 +212,8 @@ namespace Senparc.Scf.XscfBase
             services.AddAutoMapper(z => z.AddProfile<Core.AutoMapper.SystemProfile>());
             //引入所有模块
             services.AddAutoMapper(z => z.AddProfile<AutoMapper.XscfModuleProfile>());
+
+
 
             return sb.ToString();
         }
