@@ -95,7 +95,7 @@ namespace Senparc.Scf.XscfBase
                                 types[t] = ScanTypeKind.IXscfFunction; /* 暂时不收录处理 */
                             }
                             else if (t.GetCustomAttributes(true).FirstOrDefault(z => z is XscfAutoConfigurationMappingAttribute) != null
-                                && t.GetInterfaces().Contains(typeof(IEntityTypeConfiguration<>)))
+                                /*&& t.GetInterfaces().Contains(typeof(IEntityTypeConfiguration<>))*/)
                             {
                                 types[t] = ScanTypeKind.XscfAutoConfigurationMappingAttribute;
                             }
