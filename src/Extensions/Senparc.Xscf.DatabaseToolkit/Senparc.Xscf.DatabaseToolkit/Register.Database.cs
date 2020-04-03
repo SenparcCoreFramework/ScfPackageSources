@@ -3,10 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
 using Senparc.Scf.XscfBase;
 using Senparc.Xscf.DatabaseToolkit.Functions;
-using Senparc.Xscf.DatabaseToolkit.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Senparc.Xscf.DatabaseToolkit
 {
@@ -19,7 +16,7 @@ namespace Senparc.Xscf.DatabaseToolkit
 
         public void AddXscfDatabaseModule(IServiceCollection services)
         {
-            SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.AddXscfDatabaseModule");
+            //SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.AddXscfDatabaseModule");
             services.AddScoped<DbConfig>();
             services.AddScoped<SetConfig>();
             services.AddScoped<SetConfig.SetConfig_Parameters>();
@@ -34,7 +31,8 @@ namespace Senparc.Xscf.DatabaseToolkit
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
+            //实现 [XscfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
+            //modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
         }
     }
 }

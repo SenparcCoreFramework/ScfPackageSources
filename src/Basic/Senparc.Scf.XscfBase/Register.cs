@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Scf.Core.Enums;
+using Senparc.Scf.Core.Models;
 using Senparc.Scf.Core.Models.DataBaseModel;
 using Senparc.Scf.Service;
 using Senparc.Scf.XscfBase.Threads;
+using Senparc.Scf.XscfBase.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -38,7 +41,22 @@ namespace Senparc.Scf.XscfBase
         public static ConcurrentDictionary<ThreadInfo, Thread> ThreadCollection = new ConcurrentDictionary<ThreadInfo, Thread>();
 
         /// <summary>
-        /// 启动 XSCF 模块引擎，包括初始化扫描和注册等过程，通常在 Startup.cs 中的 ConfigureServices() 方法中执行
+        /// 所有自动注册 Xscf 的数据库的 ConfigurationMapping 对象
+        /// </summary>
+        public static List<IEntityTypeConfiguration<IEntityBase>> XscfAutoConfigurationMappingList = new List<IEntityTypeConfiguration<IEntityBase>>();
+
+        /// <summary>
+        /// 扫描程序集分类
+        /// </summary>
+        enum ScanTypeKind
+        {
+            IXscfRegister,
+            IXscfFunction,
+            XscfAutoConfigurationMappingAttribute
+        }
+
+        /// <summary>
+        /// 启动 XSCF 模块引擎，包括初始化扫描和注册等过程
         /// </summary>
         /// <returns></returns>
         public static string StartEngine(this IServiceCollection services, IConfiguration configuration)
@@ -47,7 +65,7 @@ namespace Senparc.Scf.XscfBase
             sb.AppendLine($"[{SystemTime.Now}] 开始初始化扫描 XscfModules");
             var scanTypesCount = 0;
             var hideTypeCount = 0;
-            IEnumerable<Type> types = null;
+            ConcurrentDictionary<Type, ScanTypeKind> types = new ConcurrentDictionary<Type, ScanTypeKind>();
 
             //所有 XSCF 模块，包括被忽略的。
             //var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
@@ -56,40 +74,46 @@ namespace Senparc.Scf.XscfBase
 
                 try
                 {
-                    types = AppDomain.CurrentDomain.GetAssemblies()
-                               .SelectMany(a =>
-                               {
-                                   try
-                                   {
-                                       scanTypesCount++;
-                                       var aTypes = a.GetTypes();
-                                       return aTypes.Where(t =>
-                                            !t.IsAbstract &&
-                                            (t.GetInterfaces().Contains(typeof(IXscfRegister)) ||
-                                            t.GetInterfaces().Contains(typeof(IXscfFunction)/* 暂时不收录 */)
-                                            ));
-                                   }
-                                   catch (Exception ex)
-                                   {
-                                       sb.AppendLine($"[{SystemTime.Now}] 自动扫描程序集异常：" + a.FullName);
-                                       SenparcTrace.SendCustomLog("XscfRegister() 自动扫描程序集异常：" + a.FullName, ex.ToString());
-                                       return new List<Type>();//不能 return null
-                                   }
-                               });
+                    //遍历所有程序集
+                    foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+                    {
+                        scanTypesCount++;
+                        var aTypes = a.GetTypes();
+                        foreach (var t in aTypes)
+                        {
+                            if (t.IsAbstract)
+                            {
+                                continue;
+                            }
+
+                            if (t.GetInterfaces().Contains(typeof(IXscfRegister)))
+                            {
+                                types[t] = ScanTypeKind.IXscfRegister;
+                            }
+                            else if (t.GetInterfaces().Contains(typeof(IXscfFunction)))
+                            {
+                                types[t] = ScanTypeKind.IXscfFunction; /* 暂时不收录处理 */
+                            }
+                            else if (t.GetCustomAttributes(true).FirstOrDefault(z => z is XscfAutoConfigurationMappingAttribute) != null
+                                /*&& t.GetInterfaces().Contains(typeof(IEntityTypeConfiguration<>))*/)
+                            {
+                                types[t] = ScanTypeKind.XscfAutoConfigurationMappingAttribute;
+                            }
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"扫描程集异常退出，可能无法获得完整程序集信息：{ex.Message}");
                 }
 
-                if (types != null)
+                sb.AppendLine($"[{SystemTime.Now}] 满足条件对象：{types.Count()}");
+
+                //先注册 XscfRegister
                 {
-                    sb.AppendLine($"[{SystemTime.Now}] 满足条件对象：{types.Count()}");
-
-                    //先注册 XscfRegister
-
                     //筛选
-                    var allTypes = types.Where(z => z != null && z.GetInterfaces().Contains(typeof(IXscfRegister)));
+                    var allTypes = types.Where(z => z.Value == ScanTypeKind.IXscfRegister/* && z.Key.GetInterfaces().Contains(typeof(IXscfRegister))*/)
+                        .Select(z => z.Key);
                     //按照优先级进行排序
                     var orderedTypes = allTypes.OrderByDescending(z =>
                     {
@@ -100,6 +124,7 @@ namespace Senparc.Scf.XscfBase
                         }
                         return 0;
                     });
+
 
                     foreach (var type in orderedTypes)
                     {
@@ -127,6 +152,8 @@ namespace Senparc.Scf.XscfBase
                         }
                     }
 
+                    #region 暂时不收录 IXscfFunction
+
                     /* 暂时不收录 */
                     ////再扫描具体方法
                     //foreach (var type in types.Where(z => z != null && z.GetInterfaces().Contains(typeof(IXscfFunction))))
@@ -141,6 +168,18 @@ namespace Senparc.Scf.XscfBase
                     //    var function = type as IXscfFunction;
                     //    ModuleFunctionCollection[type].Add(function);
                     //}
+
+                    #endregion
+                }
+
+                //处理 XscfAutoConfigurationMappingAttribute
+                {
+                    var allTypes = types.Where(z => z.Value == ScanTypeKind.XscfAutoConfigurationMappingAttribute).Select(z => z.Key);
+                    foreach (var type in allTypes)
+                    {
+                        var obj = type.Assembly.CreateInstance(type.FullName) as IEntityTypeConfiguration<IEntityBase>;
+                        XscfAutoConfigurationMappingList.Add(obj);
+                    }
                 }
             }
 
