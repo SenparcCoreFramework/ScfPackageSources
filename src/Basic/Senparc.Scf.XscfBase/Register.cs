@@ -177,8 +177,8 @@ namespace Senparc.Scf.XscfBase
                     var allTypes = types.Where(z => z.Value == ScanTypeKind.XscfAutoConfigurationMappingAttribute).Select(z => z.Key);
                     foreach (var type in allTypes)
                     {
-                        var obj = type.Assembly.CreateInstance(type.FullName) as IEntityTypeConfiguration<object>;
-                        XscfAutoConfigurationMappingList.Add(obj);
+                        var obj = type.Assembly.CreateInstance(type.FullName);
+                        XscfAutoConfigurationMappingList.Add(obj as IEntityTypeConfiguration<object>);
                     }
                 }
             }
@@ -197,8 +197,8 @@ namespace Senparc.Scf.XscfBase
             services.AddScoped(typeof(IServiceBase<>), typeof(ServiceBase<>));
 
             //ConfigurationMapping
-            services.AddScoped(typeof(ConfigurationMappingWithIdBase<,>));
             services.AddScoped(typeof(ConfigurationMappingBase<>));
+            services.AddScoped(typeof(ConfigurationMappingWithIdBase<,>));
 
             //微模块进行 Service 注册
             foreach (var xscfRegister in RegisterList)
