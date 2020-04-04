@@ -349,10 +349,12 @@ namespace Senparc.Scf.XscfBase
                     var setKeyInfoList = EntitySetKeys.GetEntitySetInfo(databaseRegister.XscfDatabaseDbContextType).Values;
                     foreach (var setKeyInfo in setKeyInfoList)
                     {
+                        //数据库实体类型
                         var entityType = setKeyInfo.DbSetType;
-                        var BlankEntityTypeConfigurationType = typeof(BlankEntityTypeConfiguration<>).MakeGenericType(entityType);
+                        //默认空 ConfigurationMapping 对象的泛型类型
+                        var blankEntityTypeConfigurationType = typeof(BlankEntityTypeConfiguration<>).MakeGenericType(entityType);
                         //创建一个新的实例
-                        var blankEntityTypeConfiguration = Activator.CreateInstance(BlankEntityTypeConfigurationType);
+                        var blankEntityTypeConfiguration = Activator.CreateInstance(blankEntityTypeConfigurationType);
                         //最佳到末尾，这样可以优先执行用户自定义的代码
                         XscfAutoConfigurationMappingList.Add(blankEntityTypeConfiguration);
                     }
