@@ -10,7 +10,7 @@ namespace Senparc.Scf.XscfBase
     public interface IXscfRazorRuntimeCompilation
     {
         /// <summary>
-        /// 相对路径，如：Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "Senparc.Areas.Admin"));
+        /// 相对路径，如：Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Areas.Admin"));
         /// </summary>
         string LibraryPath { get; }
     }

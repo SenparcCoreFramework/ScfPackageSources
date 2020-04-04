@@ -10,7 +10,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
     /// 包含 Id（Key）的 ConfigurationMapping 基类
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
-    public class ConfigurationMappingWithIdBase<TEntity, TKey> : ConfigurationMappingWithIdBase<TEntity>, IEntityTypeConfiguration<TEntity>
+    public class ConfigurationMappingWithIdBase<TEntity, TKey> : ConfigurationMappingBase<TEntity>, IEntityTypeConfiguration<TEntity>
         where TEntity : EntityBase<TKey>
     {
         /// <summary>
@@ -27,7 +27,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
     /// <summary>
     /// 不包含 Id（Key）的 ConfigurationMapping 基类
     /// </summary>
-    public class ConfigurationMappingWithIdBase<TEntity> : IEntityTypeConfiguration<TEntity>
+    public class ConfigurationMappingBase<TEntity> : IEntityTypeConfiguration<TEntity>
         where TEntity : EntityBase
     {
         /// <summary>
@@ -39,5 +39,6 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
             builder.Property(e => e.AddTime).HasColumnType("datetime").IsRequired();
             builder.Property(e => e.LastUpdateTime).HasColumnType("datetime").IsRequired();
         }
+
     }
 }

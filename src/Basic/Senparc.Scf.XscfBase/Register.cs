@@ -43,7 +43,8 @@ namespace Senparc.Scf.XscfBase
         /// <summary>
         /// 所有自动注册 Xscf 的数据库的 ConfigurationMapping 对象
         /// </summary>
-        public static List<IEntityTypeConfiguration<IEntityBase>> XscfAutoConfigurationMappingList = new List<IEntityTypeConfiguration<IEntityBase>>();
+        public static List<object> XscfAutoConfigurationMappingList = new List<object>();
+        //public static List<IEntityTypeConfiguration<EntityBase>> XscfAutoConfigurationMappingList = new List<IEntityTypeConfiguration<EntityBase>>();
 
         /// <summary>
         /// 扫描程序集分类
@@ -177,8 +178,8 @@ namespace Senparc.Scf.XscfBase
                     var allTypes = types.Where(z => z.Value == ScanTypeKind.XscfAutoConfigurationMappingAttribute).Select(z => z.Key);
                     foreach (var type in allTypes)
                     {
-                        var obj = type.Assembly.CreateInstance(type.FullName) as IEntityTypeConfiguration<IEntityBase>;
-                        XscfAutoConfigurationMappingList.Add(obj);
+                        var obj = type.Assembly.CreateInstance(type.FullName);
+                        XscfAutoConfigurationMappingList.Add(obj /*as IEntityTypeConfiguration<EntityBase>*/);
                     }
                 }
             }
@@ -190,6 +191,15 @@ namespace Senparc.Scf.XscfBase
             }
             sb.AppendLine($"[{SystemTime.Now}] {scanResult}");
 
+
+            //Repository & Service
+            services.AddScoped(typeof(Senparc.Scf.Repository.IRepositoryBase<>), typeof(Senparc.Scf.Repository.RepositoryBase<>));
+            services.AddScoped(typeof(ServiceBase<>));
+            services.AddScoped(typeof(IServiceBase<>), typeof(ServiceBase<>));
+
+            //ConfigurationMapping
+            services.AddScoped(typeof(ConfigurationMappingBase<>));
+            services.AddScoped(typeof(ConfigurationMappingWithIdBase<,>));
 
             //微模块进行 Service 注册
             foreach (var xscfRegister in RegisterList)
@@ -308,7 +318,7 @@ namespace Senparc.Scf.XscfBase
                     {
                         XscfThreadBuilder xscfThreadBuilder = new XscfThreadBuilder();
                         threadRegister.ThreadConfig(xscfThreadBuilder);
-                        xscfThreadBuilder.Build(app,register);
+                        xscfThreadBuilder.Build(app, register);
                     }
                     catch (Exception ex)
                     {
@@ -317,6 +327,78 @@ namespace Senparc.Scf.XscfBase
                 }
             }
             return app;
+        }
+
+        /// <summary>
+        /// 所有已经使用的 [AutoConfigurationMapping] 对应的实体类型
+        /// </summary>
+        public static List<Type> ApplyedAutoConfigurationMappingTypes = new List<Type>();
+        /// <summary>
+        /// 自动添加所有 XSCF 模块中标记了 [XscfAutoConfigurationMapping] 特性的对象
+        /// </summary>
+        public static void ApplyAllAutoConfigurationMapping(ModelBuilder modelBuilder)
+        {
+            var entityTypeConfigurationMethod = typeof(ModelBuilder).GetMethods()
+                .FirstOrDefault(z => z.Name == "ApplyConfiguration" && z.ContainsGenericParameters && z.GetParameters().SingleOrDefault()?.ParameterType.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>));
+
+            //所有模块中数据库实体中自动获取所有的 DbSet 下的实体类型
+            foreach (var databaseRegister in Register.XscfDatabaseList)
+            {
+                if (databaseRegister.XscfDatabaseDbContextType != null)
+                {
+                    var setKeyInfoList = EntitySetKeys.GetEntitySetInfo(databaseRegister.XscfDatabaseDbContextType).Values;
+                    foreach (var setKeyInfo in setKeyInfoList)
+                    {
+                        //数据库实体类型
+                        var entityType = setKeyInfo.DbSetType;
+                        //默认空 ConfigurationMapping 对象的泛型类型
+                        var blankEntityTypeConfigurationType = typeof(BlankEntityTypeConfiguration<>).MakeGenericType(entityType);
+                        //创建一个新的实例
+                        var blankEntityTypeConfiguration = Activator.CreateInstance(blankEntityTypeConfigurationType);
+                        //最佳到末尾，这样可以优先执行用户自定义的代码
+                        XscfAutoConfigurationMappingList.Add(blankEntityTypeConfiguration);
+                    }
+                }
+            }
+
+            foreach (var autoConfigurationMapping in XscfAutoConfigurationMappingList)
+            {
+                if (autoConfigurationMapping == null)
+                {
+                    continue;
+                }
+
+                SenparcTrace.SendCustomLog("监测到 ApplyAllAutoConfigurationMapping 执行", autoConfigurationMapping.GetType().FullName);
+
+                //获取配置实体类型，如：DbConfig_WeixinUserConfigurationMapping
+                Type mappintConfigType = autoConfigurationMapping.GetType();
+                //获取 IEntityTypeConfiguration<Entity> 接口
+                var interfaceType = mappintConfigType.GetInterfaces().FirstOrDefault(z => z.Name.StartsWith("IEntityTypeConfiguration"));
+                if (interfaceType == null)
+                {
+                    continue;
+                }
+                //实体类型，如：DbConfig
+                Type entityType = interfaceType.GenericTypeArguments[0];
+                if (ApplyedAutoConfigurationMappingTypes.Contains(entityType))
+                {
+                    continue;//如果已经添加过则跳过。作此判断因为：原始的 XscfAutoConfigurationMappingList 数据可能和上一步自动添加 DataSet 中的对象有重复
+                }
+
+                entityTypeConfigurationMethod.MakeGenericMethod(entityType)
+                                .Invoke(modelBuilder, new object[1]
+                                {
+                                    autoConfigurationMapping
+                 });
+
+                ApplyedAutoConfigurationMappingTypes.Add(entityType);
+
+                //entityTypeConfigurationMethod.Invoke(modelBuilder, new[] { autoConfigurationMapping });
+            }
+
+            //TODO：添加 IQueryTypeConfiguration<>
+
+
         }
     }
 }

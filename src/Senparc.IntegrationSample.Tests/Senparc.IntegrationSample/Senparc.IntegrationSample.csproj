@@ -5,9 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Senparc.CO2NET.AspNet" Version="0.3.104" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Basic\Senparc.Scf.Core\Senparc.Scf.Core.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Scf.SMS\Senparc.Scf.SMS.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Scf.XscfBase\Senparc.Scf.XscfBase.csproj" />
+    <ProjectReference Include="..\..\Extensions\Senparc.Xscf.ChangeNamespace\Senparc.Xscf.ChangeNamespace.csproj" />
+    <ProjectReference Include="..\..\Extensions\Senparc.Xscf.DatabaseToolkit\Senparc.Xscf.DatabaseToolkit\Senparc.Xscf.DatabaseToolkit.csproj" />
   </ItemGroup>
 
 
