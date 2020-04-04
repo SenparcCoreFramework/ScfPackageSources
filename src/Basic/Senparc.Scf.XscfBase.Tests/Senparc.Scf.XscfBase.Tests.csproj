@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Senparc.Scf.XscfBase\Senparc.Scf.XscfBase.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Attributes\" />
+  </ItemGroup>
+
 </Project>
