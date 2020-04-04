@@ -198,7 +198,7 @@ namespace Senparc.Scf.XscfBase
 
             //ConfigurationMapping
             services.AddScoped(typeof(ConfigurationMappingWithIdBase<,>));
-            services.AddScoped(typeof(ConfigurationMappingWithIdBase<>));
+            services.AddScoped(typeof(ConfigurationMappingBase<>));
 
             //微模块进行 Service 注册
             foreach (var xscfRegister in RegisterList)
@@ -212,8 +212,6 @@ namespace Senparc.Scf.XscfBase
             services.AddAutoMapper(z => z.AddProfile<Core.AutoMapper.SystemProfile>());
             //引入所有模块
             services.AddAutoMapper(z => z.AddProfile<AutoMapper.XscfModuleProfile>());
-
-
 
             return sb.ToString();
         }

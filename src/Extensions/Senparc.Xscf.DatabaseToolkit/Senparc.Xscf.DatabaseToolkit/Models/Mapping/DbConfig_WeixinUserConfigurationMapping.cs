@@ -4,7 +4,7 @@ using Senparc.Scf.XscfBase.Attributes;
 namespace Senparc.Xscf.DatabaseToolkit.Models
 {
     [XscfAutoConfigurationMapping]
-    public class DbConfig_WeixinUserConfigurationMapping : ConfigurationMappingWithIdBase<DbConfig>
+    public class DbConfig_WeixinUserConfigurationMapping : ConfigurationMappingBase<DbConfig>
     {
     }
 }

@@ -10,8 +10,8 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
     /// 包含 Id（Key）的 ConfigurationMapping 基类
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
-    public class ConfigurationMappingWithIdBase<TEntity, TKey> : ConfigurationMappingWithIdBase<TEntity>, IEntityTypeConfiguration<TEntity>
-        where TEntity : class, IEntityBase<TKey>
+    public class ConfigurationMappingWithIdBase<TEntity, TKey> : ConfigurationMappingBase<TEntity>, IEntityTypeConfiguration<TEntity>
+        where TEntity : EntityBase<TKey>
     {
         /// <summary>
         /// 配置 <typeparamref name="TEntity"/> 实例
@@ -27,8 +27,8 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
     /// <summary>
     /// 不包含 Id（Key）的 ConfigurationMapping 基类
     /// </summary>
-    public class ConfigurationMappingWithIdBase<TEntity> : IEntityTypeConfiguration<TEntity>
-        where TEntity : class, IEntityBase
+    public class ConfigurationMappingBase<TEntity> : IEntityTypeConfiguration<TEntity>
+        where TEntity : EntityBase
     {
         /// <summary>
         /// 配置 <typeparamref name="TEntity"/> 实例
