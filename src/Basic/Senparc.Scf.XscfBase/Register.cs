@@ -43,7 +43,8 @@ namespace Senparc.Scf.XscfBase
         /// <summary>
         /// 所有自动注册 Xscf 的数据库的 ConfigurationMapping 对象
         /// </summary>
-        public static List<IEntityTypeConfiguration<object>> XscfAutoConfigurationMappingList = new List<IEntityTypeConfiguration<object>>();
+        public static List<object> XscfAutoConfigurationMappingList = new List<object>();
+        //public static List<IEntityTypeConfiguration<EntityBase>> XscfAutoConfigurationMappingList = new List<IEntityTypeConfiguration<EntityBase>>();
 
         /// <summary>
         /// 扫描程序集分类
@@ -178,7 +179,7 @@ namespace Senparc.Scf.XscfBase
                     foreach (var type in allTypes)
                     {
                         var obj = type.Assembly.CreateInstance(type.FullName);
-                        XscfAutoConfigurationMappingList.Add(obj as IEntityTypeConfiguration<object>);
+                        XscfAutoConfigurationMappingList.Add(obj /*as IEntityTypeConfiguration<EntityBase>*/);
                     }
                 }
             }
