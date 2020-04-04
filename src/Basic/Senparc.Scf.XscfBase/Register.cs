@@ -318,7 +318,7 @@ namespace Senparc.Scf.XscfBase
                     {
                         XscfThreadBuilder xscfThreadBuilder = new XscfThreadBuilder();
                         threadRegister.ThreadConfig(xscfThreadBuilder);
-                        xscfThreadBuilder.Build(app,register);
+                        xscfThreadBuilder.Build(app, register);
                     }
                     catch (Exception ex)
                     {
@@ -327,6 +327,33 @@ namespace Senparc.Scf.XscfBase
                 }
             }
             return app;
+        }
+
+        /// <summary>
+        /// 自动添加所有 XSCF 模块中标记了 [XscfAutoConfigurationMapping] 特性的对象
+        /// </summary>
+        public static void ApplyAllAutoConfigurationMapping(ModelBuilder modelBuilder)
+        {
+            var entityTypeConfigurationMethod = typeof(ModelBuilder).GetMethods()
+                .FirstOrDefault(z => z.Name == "ApplyConfiguration" && z.ContainsGenericParameters && z.GetParameters().SingleOrDefault()?.ParameterType.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>));
+
+            foreach (var autoConfigurationMapping in XscfAutoConfigurationMappingList)
+            {
+                if (autoConfigurationMapping == null)
+                {
+                    continue;
+                }
+
+                SenparcTrace.SendCustomLog("监测到 ApplyAllAutoConfigurationMapping 执行", autoConfigurationMapping.GetType().FullName);
+                entityTypeConfigurationMethod.MakeGenericMethod(autoConfigurationMapping.GetType().GenericTypeArguments[0])
+                                .Invoke(modelBuilder, new object[1]
+                                {
+                                    autoConfigurationMapping
+                                });
+                //entityTypeConfigurationMethod.Invoke(modelBuilder, new[] { autoConfigurationMapping });
+            }
+
+            //TODO：添加 IQueryTypeConfiguration<>
         }
     }
 }
