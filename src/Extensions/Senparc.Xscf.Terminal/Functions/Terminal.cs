@@ -48,33 +48,45 @@ namespace Senparc.Xscf.Terminal.Functions
             StringBuilder sb = new StringBuilder();
             base.RecordLog(sb, "开始运行 Terminal");
 
-            //TODO:需要限制一下执行的命令
-            if (!CommandFilter(typeParam.CommandLine))
+            var upperCmd = typeParam.CommandLine.ToUpper();
+            switch (upperCmd)
             {
-                sb.AppendLine("命令不在允许范围之内");
-                result.Log = sb.ToString();
-                result.Message = "操作失败！";
-                return result;
-            }
+                case "SCF RELEASE"://切换到发布状态
 
-            string strExecRes = string.Empty;
-            if (!string.IsNullOrEmpty(typeParam.CommandLine))
-            {
-                strExecRes = ExeCommand($"{typeParam.CommandLine}");
-            }
-            else
-            {
-                strExecRes = ExeCommand($"dir");
-            }
-            sb.AppendLine(strExecRes);
-            result.Log = sb.ToString();
-            result.Message = "操作成功！";
+                    break;
+                case "SCF DEVELOP"://切换到开发状态
+                    break;
+                default:
+                    //TODO:需要限制一下执行的命令
+                    if (!CommandFilter(typeParam.CommandLine))
+                    {
+                        sb.AppendLine("命令不在允许范围之内");
+                        result.Log = sb.ToString();
+                        result.Message = "操作失败！";
+                        return result;
+                    }
 
-            if (!string.IsNullOrEmpty(strExecRes))
-            {
-                result.Message += Environment.CommandLine + strExecRes;
-            }
+                    string strExecRes = string.Empty;
+                    if (!string.IsNullOrEmpty(typeParam.CommandLine))
+                    {
+                        strExecRes = ExeCommand($"{typeParam.CommandLine}");
+                    }
+                    else
+                    {
+                        strExecRes = ExeCommand($"dir");
+                    }
 
+                    sb.AppendLine(strExecRes);
+                    result.Log = sb.ToString();
+                    result.Message = "操作成功！";
+
+                    if (!string.IsNullOrEmpty(strExecRes))
+                    {
+                        result.Message += Environment.CommandLine + strExecRes;
+                    }
+
+                    break;
+            }
             return result;
         }
 
