@@ -87,25 +87,22 @@ namespace Senparc.Scf.XscfBase
             {
                 SelectionList selectionList = null;
                 //判断是否存在选项
-                if (prop.PropertyType.IsArray)
+                if (prop.PropertyType == typeof(SelectionList))
                 {
-                    var item = prop.GetValue(obj, null);
-                    if (item is SelectionList selections)
+                    var selections = prop.GetValue(obj, null) as SelectionList;
+                    switch (selections.SelectionType)
                     {
-                        switch (selections.SelectionType)
-                        {
-                            case SelectionType.DropDownList:
-                                parameterType = ParameterType.DropDownList;
-                                break;
-                            case SelectionType.CheckBoxList:
-                                parameterType = ParameterType.CheckBoxList;
-                                break;
-                            default:
-                                break;
-                        }
-                        selectionList = selections;
-                        parameterType = ParameterType.DropDownList;//TODO:根据其他条件（如创建一个新的Attribute）判断多选
+                        case SelectionType.DropDownList:
+                            parameterType = ParameterType.DropDownList;
+                            break;
+                        case SelectionType.CheckBoxList:
+                            parameterType = ParameterType.CheckBoxList;
+                            break;
+                        default:
+                            //TODO: throw
+                            break;
                     }
+                    selectionList = selections;
                 }
 
                 var name = prop.Name;

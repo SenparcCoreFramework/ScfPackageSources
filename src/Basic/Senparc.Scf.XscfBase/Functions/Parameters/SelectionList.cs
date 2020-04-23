@@ -20,7 +20,13 @@ namespace Senparc.Scf.XscfBase.Functions
 
         public SelectionList() { }
 
-        public SelectionList(SelectionType selectionType, IEnumerable<SelectionItem> collection = null) : base(collection)
+
+        public SelectionList(SelectionType selectionType)
+        {
+            SelectionType = selectionType;
+        }
+
+        public SelectionList(SelectionType selectionType, IEnumerable<SelectionItem> collection) : base(collection)
         {
             SelectionType = selectionType;
         }
