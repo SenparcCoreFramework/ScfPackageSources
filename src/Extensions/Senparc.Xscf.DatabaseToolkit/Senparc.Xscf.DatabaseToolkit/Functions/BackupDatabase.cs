@@ -24,6 +24,12 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
             [Description("路径||本地物理路径，如：E:\\Senparc\\Database-Backup\\SCF.bak，必须包含文件名。请确保此路径有网站程序访问权限！")]
             public string Path { get; set; }
 
+            [Description("选项||备份数据库选项")]
+            public string[] Options { get; set; } = new[] {
+                "如果文件存在，则不覆盖",
+                "备份完成后校验.bak文件是否更新成功",
+            };
+
             public override async Task LoadData(IServiceProvider serviceProvider)
             {
                 var configService = serviceProvider.GetService<ServiceBase<DbConfig>>();

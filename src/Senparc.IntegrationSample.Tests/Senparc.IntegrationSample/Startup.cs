@@ -1,13 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,6 +14,9 @@ using Senparc.Scf.Core.Config;
 using Senparc.Scf.Core.Models;
 using Senparc.Scf.SMS;
 using Senparc.Scf.XscfBase;
+using System;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 namespace Senparc.IntegrationSample
 {

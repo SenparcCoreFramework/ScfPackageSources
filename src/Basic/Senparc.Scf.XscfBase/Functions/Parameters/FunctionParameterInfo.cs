@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Senparc.Scf.XscfBase.Functions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,8 +8,8 @@ namespace Senparc.Scf.XscfBase
     public enum ParameterType
     {
         Text,
-        SingleSelection,
-        MultipleSelection,
+        DropDownList,
+        CheckBoxList,
     }
 
     /// <summary>
@@ -23,7 +24,6 @@ namespace Senparc.Scf.XscfBase
         public string SystemType { get; set; }
         public object Value { get; set; }
 
-
         /// <summary>
         /// 参数类型
         /// </summary>
@@ -31,21 +31,21 @@ namespace Senparc.Scf.XscfBase
         /// <summary>
         /// 选项
         /// </summary>
-        public string[] SelectionItems { get; set; }
+        public SelectionList SelectionList { get; set; }
 
         public FunctionParameterInfo()
         {
         }
 
         public FunctionParameterInfo(string name, string title, string description,
-            bool isRequired, string systemType, ParameterType parameterType, string[] selectionItems, object value)
+            bool isRequired, string systemType, ParameterType parameterType, SelectionList selectionList, object value)
         {
             Name = name;
             Title = title;
             Description = description;
             IsRequired = isRequired;
             SystemType = systemType;
-            SelectionItems = selectionItems;
+            SelectionList = selectionList;
             ParameterType = parameterType;
             Value = value;
         }

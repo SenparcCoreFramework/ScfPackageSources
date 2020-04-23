@@ -73,14 +73,14 @@ namespace Senparc.Scf.XscfBase.Tests
             Assert.AreEqual(ParameterType.Text, paraInfo[1].ParameterType);
             Assert.AreEqual("命名空间根，必须以.结尾，用于替换[Senparc.Scf.]", paraInfo[1].Description);
 
-            Assert.AreEqual(ParameterType.SingleSelection, paraInfo[2].ParameterType);
+            Assert.AreEqual(ParameterType.DropDownList, paraInfo[2].ParameterType);
             Assert.AreEqual("Site", paraInfo[2].Name);
             Assert.AreEqual("网站", paraInfo[2].Title);
             Assert.AreEqual("选择需要下载的网站", paraInfo[2].Description);
-            Assert.AreEqual(3, paraInfo[2].SelectionItems.Count());
-            Assert.AreEqual("", paraInfo[2].SelectionItems[0]);
-            Assert.AreEqual("GitHub", paraInfo[2].SelectionItems[1]);
-            Assert.AreEqual("Gitee", paraInfo[2].SelectionItems[2]);
+            Assert.AreEqual(3, paraInfo[2].SelectionList.Count());
+            Assert.AreEqual("", paraInfo[2].SelectionList[0]);
+            Assert.AreEqual("GitHub", paraInfo[2].SelectionList[1]);
+            Assert.AreEqual("Gitee", paraInfo[2].SelectionList[2]);
 
         }
     }
