@@ -25,9 +25,9 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
             public string Path { get; set; }
 
             [Description("选项||备份数据库选项")]
-            public string[] Options { get; set; } = new[] {
-                "如果文件存在，则不覆盖",
-                "备份完成后校验.bak文件是否更新成功",
+            public SelectionList Options { get; set; } = new SelectionList(SelectionType.CheckBoxList){
+                new SelectionItem("0","如果文件存在，则不覆盖"),
+                new SelectionItem("1","备份完成后校验.bak文件是否更新成功"),
             };
 
             public override async Task LoadData(IServiceProvider serviceProvider)
