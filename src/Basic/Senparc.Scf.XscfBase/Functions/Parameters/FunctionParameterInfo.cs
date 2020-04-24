@@ -13,23 +13,43 @@ namespace Senparc.Scf.XscfBase
     }
 
     /// <summary>
-    /// FunctionParameter 信息
+    /// FunctionParameter 信息（供输出用）
     /// </summary>
     public class FunctionParameterInfo
     {
+        /// <summary>
+        /// 参数名称
+        /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// 标题（标签内容）
+        /// </summary>
         public string Title { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Description { get; set; }
+        /// <summary>
+        /// 是否必须
+        /// </summary>
         public bool IsRequired { get; set; }
+        /// <summary>
+        /// 系统类型
+        /// </summary>
         public string SystemType { get; set; }
-        public object Value { get; set; }
 
         /// <summary>
         /// 参数类型
         /// </summary>
         public ParameterType ParameterType { get; set; } = ParameterType.Text;
+
         /// <summary>
-        /// 选项
+        /// 文本值（当文本类型时使用）
+        /// </summary>
+        public object Value { get; set; }
+
+        /// <summary>
+        /// 选项（当出现非文本内容时使用）
         /// </summary>
         public SelectionList SelectionList { get; set; }
 

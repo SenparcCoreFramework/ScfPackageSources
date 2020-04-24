@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Senparc.Scf.XscfBase.Functions
@@ -7,16 +8,21 @@ namespace Senparc.Scf.XscfBase.Functions
     /// <summary>
     /// 选项列表
     /// </summary>
-    public class SelectionList : List<SelectionItem>
+    public class SelectionList
     {
         /// <summary>
         /// 选项类型
         /// </summary>
         public SelectionType SelectionType { get; set; }
-        /// <summary>
-        /// 已经选中的项的值
-        /// </summary>
+        ///// <summary>
+        ///// 选中的项的值（从客户端传入）
+        ///// </summary>
         public string[] SelectedValues { get; set; }
+
+        /// <summary>
+        /// 选项参数
+        /// </summary>
+        public IList<SelectionItem> Items { get; set; }
 
         public SelectionList() { }
 
@@ -26,9 +32,10 @@ namespace Senparc.Scf.XscfBase.Functions
             SelectionType = selectionType;
         }
 
-        public SelectionList(SelectionType selectionType, IEnumerable<SelectionItem> collection) : base(collection)
+        public SelectionList(SelectionType selectionType, IList<SelectionItem> items)
         {
             SelectionType = selectionType;
+            Items = items ?? new List<SelectionItem>();
         }
     }
 
@@ -37,21 +44,32 @@ namespace Senparc.Scf.XscfBase.Functions
     /// </summary>
     public class SelectionItem
     {
+        /// <summary>
+        /// 文字标签
+        /// </summary>
         public string Text { get; set; }
+        /// <summary>
+        /// 值
+        /// </summary>
         public string Value { get; set; }
-        //public bool Selected { get; set; }
+        /// <summary>
+        /// （仅供显示时使用），是否默认选中
+        /// </summary>
+        public bool DefaultSelected { get; set; }
+        /// <summary>
+        /// 说明
+        /// </summary>
         public string Note { get; set; }
 
         public SelectionItem() { }
 
-        public SelectionItem(string text, string value, /*bool selected = false,*/ string note = "")
+        public SelectionItem(string value, string text, string note = "", bool defaultSelected = false)
         {
             Text = text;
             Value = value;
-            //Selected = selected;
             Note = note;
+            DefaultSelected = defaultSelected;
         }
-
     }
 
     /// <summary>
