@@ -21,11 +21,11 @@ namespace Senparc.Xscf.ChangeNamespace.Functions
             /// </summary>
             [Required]
             [Description("源码来源||目前更新最快的是 GitHub，Gitee（码云）在国内下载速度更快，但是不能确定是最新代码，下载前请注意核对最新 GitHub 上的版本。")]
-            public SelectionList Site { get; set; } = new SelectionList(SelectionType.DropDownList)
+            public SelectionList Site { get; set; } = new SelectionList(SelectionType.DropDownList, new[] 
             {
                 new SelectionItem(Parameters_Site.GitHub.ToString(),Parameters_Site.GitHub.ToString()),
                 new SelectionItem(Parameters_Site.Gitee.ToString(),Parameters_Site.Gitee.ToString())
-            };
+            });
 
             public enum Parameters_Site
             {

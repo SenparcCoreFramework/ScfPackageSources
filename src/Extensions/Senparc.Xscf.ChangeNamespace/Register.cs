@@ -18,7 +18,7 @@ namespace Senparc.Xscf.ChangeNamespace
 
         public override string Name => "Senparc.Xscf.ChangeNamespace";
         public override string Uid => "476A8F12-860D-4B18-B703-393BBDEFBD85";//必须确保全局唯一，生成后必须固定
-        public override string Version => "0.3.5";//必须填写版本号
+        public override string Version => "0.3.7";//必须填写版本号
 
         public override string MenuName => "修改命名空间";
         public override string Icon => "fa fa-space-shuttle";//参考如：https://colorlib.com/polygon/gentelella/icons.html

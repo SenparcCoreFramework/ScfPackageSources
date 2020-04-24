@@ -86,6 +86,7 @@ namespace Senparc.Scf.XscfBase
             foreach (var prop in props)
             {
                 SelectionList selectionList = null;
+                parameterType = ParameterType.Text;//默认为文本内容
                 //判断是否存在选项
                 if (prop.PropertyType == typeof(SelectionList))
                 {
