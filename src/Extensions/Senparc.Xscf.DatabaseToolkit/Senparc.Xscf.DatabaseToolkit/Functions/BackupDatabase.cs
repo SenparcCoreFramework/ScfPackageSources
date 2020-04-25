@@ -17,12 +17,25 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
 {
     public class BackupDatabase : FunctionBase
     {
+        public enum BackupDatabaseOptions
+        {
+            如果文件存在则不覆盖 = 0,
+            校验备份成功 = 1
+        }
+
         public class BackupDatabase_Parameters : FunctionParameterLoadDataBase
         {
             [Required]
             [MaxLength(300)]
             [Description("路径||本地物理路径，如：E:\\Senparc\\Database-Backup\\SCF.bak，必须包含文件名。请确保此路径有网站程序访问权限！")]
             public string Path { get; set; }
+
+            [Description("选项||备份数据库选项")]
+            public SelectionList Options { get; set; } = new SelectionList(SelectionType.CheckBoxList,
+                new[] {
+                    new SelectionItem($"{(int)BackupDatabaseOptions.如果文件存在则不覆盖}","如果文件存在，则不覆盖","文件已存在的情况下，不会执行备份操作"),
+                    new SelectionItem($"{(int)BackupDatabaseOptions.校验备份成功}","备份完成后校验.bak文件是否更新成功","此操作只能检查文件是否被更新，无法检测文件内部内容",true),
+                });
 
             public override async Task LoadData(IServiceProvider serviceProvider)
             {
@@ -58,9 +71,17 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                 try
                 {
                     var path = typeParam.Path;
+
                     if (File.Exists(path))
                     {
                         var copyPath = path + ".last.bak";
+                        if (typeParam.Options.SelectedValues.Contains($"{(int)BackupDatabaseOptions.如果文件存在则不覆盖}"))
+                        {
+                            RecordLog(sb, "检测到同名文件，停止覆盖。地址：" + copyPath);
+                            result.Message = "检测到同名文件，停止覆盖！";
+                            return;
+                        }
+
                         RecordLog(sb, "检测到同名文件，已经移动到（并覆盖）：" + copyPath);
                         File.Move(path, copyPath, true);
                     }
@@ -73,25 +94,32 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                     int affectRows = senparcEntities.Database.ExecuteSqlRaw(sql);
                     RecordLog(sb, "执行完毕，备份结束。affectRows：" + affectRows);
 
-                    RecordLog(sb, "检查备份文件：" + path);
-                    if (File.Exists(path))
+                    if (typeParam.Options.SelectedValues.Contains($"{(int)BackupDatabaseOptions.校验备份成功}"))
                     {
-                        var modifyTime = File.GetLastWriteTimeUtc(path);
-                        if ((SystemTime.UtcDateTime - modifyTime).TotalSeconds < 5/*5秒钟内创建的*/)
+                        RecordLog(sb, "检查备份文件：" + path);
+                        if (File.Exists(path))
                         {
-                            RecordLog(sb, "检查通过，备份成功！最后修改时间：" + modifyTime.ToString());
-                            result.Message = "备份完成！";
+                            var modifyTime = File.GetLastWriteTimeUtc(path);
+                            if ((SystemTime.UtcDateTime - modifyTime).TotalSeconds < 5/*5秒钟内创建的*/)
+                            {
+                                RecordLog(sb, "检查通过，备份成功！最后修改时间：" + modifyTime.ToString());
+                                result.Message = "检查通过，备份成功！";
+                            }
+                            else
+                            {
+                                result.Message = $"文件存在，但修改时间不符，可能未备份成功，请检查文件！文件最后修改时间：{modifyTime.ToString()}";
+                                RecordLog(sb, result.Message);
+                            }
                         }
                         else
                         {
-                            result.Message = $"文件存在，但修改时间不符，可能未备份成功，请检查文件！文件最后修改时间：{modifyTime.ToString()}";
+                            result.Message = "备份文件未生成，备份失败！";
                             RecordLog(sb, result.Message);
                         }
                     }
                     else
                     {
-                        result.Message = "备份文件未生成，备份失败！";
-                        RecordLog(sb, result.Message);
+                        result.Message = "备份完成！";
                     }
                 }
                 catch (Exception ex)
@@ -99,7 +127,6 @@ namespace Senparc.Xscf.DatabaseToolkit.Functions
                     result.Message += ex.Message;
                     throw;
                 }
-
             });
         }
     }

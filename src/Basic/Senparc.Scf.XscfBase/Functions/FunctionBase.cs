@@ -85,22 +85,25 @@ namespace Senparc.Scf.XscfBase
             List<FunctionParameterInfo> result = new List<FunctionParameterInfo>();
             foreach (var prop in props)
             {
-                List<string> selectionItems = null;
+                SelectionList selectionList = null;
+                parameterType = ParameterType.Text;//默认为文本内容
                 //判断是否存在选项
-                if (prop.PropertyType.IsArray)
+                if (prop.PropertyType == typeof(SelectionList))
                 {
-                    var selection = prop.GetValue(obj, null);
-                    if (selection == null)
+                    var selections = prop.GetValue(obj, null) as SelectionList;
+                    switch (selections.SelectionType)
                     {
-                        continue;//此参数不加入
+                        case SelectionType.DropDownList:
+                            parameterType = ParameterType.DropDownList;
+                            break;
+                        case SelectionType.CheckBoxList:
+                            parameterType = ParameterType.CheckBoxList;
+                            break;
+                        default:
+                            //TODO: throw
+                            break;
                     }
-
-                    selectionItems = new List<string>();
-                    parameterType = ParameterType.SingleSelection;//TODO:根据其他条件（如创建一个新的Attribute）判断多选
-                    foreach (var item in (Array)selection)
-                    {
-                        selectionItems.Add(item.ToString());
-                    }
+                    selectionList = selections;
                 }
 
                 var name = prop.Name;
@@ -125,13 +128,13 @@ namespace Senparc.Scf.XscfBase
                 {
                     value = prop.GetValue(obj);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     SenparcTrace.BaseExceptionLog(ex);
                 }
 
-                var functionParamInfo = new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType, 
-                                            selectionItems?.ToArray(), value);
+                var functionParamInfo = new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType,
+                                            selectionList ?? new SelectionList(), value);
                 result.Add(functionParamInfo);
             }
             return result;

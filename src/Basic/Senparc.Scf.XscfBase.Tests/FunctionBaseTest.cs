@@ -6,6 +6,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Scf.Core.Tests;
 using Senparc.Scf.XscfBase.Functions;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using Senparc.CO2NET.Extensions;
 
 namespace Senparc.Scf.XscfBase.Tests
 {
@@ -47,7 +49,11 @@ namespace Senparc.Scf.XscfBase.Tests
 
 
         [System.ComponentModel.Description("网站||选择需要下载的网站")]
-        public string[] Site { get; set; } = new[] { "", "GitHub", "Gitee" };
+        public SelectionList Site { get; set; } = new SelectionList(SelectionType.DropDownList,new[]{
+            new SelectionItem("请选择","请选择","选项1"),
+            new SelectionItem("GitHub","GitHub","选项2"),
+            new SelectionItem("Gitee","Gitee","选项3")
+        });
     }
 
     [TestClass]
@@ -73,14 +79,14 @@ namespace Senparc.Scf.XscfBase.Tests
             Assert.AreEqual(ParameterType.Text, paraInfo[1].ParameterType);
             Assert.AreEqual("命名空间根，必须以.结尾，用于替换[Senparc.Scf.]", paraInfo[1].Description);
 
-            Assert.AreEqual(ParameterType.SingleSelection, paraInfo[2].ParameterType);
+            Assert.AreEqual(ParameterType.DropDownList, paraInfo[2].ParameterType);
             Assert.AreEqual("Site", paraInfo[2].Name);
             Assert.AreEqual("网站", paraInfo[2].Title);
             Assert.AreEqual("选择需要下载的网站", paraInfo[2].Description);
-            Assert.AreEqual(3, paraInfo[2].SelectionItems.Count());
-            Assert.AreEqual("", paraInfo[2].SelectionItems[0]);
-            Assert.AreEqual("GitHub", paraInfo[2].SelectionItems[1]);
-            Assert.AreEqual("Gitee", paraInfo[2].SelectionItems[2]);
+            Assert.AreEqual(3, paraInfo[2].SelectionList.Items.Count());
+            Assert.AreEqual("请选择", paraInfo[2].SelectionList.Items[0].Text);
+            Assert.AreEqual("GitHub", paraInfo[2].SelectionList.Items[1].Value);
+            Assert.AreEqual("Gitee", paraInfo[2].SelectionList.Items[2].Value);
 
         }
     }
