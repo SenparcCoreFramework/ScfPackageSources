@@ -10,6 +10,8 @@ namespace Senparc.Scf.XscfBase.Functions
     /// </summary>
     public class SelectionList
     {
+        private string[] selectedValues;
+
         /// <summary>
         /// 选项类型
         /// </summary>
@@ -17,14 +19,14 @@ namespace Senparc.Scf.XscfBase.Functions
         ///// <summary>
         ///// 选中的项的值（从客户端传入）
         ///// </summary>
-        public string[] SelectedValues { get; set; }
+        public string[] SelectedValues { get => selectedValues ?? new string[0]; set => selectedValues = value; }
 
         /// <summary>
         /// 选项参数
         /// </summary>
         public IList<SelectionItem> Items { get; set; }
 
-        public SelectionList() { }
+        //public SelectionList() { }
 
 
         public SelectionList(SelectionType selectionType)
@@ -36,6 +38,31 @@ namespace Senparc.Scf.XscfBase.Functions
         {
             SelectionType = selectionType;
             Items = items ?? new List<SelectionItem>();
+        }
+
+        /// <summary>
+        /// 判断 SelectedValues 中是否存在值
+        /// </summary>
+        /// <param name="itemIndex">获取 Items 中的索引项对应的 Value</param>
+        /// <returns></returns>
+        public bool IsSelected(int itemIndex)
+        {
+            if (itemIndex > Items.Count - 1)
+            {
+                throw new IndexOutOfRangeException($"{nameof(itemIndex)}（{itemIndex}） 超出 {nameof(Items)} 索引值范围（{Items.Count}）！");
+            }
+
+            return IsSelected(Items[itemIndex].Value);
+        }
+
+        /// <summary>
+        /// 判断 SelectedValues 中是否存在值
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool IsSelected(string value)
+        {
+            return SelectedValues.Contains(value);
         }
     }
 
@@ -77,6 +104,10 @@ namespace Senparc.Scf.XscfBase.Functions
     /// </summary>
     public enum SelectionType
     {
+        /// <summary>
+        /// 未知参数
+        /// </summary>
+        Unknown,
         /// <summary>
         /// 下拉列表（单选）
         /// </summary>
