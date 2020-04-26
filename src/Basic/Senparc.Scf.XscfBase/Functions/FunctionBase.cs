@@ -134,7 +134,7 @@ namespace Senparc.Scf.XscfBase
                 }
 
                 var functionParamInfo = new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType,
-                                            selectionList ?? new SelectionList(), value);
+                                            selectionList ?? new SelectionList(SelectionType.Unknown), value);
                 result.Add(functionParamInfo);
             }
             return result;
