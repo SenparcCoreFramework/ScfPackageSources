@@ -20,5 +20,10 @@ namespace Senparc.Scf.Core.Models
 
         [Column(TypeName = "varchar(100)")]
         public string TenPayAppId { get; set; }
+
+        /// <summary>
+        /// 是否隐藏模块管理
+        /// </summary>
+        public bool? HideModuleManager { get; set; }
     }
 }
