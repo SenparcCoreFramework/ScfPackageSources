@@ -229,6 +229,8 @@ namespace Senparc.Scf.Core.Models
         public string MchKey { get; set; }
         [AutoSetCache]
         public string TenPayAppId { get; set; }
+        [AutoSetCache]
+        public bool? HideModuleManager { get; set; }
 
 
         public override void CreateEntity(SystemConfig entity)
