@@ -52,7 +52,8 @@ namespace Senparc.Scf.Core.Config
         public const decimal PROJECTDMANDDEPOSIT = 1000; //任务默认押金
         public const string CERT_P12_ADDRESS = @"E:\";//微信支付数字证书存放地址
 
-        public const string SYSTEM_XSCF_MODULE_UID = "00000000-0000-0000-0000-000000000001";
+        public const string SYSTEM_XSCF_MODULE_SERVICE_UID = "00000000-0000-0000-0000-000000000001";
+        public const string SYSTEM_XSCF_MODULE_AREAS_ADMIN_UID = "00000000-0000-0000-0000-000000000002";
 
         /// <summary>
         /// 开发者收入比例
