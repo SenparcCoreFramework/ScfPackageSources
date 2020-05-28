@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.4.105.4-beta1</Version>
+    <Version>0.4.105.5-beta1</Version>
     <AssemblyName>Senparc.Xscf.ChangeNamespace</AssemblyName>
     <RootNamespace>Senparc.Xscf.ChangeNamespace</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
