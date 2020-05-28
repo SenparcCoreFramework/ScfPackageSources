@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Senparc.Scf.AreaBase.Admin.Filters;
+using Senparc.Scf.Core.Models;
 using Senparc.Scf.Core.Models.VD;
 using Senparc.Scf.Core.WorkContext;
 using Senparc.Scf.Mvc.UI;
@@ -14,6 +15,8 @@ namespace Senparc.Scf.AreaBase.Admin//  Senparc.Areas.Admin
         AdminWorkContext AdminWorkContext { get; set; }
         string Uid { get; set; }
         List<IXscfRegister> XscfRegisterList { get; }
+
+        FullSystemConfig FullSystemConfig { get; set; }
 
         IActionResult RenderError(string message);
     }
@@ -35,6 +38,8 @@ namespace Senparc.Scf.AreaBase.Admin//  Senparc.Areas.Admin
         /// 所有 XscfRegister 列表（包括还未注册的）
         /// </summary>
         public virtual List<IXscfRegister> XscfRegisterList => Senparc.Scf.XscfBase.Register.RegisterList;
+
+        FullSystemConfig FullSystemConfig { get; set; }
 
 
         public virtual IActionResult RenderError(string message)

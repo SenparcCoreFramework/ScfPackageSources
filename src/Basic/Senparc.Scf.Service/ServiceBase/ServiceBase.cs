@@ -250,7 +250,7 @@ namespace Senparc.Scf.Service
 
 
 
-        public async Task SaveObjectAsync(T obj)
+        public virtual async Task SaveObjectAsync(T obj)
         {
             if (RepositoryBase.BaseDB.ManualDetectChangeObject)
             {
@@ -259,7 +259,7 @@ namespace Senparc.Scf.Service
             await RepositoryBase.SaveAsync(obj).ConfigureAwait(false);
         }
 
-        public async Task SaveChangesAsync()
+        public virtual async Task SaveChangesAsync()
         {
             await RepositoryBase.SaveChangesAsync().ConfigureAwait(false);
         }
@@ -294,7 +294,7 @@ namespace Senparc.Scf.Service
         /// <param name="orderField">xxx desc, yyy asc</param>
         /// <param name="includes"></param>
         /// <returns></returns>
-        public async Task<PagedList<T>> GetFullListAsync(Expression<Func<T, bool>> where, string orderField = null, params string[] includes)
+        public virtual async Task<PagedList<T>> GetFullListAsync(Expression<Func<T, bool>> where, string orderField = null, params string[] includes)
         {
             return await RepositoryBase.GetObjectListAsync(where, orderField, 0, 0, includes);
         }
@@ -308,12 +308,12 @@ namespace Senparc.Scf.Service
         /// <param name="orderField">xxx desc, yyy asc</param>
         /// <param name="includes"></param>
         /// <returns></returns>
-        public async Task<PagedList<T>> GetFullListAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc, string orderField = null)
+        public virtual async Task<PagedList<T>> GetFullListAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc, string orderField = null)
         {
             return await RepositoryBase.GetObjectListAsync(where, orderField, 0, 0, includesNavigationPropertyPathFunc);
         }
 
-        public async Task SaveObjectListAsync(IEnumerable<T> objs)
+        public virtual async Task SaveObjectListAsync(IEnumerable<T> objs)
         {
             await RepositoryBase.SaveObjectListAsync(objs);
         }
@@ -323,7 +323,7 @@ namespace Senparc.Scf.Service
         /// 开启事务
         /// </summary>
         /// <returns></returns>
-        public async Task BeginTransactionAsync()
+        public  async Task BeginTransactionAsync()
         {
             await RepositoryBase.BeginTransactionAsync();
         }
