@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET.AspNet" Version="0.3.108" />
+    <PackageReference Include="Senparc.CO2NET.AspNet" Version="0.3.109" />
   </ItemGroup>
 
   <ItemGroup>

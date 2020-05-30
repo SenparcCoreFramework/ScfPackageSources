@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.3.310-beta2</Version>
+    <Version>0.3.311-beta2</Version>
     <AssemblyName>Senparc.Scf.SMS</AssemblyName>
     <RootNamespace>Senparc.Scf.SMS</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
