@@ -61,7 +61,7 @@ namespace Senparc.Scf.Service
                 menu = new SysMenu(sysMenuDto);
                 isRepeat = await _serviceProvider.GetService<SenparcEntitiesBase>().SysMenus.AnyAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode);
             }
-            if (isRepeat)
+            if (isRepeat && sysMenuDto.MenuType == MenuType.按钮)
             {
                 throw new SCFExceptionBase($"ResourceCode：{sysMenuDto.ResourceCode}已重复");
             }
