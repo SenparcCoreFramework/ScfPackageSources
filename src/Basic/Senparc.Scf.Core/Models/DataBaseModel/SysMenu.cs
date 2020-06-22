@@ -21,7 +21,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
 
         public SysMenu(SysMenuDto sysMenuDto) : this()
         {
-            this.LastUpdateTime = DateTime.Now;
+            LastUpdateTime = DateTime.Now;
             Icon = sysMenuDto.Icon;
             Sort = sysMenuDto.Sort;
             Visible = sysMenuDto.Visible;
@@ -29,6 +29,8 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
             ParentId = sysMenuDto.ParentId;
             MenuName = sysMenuDto.MenuName;
             IsLocked = sysMenuDto.IsLocked;
+            MenuType = sysMenuDto.MenuType;
+            ResourceCode = sysMenuDto.ResourceCode;
         }
 
         [MaxLength(50)]
@@ -58,6 +60,17 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         /// </summary>
         public bool IsLocked { get; set; }
 
+        /// <summary>
+        /// 类型
+        /// </summary>
+        public MenuType MenuType { get; set; }
+
+        /// <summary>
+        /// 操作资源
+        /// </summary>
+        [MaxLength(30)]
+        public string ResourceCode { get; set; }
+
         public void Update(SysMenuDto sysMenuDto)
         {
             this.LastUpdateTime = DateTime.Now;
@@ -66,6 +79,8 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
             Visible = sysMenuDto.Visible;
             Url = sysMenuDto.Url;
             MenuName = sysMenuDto.MenuName;
+            MenuType = sysMenuDto.MenuType;
+            ResourceCode = sysMenuDto.ResourceCode;
         }
         /// <summary>
         /// 
@@ -76,5 +91,13 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         /// 是否可见
         /// </summary>
         public bool Visible { get; set; }
+    }
+
+    public enum MenuType
+    {
+        无,
+        菜单,
+        页面,
+        按钮
     }
 }

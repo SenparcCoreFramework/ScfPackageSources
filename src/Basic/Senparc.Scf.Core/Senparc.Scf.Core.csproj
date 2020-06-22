@@ -51,4 +51,7 @@
     <ProjectReference Include="..\Senparc.Scf.Log\Senparc.Scf.Log.csproj" />
     <ProjectReference Include="..\Senparc.Scf.Utility\Senparc.Scf.Utility.csproj" />
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy bin\Debug\netcoreapp3.1\Senparc.Scf.Core.dll C:\Users\Senparc-052\.nuget\packages\senparc.scf.core\0.3.312-beta2\lib\netcoreapp3.1 /Y" />
+  </Target>
 </Project>

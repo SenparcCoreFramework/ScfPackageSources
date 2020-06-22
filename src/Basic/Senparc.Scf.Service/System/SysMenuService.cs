@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Senparc.Scf.Core.Models.DataBaseModel;
 using Senparc.Scf.Core.Models;
+using Senparc.Scf.Core.Exceptions;
 
 namespace Senparc.Scf.Service
 {
@@ -40,10 +41,11 @@ namespace Senparc.Scf.Service
         /// <param name="sysMenuDto"></param>
         /// <param name="buttons"></param>
         /// <returns></returns>
-        public async Task<SysMenu> CreateOrUpdateAsync(SysMenuDto sysMenuDto)
+        public virtual async Task<SysMenu> CreateOrUpdateAsync(SysMenuDto sysMenuDto)
         {
             SysMenu menu;
             ICollection<SysButton> sysButtons = new List<SysButton>();
+            bool isRepeat;
             if (!string.IsNullOrEmpty(sysMenuDto.Id))
             {
                 menu = await GetObjectAsync(_ => _.Id == sysMenuDto.Id);
@@ -51,12 +53,19 @@ namespace Senparc.Scf.Service
                 {
                     return menu;//TODO：需要给出提示
                 }
+                isRepeat = await _serviceProvider.GetService<SenparcEntitiesBase>().SysMenus.AnyAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode && _.Id != sysMenuDto.Id);
                 menu.Update(sysMenuDto);
             }
             else
             {
                 menu = new SysMenu(sysMenuDto);
+                isRepeat = await _serviceProvider.GetService<SenparcEntitiesBase>().SysMenus.AnyAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode);
             }
+            if (isRepeat)
+            {
+                throw new SCFExceptionBase($"ResourceCode：{sysMenuDto.ResourceCode}已重复");
+            }
+            menu.ResourceCode = sysMenuDto.MenuType == MenuType.按钮 ? menu.ResourceCode : string.Empty;
             await SaveObjectAsync(menu);
             await GetMenuDtoByCacheAsync(true);
             return menu;
@@ -68,7 +77,7 @@ namespace Senparc.Scf.Service
         /// <param name="sysMenuDto"></param>
         /// <param name="buttons"></param>
         /// <returns></returns>
-        public async Task CreateOrUpdateAsync(SysMenuDto sysMenuDto, IEnumerable<SysButtonDto> buttons)
+        public virtual async Task CreateOrUpdateAsync(SysMenuDto sysMenuDto, IEnumerable<SysButtonDto> buttons)
         {
             SysMenu menu;
             List<SysButton> sysButtons = new List<SysButton>();
@@ -127,7 +136,7 @@ namespace Senparc.Scf.Service
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>
-        public async Task RemoveMenuAsync()
+        public virtual async Task RemoveMenuAsync()
         {
             await _distributedCache.RemoveAsync(MenuCacheKey);
         }
@@ -137,7 +146,7 @@ namespace Senparc.Scf.Service
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<SysMenuDto>> GetMenuDtoByCacheAsync(bool isRefresh = false)
+        public virtual async Task<IEnumerable<SysMenuDto>> GetMenuDtoByCacheAsync(bool isRefresh = false)
         {
             List<SysMenuDto> selectListItems = null;
             byte[] selectLiteItemBytes = await _distributedCache.GetAsync(MenuCacheKey);
@@ -161,7 +170,7 @@ namespace Senparc.Scf.Service
             return selectListItems;
         }
 
-        public IEnumerable<SysMenuTreeItemDto> GetSysMenuTreesMainRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems)
+        public virtual IEnumerable<SysMenuTreeItemDto> GetSysMenuTreesMainRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems)
         {
             List<SysMenuTreeItemDto> sysMenuTrees = new List<SysMenuTreeItemDto>();
             getSysMenuTreesRecursive(sysMenuTreeItems, sysMenuTrees, null);
