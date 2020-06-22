@@ -42,6 +42,6 @@
     <ProjectReference Include="..\Senparc.Scf.Utility\Senparc.Scf.Utility.csproj" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy bin\Debug\netcoreapp3.1\Senparc.Scf.Service.dll C:\Users\Senparc-052\.nuget\packages\senparc.scf.service\0.3.312-beta2\lib\netcoreapp3.1 /Y" />
+    <Exec Command="copy bin\Debug\netcoreapp3.1\Senparc.Scf.Service.dll C:\Users\%25USERNAME%25\.nuget\packages\senparc.scf.service\0.3.312-beta2\lib\netcoreapp3.1 /Y" />
   </Target>
 </Project>
