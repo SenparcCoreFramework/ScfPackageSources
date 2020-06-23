@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Senparc.Scf.AreaBase.Admin.Filters
 {
-    public class CustomerResourceFilterAttribute : Attribute, Microsoft.AspNetCore.Mvc.Filters.IFilterMetadata
+    public class CustomerResourceAttribute : Attribute
     {
         public string[] ResourceCodes { get; set; }
 
-        public CustomerResourceFilterAttribute(string[] resuouceCodes)
+        public CustomerResourceAttribute(params string[] resuouceCodes)
         {
             ResourceCodes = resuouceCodes;
         }

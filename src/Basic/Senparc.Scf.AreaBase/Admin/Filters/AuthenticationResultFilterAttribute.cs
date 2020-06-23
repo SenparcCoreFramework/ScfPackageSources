@@ -43,9 +43,9 @@ namespace Senparc.Scf.AreaBase.Admin.Filters
             bool canAccessResource = false;
             bool isAjax = false;
             isAjax = IsAjax(context);
-            CustomerResourceFilterAttribute attributeCodes = context.HandlerMethod.MethodInfo
-                .GetCustomAttributes(typeof(CustomerResourceFilterAttribute), false)
-                .OfType<CustomerResourceFilterAttribute>()
+            CustomerResourceAttribute attributeCodes = context.HandlerMethod.MethodInfo
+                .GetCustomAttributes(typeof(CustomerResourceAttribute), false)
+                .OfType<CustomerResourceAttribute>()
                 .FirstOrDefault();
             IEnumerable<string> resourceCodes = attributeCodes?.ResourceCodes.ToList() ?? new List<string>() { "*" };//当前方法的资源Code
             if (resourceCodes.Any(_ => "*".Equals(_)))
