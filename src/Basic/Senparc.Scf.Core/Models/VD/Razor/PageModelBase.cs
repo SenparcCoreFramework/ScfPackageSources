@@ -135,7 +135,7 @@ namespace Senparc.Scf.Core.Models.VD
 
         public IActionResult Ok(object data)
         {
-            return new OkObjectResult(new AjaxReturnModel<object>(data));
+            return new OkObjectResult(new AjaxReturnModel<object>(data) { Success = true });
         }
     }
 
