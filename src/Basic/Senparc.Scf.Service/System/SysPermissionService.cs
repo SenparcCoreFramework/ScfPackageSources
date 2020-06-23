@@ -229,12 +229,25 @@ namespace Senparc.Scf.Service
         /// 获取当前用户可以看见的菜单（可见）
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<SysMenuDto>> GetCurrentUserMenuDtoAsync()
+        public async Task<IEnumerable<SysMenuDto>> GetCurrentUserMenuDtoAsync(MenuType menuType = MenuType.菜单)
         {
             //IEnumerable<SysMenuTreeItemDto> sysMenuTreeItems = null;//
             int currentAdminId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
             SenparcEntitiesBase db = _serviceProvider.GetService<SenparcEntitiesBase>();
-            List<SysMenuDto> sysMenuDtos = await getUserPermissions(currentAdminId).Where(_ => _.MenuType == MenuType.菜单).OrderByDescending(_ => _.Sort).ToListAsync();
+            List<SysMenuDto> sysMenuDtos = await getUserPermissions(currentAdminId).Where(_ => _.MenuType == menuType).OrderByDescending(_ => _.Sort).ToListAsync();
+            return sysMenuDtos;// _sysMenuService.GetSysMenuTreesMainRecursive(sysMenuDtos);
+        }
+
+        /// <summary>
+        /// 获取用户可见的所有资源（除菜单外）
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<SysMenuDto>> GetCurrentUserResourcesDtoAsync()
+        {
+            //IEnumerable<SysMenuTreeItemDto> sysMenuTreeItems = null;//
+            int currentAdminId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
+            SenparcEntitiesBase db = _serviceProvider.GetService<SenparcEntitiesBase>();
+            List<SysMenuDto> sysMenuDtos = await getUserPermissions(currentAdminId).Where(_ => _.MenuType > MenuType.菜单).OrderByDescending(_ => _.Sort).ToListAsync();
             return sysMenuDtos;// _sysMenuService.GetSysMenuTreesMainRecursive(sysMenuDtos);
         }
 
