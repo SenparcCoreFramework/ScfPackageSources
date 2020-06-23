@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Senparc.Scf.Core.Models.DataBaseModel;
 using Senparc.Scf.Core.Models;
 using Senparc.Scf.Core.Exceptions;
+using AutoMapper.QueryableExtensions;
 
 namespace Senparc.Scf.Service
 {
@@ -142,7 +143,7 @@ namespace Senparc.Scf.Service
         }
 
         /// <summary>
-        /// 获取缓存中的数据
+        /// 获取缓存中的数据 TODO...
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>
@@ -296,6 +297,23 @@ namespace Senparc.Scf.Service
 
                 throw new Exception("初始化数据失败，原因:" + ex);
             }
+        }
+
+        /// <summary>
+        /// 获取数据库的菜单集合(线性)
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<SysMenuDto>> GetMenuDtoByDbAsync()
+        {
+            List<SysMenuDto> selectListItems = null;
+            IConfigurationProvider configurationProvider = _serviceProvider.GetService<IMapper>().ConfigurationProvider;
+            selectListItems = await _serviceProvider.GetService<SenparcEntitiesBase>().SysMenus.OrderByDescending(_ => _.AddTime).ProjectTo<SysMenuDto>(configurationProvider).ToListAsync();
+            //List<SysMenu> sysMenus = (await GetFullListAsync(_ => _.Visible).ConfigureAwait(false)).OrderByDescending(z => z.Sort).ToList();
+            //List<SysButton> sysButtons = (await _sysButtonService.GetFullListAsync(_ => true).ConfigureAwait(false)).OrderBy(z => z.Id).ToList();
+            //selectListItems = Mapper.Map<List<SysMenuDto>>(sysMenus);
+            //List<SysMenuDto> buttons = _sysButtonService.Mapper.Map<List<SysMenuDto>>(sysButtons);
+            //selectListItems.AddRange(buttons);
+            return selectListItems;
         }
     }
 }
