@@ -17,6 +17,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
             Id = Guid.NewGuid().ToString();
             AddTime = DateTime.Now;
             this.LastUpdateTime = AddTime;
+            ResourceCode = string.Empty;
         }
 
         public SysMenu(SysMenuDto sysMenuDto) : this()
@@ -30,7 +31,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
             MenuName = sysMenuDto.MenuName;
             IsLocked = sysMenuDto.IsLocked;
             MenuType = sysMenuDto.MenuType;
-            ResourceCode = sysMenuDto.ResourceCode;
+            ResourceCode = sysMenuDto.ResourceCode ?? string.Empty;
         }
 
         [MaxLength(50)]

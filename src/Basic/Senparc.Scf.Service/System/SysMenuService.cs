@@ -214,12 +214,12 @@ namespace Senparc.Scf.Service
         {
             IEnumerable<SysMenu> sysMenus = new List<SysMenu>()
             {
-                new SysMenu(){ Id = "0", MenuName = "系统管理", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 300},
-                new SysMenu(){ Id = "1", MenuName = "管理员管理", Url = "/Admin/AdminUserInfo/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 300, ParentId = "0"},
-                new SysMenu(){ Id = "2", MenuName = "角色管理", Url = "/Admin/Role/Index", Icon = "fa fa-user", Visible = true, IsLocked = true, Sort = 275, ParentId = "0"},
-                new SysMenu(){ Id = "3", MenuName = "菜单管理", Url = "/Admin/Menu/Index", Icon = "fa fa-bars", Visible = true, IsLocked = true, Sort = 250, ParentId = "0"},
-                new SysMenu(){ Id = "4", MenuName = "扩展模块", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 200},
-                new SysMenu(){ Id = "5", MenuName = "模块管理", Url = "/Admin/XscfModule", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 175, ParentId = "4"},
+                new SysMenu(){ Id = "0", MenuName = "系统管理", Url = null, Icon = "s-tools", Visible = true, IsLocked = true, Sort = 300, MenuType = MenuType.页面},
+                new SysMenu(){ Id = "1", MenuName = "管理员管理", Url = "/Admin/AdminUserInfo/Index", Icon = "user-solid", Visible = true, IsLocked = true, Sort = 300, ParentId = "0", MenuType = MenuType.页面},
+                new SysMenu(){ Id = "2", MenuName = "角色管理", Url = "/Admin/Role/Index", Icon = "s-custom", Visible = true, IsLocked = true, Sort = 275, ParentId = "0", MenuType = MenuType.页面},
+                new SysMenu(){ Id = "3", MenuName = "菜单管理", Url = "/Admin/Menu/Index", Icon = "menu", Visible = true, IsLocked = true, Sort = 250, ParentId = "0", MenuType = MenuType.页面},
+                new SysMenu(){ Id = "4", MenuName = "扩展模块", Url = null, Icon = "s-grid", Visible = true, IsLocked = true, Sort = 200, MenuType = MenuType.页面},
+                new SysMenu(){ Id = "5", MenuName = "模块管理", Url = "/Admin/XscfModule/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 175, ParentId = "4", MenuType = MenuType.页面},
             };
 
             IEnumerable<SysRole> sysRoles = new List<SysRole>()

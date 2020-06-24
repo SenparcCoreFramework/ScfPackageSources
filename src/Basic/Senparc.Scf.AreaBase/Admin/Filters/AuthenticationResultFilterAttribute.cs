@@ -15,6 +15,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Senparc.Scf.AreaBase.Admin.Filters
 {
@@ -47,8 +48,11 @@ namespace Senparc.Scf.AreaBase.Admin.Filters
                 .GetCustomAttributes(typeof(CustomerResourceAttribute), false)
                 .OfType<CustomerResourceAttribute>()
                 .FirstOrDefault();
+            bool isIgnore = context.Filters.OfType<IgnoreAuthAttribute>().Any();
             IEnumerable<string> resourceCodes = attributeCodes?.ResourceCodes.ToList() ?? new List<string>() { "*" };//当前方法的资源Code
-            if (resourceCodes.Any(_ => "*".Equals(_)))
+            //Console.WriteLine("isAjax:{0}， isIgnore：{1}", isAjax, isIgnore);
+            System.Diagnostics.Debug.WriteLine("isAjax:{0}, isIgnore: {1}", isAjax, isIgnore);
+            if (isIgnore || (resourceCodes.Any(_ => "*".Equals(_) && isAjax)))
             {
                 await next();
             }
@@ -59,6 +63,7 @@ namespace Senparc.Scf.AreaBase.Admin.Filters
                 {
                     url = string.Concat("/", url); // /Admin/AdminUserInfo/Index
                 }
+                System.Diagnostics.Debug.WriteLine("url:{0}", url);
                 canAccessResource = await serviceProvider.GetService<SysPermissionService>().HasPermissionAsync(resourceCodes, url, isAjax);// await Task.FromResult(true);//TODO...
                 if (canAccessResource)
                 {

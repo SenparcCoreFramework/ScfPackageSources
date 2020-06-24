@@ -13,6 +13,13 @@ namespace Senparc.Scf.AreaBase.Admin.Filters
         {
             ResourceCodes = resuouceCodes;
         }
+    }
+
+    /// <summary>
+    /// 不进行权限校验
+    /// </summary>
+    public class IgnoreAuthAttribute: Attribute, IFilterMetadata
+    {
 
     }
 }
