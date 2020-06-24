@@ -29,6 +29,12 @@ namespace Senparc.Scf.AreaBase.Admin.Filters
 
         public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
+            if (context.HandlerMethod == null)
+            {
+                //throw new NotSupportedException($"404，未找到对应的Handler。请检查请求方法请求地址是否有误！请求方法：{context.HandlerMethod.HttpMethod}");
+                context.Result = new OkObjectResult(new AjaxReturnModel() { Success = false, Msg = $"404，未找到对应的Handler。请检查请求方法请求地址是否有误！请求方法：{context.HttpContext.Request.Method}" }) { StatusCode = 404 };
+                return;
+            }
             await ValidatePermissionAsync(_serviceProvider, context, next);
         }
 
@@ -43,10 +49,6 @@ namespace Senparc.Scf.AreaBase.Admin.Filters
         {
             bool canAccessResource = false;
             bool isAjax = false;
-            if (context.HandlerMethod.MethodInfo == null)
-            {
-                throw new NotSupportedException($"404，未找到对应的Handler。请检查请求方法请求地址是否有误！请求方法：{context.HandlerMethod.HttpMethod}");
-            }
             isAjax = IsAjax(context);
             CustomerResourceAttribute attributeCodes = context.HandlerMethod.MethodInfo
                 .GetCustomAttributes(typeof(CustomerResourceAttribute), false)
