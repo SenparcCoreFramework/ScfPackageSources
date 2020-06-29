@@ -214,26 +214,26 @@ namespace Senparc.Scf.Service
         {
             IEnumerable<SysMenu> sysMenus = new List<SysMenu>()
             {
-                new SysMenu(){ Id = "0", MenuName = "系统管理", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 300},
-                new SysMenu(){ Id = "1", MenuName = "管理员管理", Url = "/Admin/AdminUserInfo/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 300, ParentId = "0"},
-                new SysMenu(){ Id = "2", MenuName = "角色管理", Url = "/Admin/Role/Index", Icon = "fa fa-user", Visible = true, IsLocked = true, Sort = 275, ParentId = "0"},
-                new SysMenu(){ Id = "3", MenuName = "菜单管理", Url = "/Admin/Menu/Index", Icon = "fa fa-bars", Visible = true, IsLocked = true, Sort = 250, ParentId = "0"},
-                new SysMenu(){ Id = "4", MenuName = "扩展模块", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 200},
-                new SysMenu(){ Id = "5", MenuName = "模块管理", Url = "/Admin/XscfModule", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 175, ParentId = "4"},
+                new SysMenu(){ Id = "0", MenuName = "系统管理", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 300, MenuType = MenuType.菜单},
+                new SysMenu(){ Id = "1", MenuName = "管理员管理", Url = "/Admin/AdminUserInfo/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 300, ParentId = "0", MenuType = MenuType.菜单},
+                new SysMenu(){ Id = "2", MenuName = "角色管理", Url = "/Admin/Role/Index", Icon = "fa fa-user", Visible = true, IsLocked = true, Sort = 275, ParentId = "0", MenuType = MenuType.菜单},
+                new SysMenu(){ Id = "3", MenuName = "菜单管理", Url = "/Admin/Menu/Index", Icon = "fa fa-bars", Visible = true, IsLocked = true, Sort = 250, ParentId = "0", MenuType = MenuType.菜单},
+                new SysMenu(){ Id = "4", MenuName = "扩展模块", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 200, MenuType = MenuType.菜单},
+                new SysMenu(){ Id = "5", MenuName = "模块管理", Url = "/Admin/XscfModule/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 175, ParentId = "4", MenuType = MenuType.菜单},
 
-                new SysMenu() { Id ="6", MenuName = "新增", ResourceCode = "role-add", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="7", MenuName = "查询", ResourceCode = "role-search", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="8", MenuName = "授权", ResourceCode = "role-grant", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="9", MenuName = "删除", ResourceCode = "role-delete", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="10", MenuName = "编辑", ResourceCode = "role-edit", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="11", MenuName = "查看", ResourceCode = "role-detail", ParentId = "2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="6", MenuName = "新增", Visible = true, ResourceCode = "role-add", ParentId = "2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="7", MenuName = "查询", Visible = true,ResourceCode = "role-search", ParentId = "2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="8", MenuName = "授权", Visible = true,ResourceCode = "role-grant", ParentId = "2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="9", MenuName = "删除", Visible = true,ResourceCode = "role-delete", ParentId = "2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="10", MenuName = "编辑", Visible = true,ResourceCode = "role-edit", ParentId = "2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="11", MenuName = "查看", Visible = true,ResourceCode = "role-detail", ParentId = "2", MenuType = MenuType.按钮 },
 
-                new SysMenu() { Id ="12", MenuName = "新增", ResourceCode = "admin-add", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="13", MenuName = "查询", ResourceCode = "admin-search", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="14", MenuName = "分配角色", ResourceCode = "admin-grant", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="15", MenuName = "编辑", ResourceCode = "admin-edit", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="16", MenuName = "删除", ResourceCode = "admin-delete", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="17", MenuName = "查看", ResourceCode = "admin-detail", ParentId = "1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="12", MenuName = "新增", Visible = true,ResourceCode = "admin-add", ParentId = "1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="13", MenuName = "查询", Visible = true,ResourceCode = "admin-search", ParentId = "1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="14", MenuName = "分配角色", Visible = true,ResourceCode = "admin-grant", ParentId = "1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="15", MenuName = "编辑", Visible = true,ResourceCode = "admin-edit", ParentId = "1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="16", MenuName = "删除", Visible = true,ResourceCode = "admin-delete", ParentId = "1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="17", MenuName = "查看", Visible = true,ResourceCode = "admin-detail", ParentId = "1", MenuType = MenuType.按钮 },
 
 
             };
