@@ -19,6 +19,9 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Senparc.Scf.AreaBase.Admin.Filters
 {
+    /// <summary>
+    /// 校验权限的类
+    /// </summary>
     public class AuthenticationResultFilterAttribute : IAsyncPageFilter, IFilterMetadata
     {
         private IServiceProvider _serviceProvider;
@@ -31,7 +34,6 @@ namespace Senparc.Scf.AreaBase.Admin.Filters
         {
             if (context.HandlerMethod == null)
             {
-                //throw new NotSupportedException($"404，未找到对应的Handler。请检查请求方法请求地址是否有误！请求方法：{context.HandlerMethod.HttpMethod}");
                 context.Result = new OkObjectResult(new AjaxReturnModel() { Success = false, Msg = $"404，未找到对应的Handler。请检查请求方法请求地址是否有误！请求方法：{context.HttpContext.Request.Method}" }) { StatusCode = 404 };
                 return;
             }
