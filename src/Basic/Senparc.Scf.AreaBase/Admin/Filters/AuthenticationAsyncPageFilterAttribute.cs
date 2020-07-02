@@ -17,6 +17,7 @@ namespace Senparc.Scf.AreaBase.Admin.Filters
 
     //https://docs.microsoft.com/zh-cn/aspnet/core/razor-pages/filter?view=aspnetcore-3.1
 
+    [Obsolete("AuthenticationResultFilterAttribute")]
     public class AuthenticationAsyncPageFilterAttribute : IAsyncPageFilter
     {
         private readonly SysPermissionService _sysPermissionService;

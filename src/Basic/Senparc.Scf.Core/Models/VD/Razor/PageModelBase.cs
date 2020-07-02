@@ -116,7 +116,7 @@ namespace Senparc.Scf.Core.Models.VD
             TempData["Messager"] = new Messager(messageType, messageText).ToJson();
         }
 
-        public IActionResult Ok<T>(T data, bool succed = true, string msg = "操作成功!")
+        public IActionResult Ok<T>(T data, bool succed, string msg = "操作成功!")
         {
             AjaxReturnModel<T> returnModel = new AjaxReturnModel<T>(data);
             returnModel.Success = succed;
@@ -124,18 +124,18 @@ namespace Senparc.Scf.Core.Models.VD
             return new JsonResult(returnModel);
         }
 
-        public IActionResult Ok(bool isSuccess)
+        public IActionResult Ok(bool isSuccess, string message)
         {
             if (!isSuccess)
             {
-                return new JsonResult(new AjaxReturnModel() { Success = isSuccess, Msg = "操作失败!" });
+                return new OkObjectResult(new AjaxReturnModel() { Success = isSuccess, Msg = message });
             }
-            return new JsonResult(new AjaxReturnModel() { Success = isSuccess, Msg = "操作成功" });
+            return new OkObjectResult(new AjaxReturnModel() { Success = isSuccess, Msg = message });
         }
 
         public IActionResult Ok(object data)
         {
-            return new OkObjectResult(data);
+            return new OkObjectResult(new AjaxReturnModel<object>(data) { Success = true });
         }
     }
 

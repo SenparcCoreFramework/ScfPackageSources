@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Senparc.Scf.Core.Models.DataBaseModel;
 using Senparc.Scf.Core.Models;
+using Senparc.Scf.Core.Exceptions;
+using AutoMapper.QueryableExtensions;
 
 namespace Senparc.Scf.Service
 {
@@ -40,10 +42,11 @@ namespace Senparc.Scf.Service
         /// <param name="sysMenuDto"></param>
         /// <param name="buttons"></param>
         /// <returns></returns>
-        public async Task<SysMenu> CreateOrUpdateAsync(SysMenuDto sysMenuDto)
+        public virtual async Task<SysMenu> CreateOrUpdateAsync(SysMenuDto sysMenuDto)
         {
             SysMenu menu;
             ICollection<SysButton> sysButtons = new List<SysButton>();
+            bool isRepeat;
             if (!string.IsNullOrEmpty(sysMenuDto.Id))
             {
                 menu = await GetObjectAsync(_ => _.Id == sysMenuDto.Id);
@@ -51,12 +54,19 @@ namespace Senparc.Scf.Service
                 {
                     return menu;//TODO：需要给出提示
                 }
+                isRepeat = await _serviceProvider.GetService<SenparcEntitiesBase>().SysMenus.AnyAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode && _.Id != sysMenuDto.Id);
                 menu.Update(sysMenuDto);
             }
             else
             {
                 menu = new SysMenu(sysMenuDto);
+                isRepeat = await _serviceProvider.GetService<SenparcEntitiesBase>().SysMenus.AnyAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode);
             }
+            if (isRepeat && sysMenuDto.MenuType == MenuType.按钮)
+            {
+                throw new SCFExceptionBase($"ResourceCode：{sysMenuDto.ResourceCode}已重复");
+            }
+            menu.ResourceCode = sysMenuDto.MenuType == MenuType.按钮 ? menu.ResourceCode : string.Empty;
             await SaveObjectAsync(menu);
             await GetMenuDtoByCacheAsync(true);
             return menu;
@@ -68,7 +78,7 @@ namespace Senparc.Scf.Service
         /// <param name="sysMenuDto"></param>
         /// <param name="buttons"></param>
         /// <returns></returns>
-        public async Task CreateOrUpdateAsync(SysMenuDto sysMenuDto, IEnumerable<SysButtonDto> buttons)
+        public virtual async Task CreateOrUpdateAsync(SysMenuDto sysMenuDto, IEnumerable<SysButtonDto> buttons)
         {
             SysMenu menu;
             List<SysButton> sysButtons = new List<SysButton>();
@@ -127,17 +137,17 @@ namespace Senparc.Scf.Service
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>
-        public async Task RemoveMenuAsync()
+        public virtual async Task RemoveMenuAsync()
         {
             await _distributedCache.RemoveAsync(MenuCacheKey);
         }
 
         /// <summary>
-        /// 获取缓存中的数据
+        /// 获取缓存中的数据 TODO...
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<SysMenuDto>> GetMenuDtoByCacheAsync(bool isRefresh = false)
+        public virtual async Task<IEnumerable<SysMenuDto>> GetMenuDtoByCacheAsync(bool isRefresh = false)
         {
             List<SysMenuDto> selectListItems = null;
             byte[] selectLiteItemBytes = await _distributedCache.GetAsync(MenuCacheKey);
@@ -161,7 +171,7 @@ namespace Senparc.Scf.Service
             return selectListItems;
         }
 
-        public IEnumerable<SysMenuTreeItemDto> GetSysMenuTreesMainRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems)
+        public virtual IEnumerable<SysMenuTreeItemDto> GetSysMenuTreesMainRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems)
         {
             List<SysMenuTreeItemDto> sysMenuTrees = new List<SysMenuTreeItemDto>();
             getSysMenuTreesRecursive(sysMenuTreeItems, sysMenuTrees, null);
@@ -204,12 +214,28 @@ namespace Senparc.Scf.Service
         {
             IEnumerable<SysMenu> sysMenus = new List<SysMenu>()
             {
-                new SysMenu(){ Id = "0", MenuName = "系统管理", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 300},
-                new SysMenu(){ Id = "1", MenuName = "管理员管理", Url = "/Admin/AdminUserInfo/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 300, ParentId = "0"},
-                new SysMenu(){ Id = "2", MenuName = "角色管理", Url = "/Admin/Role/Index", Icon = "fa fa-user", Visible = true, IsLocked = true, Sort = 275, ParentId = "0"},
-                new SysMenu(){ Id = "3", MenuName = "菜单管理", Url = "/Admin/Menu/Edit", Icon = "fa fa-bars", Visible = true, IsLocked = true, Sort = 250, ParentId = "0"},
-                new SysMenu(){ Id = "4", MenuName = "扩展模块", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 200},
-                new SysMenu(){ Id = "5", MenuName = "模块管理", Url = "/Admin/XscfModule", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 175, ParentId = "4"},
+                new SysMenu(){ Id = "0", MenuName = "系统管理", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 300, MenuType = MenuType.菜单},
+                new SysMenu(){ Id = "1", MenuName = "管理员管理", Url = "/Admin/AdminUserInfo/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 300, ParentId = "0", MenuType = MenuType.菜单},
+                new SysMenu(){ Id = "2", MenuName = "角色管理", Url = "/Admin/Role/Index", Icon = "fa fa-user", Visible = true, IsLocked = true, Sort = 275, ParentId = "0", MenuType = MenuType.菜单},
+                new SysMenu(){ Id = "3", MenuName = "菜单管理", Url = "/Admin/Menu/Index", Icon = "fa fa-bars", Visible = true, IsLocked = true, Sort = 250, ParentId = "0", MenuType = MenuType.菜单},
+                new SysMenu(){ Id = "4", MenuName = "扩展模块", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 200, MenuType = MenuType.菜单},
+                new SysMenu(){ Id = "5", MenuName = "模块管理", Url = "/Admin/XscfModule/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 175, ParentId = "4", MenuType = MenuType.菜单},
+
+                new SysMenu() { Id ="6", MenuName = "新增", Visible = true, ResourceCode = "role-add", ParentId = "2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="7", MenuName = "查询", Visible = true,ResourceCode = "role-search", ParentId = "2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="8", MenuName = "授权", Visible = true,ResourceCode = "role-grant", ParentId = "2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="9", MenuName = "删除", Visible = true,ResourceCode = "role-delete", ParentId = "2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="10", MenuName = "编辑", Visible = true,ResourceCode = "role-edit", ParentId = "2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="11", MenuName = "查看", Visible = true,ResourceCode = "role-detail", ParentId = "2", MenuType = MenuType.按钮 },
+
+                new SysMenu() { Id ="12", MenuName = "新增", Visible = true,ResourceCode = "admin-add", ParentId = "1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="13", MenuName = "查询", Visible = true,ResourceCode = "admin-search", ParentId = "1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="14", MenuName = "分配角色", Visible = true,ResourceCode = "admin-grant", ParentId = "1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="15", MenuName = "编辑", Visible = true,ResourceCode = "admin-edit", ParentId = "1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="16", MenuName = "删除", Visible = true,ResourceCode = "admin-delete", ParentId = "1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="17", MenuName = "查看", Visible = true,ResourceCode = "admin-detail", ParentId = "1", MenuType = MenuType.按钮 },
+
+
             };
 
             IEnumerable<SysRole> sysRoles = new List<SysRole>()
@@ -224,7 +250,18 @@ namespace Senparc.Scf.Service
                 new SysPermission() { PermissionId = "2", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
                 new SysPermission() { PermissionId = "3", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
                 new SysPermission() { PermissionId = "4", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "5", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true }
+                new SysPermission() { PermissionId = "5", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "6", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true } ,
+                new SysPermission() { PermissionId = "7", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true } ,
+                new SysPermission() { PermissionId = "8", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true } ,
+                new SysPermission() { PermissionId = "9", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true } ,
+                new SysPermission() { PermissionId = "10", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "12", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "13", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "14", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "15", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "16", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "17", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true }
             };
 
             IEnumerable<SysRoleAdminUserInfo> sysRoleAdminUserInfos = new List<SysRoleAdminUserInfo>()
@@ -287,6 +324,23 @@ namespace Senparc.Scf.Service
 
                 throw new Exception("初始化数据失败，原因:" + ex);
             }
+        }
+
+        /// <summary>
+        /// 获取数据库的菜单集合(线性)
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<SysMenuDto>> GetMenuDtoByDbAsync()
+        {
+            List<SysMenuDto> selectListItems = null;
+            IConfigurationProvider configurationProvider = _serviceProvider.GetService<IMapper>().ConfigurationProvider;
+            selectListItems = await _serviceProvider.GetService<SenparcEntitiesBase>().SysMenus.OrderByDescending(_ => _.AddTime).ProjectTo<SysMenuDto>(configurationProvider).ToListAsync();
+            //List<SysMenu> sysMenus = (await GetFullListAsync(_ => _.Visible).ConfigureAwait(false)).OrderByDescending(z => z.Sort).ToList();
+            //List<SysButton> sysButtons = (await _sysButtonService.GetFullListAsync(_ => true).ConfigureAwait(false)).OrderBy(z => z.Id).ToList();
+            //selectListItems = Mapper.Map<List<SysMenuDto>>(sysMenus);
+            //List<SysMenuDto> buttons = _sysButtonService.Mapper.Map<List<SysMenuDto>>(sysButtons);
+            //selectListItems.AddRange(buttons);
+            return selectListItems;
         }
     }
 }

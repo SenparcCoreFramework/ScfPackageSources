@@ -11,6 +11,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
         /// <summary>
         /// 是否是菜单
         /// </summary>
+        [Obsolete("使用MenuType字段代替")]
         public bool IsMenu { get; set; }
 
         [MaxLength(50)]
@@ -51,7 +52,10 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
 
         public SysMenuDto() { }
 
-        public SysMenuDto(bool isMenu, string id, string menuName, string parentId, string url, string icon, int sort, bool visible, string resourceCode)
+        public MenuType MenuType { get; set; }
+
+
+        public SysMenuDto(bool isMenu, string id, string menuName, string parentId, string url, string icon, int sort, bool visible, string resourceCode, MenuType menuType = MenuType.菜单)
         {
             IsMenu = isMenu;
             Id = id;
@@ -62,6 +66,7 @@ namespace Senparc.Scf.Core.Models.DataBaseModel
             Sort = sort;
             Visible = visible;
             ResourceCode = resourceCode;
+            MenuType = menuType;
         }
 
     }
