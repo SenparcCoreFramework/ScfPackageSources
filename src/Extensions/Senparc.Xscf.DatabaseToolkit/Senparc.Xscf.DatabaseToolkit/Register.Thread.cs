@@ -59,7 +59,7 @@ namespace Senparc.Xscf.DatabaseToolkit
                             }
                             catch (Exception ex)
                             {
-                                threadInfo.RecordStory(@$"遇到异常，可能未配置数据库，已忽略本次备份计划。如需启动，请更新此模块到最新版本。
+                                threadInfo.RecordStory($@"遇到异常，可能未配置数据库，已忽略本次备份计划。如需启动，请更新此模块到最新版本。
 异常信息：{ex.Message}
 {ex.StackTrace}");
                                 stopBackup = true;//可能没有配置数据库，返回
@@ -98,7 +98,7 @@ namespace Senparc.Xscf.DatabaseToolkit
                 },
                 exceptionHandler: ex =>
                 {
-                    SenparcTrace.SendCustomLog("DatabaseToolkit", @$"{ex.Message}
+                    SenparcTrace.SendCustomLog("DatabaseToolkit", $@"{ex.Message}
 {ex.StackTrace}
 {ex.InnerException?.StackTrace}");
                     return Task.CompletedTask;

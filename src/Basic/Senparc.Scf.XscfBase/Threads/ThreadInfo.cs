@@ -59,7 +59,7 @@ namespace Senparc.Scf.XscfBase.Threads
             {
                 Stories.RemoveAt(0);
             }
-            var story = @$"{SystemTime.Now.ToString()}
+            var story = $@"{SystemTime.Now.ToString()}
 {msg}";
             Stories.Add(story);
             return story;

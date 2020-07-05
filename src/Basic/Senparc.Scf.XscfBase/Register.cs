@@ -118,7 +118,7 @@ namespace Senparc.Scf.XscfBase
                     //按照优先级进行排序
                     var orderedTypes = allTypes.OrderByDescending(z =>
                     {
-                        var orderAttribute = z.GetCustomAttributes(true).FirstOrDefault(z => z is XscfOrderAttribute) as XscfOrderAttribute;
+                        var orderAttribute = z.GetCustomAttributes(true).FirstOrDefault(zz => zz is XscfOrderAttribute) as XscfOrderAttribute;
                         if (orderAttribute != null)
                         {
                             return orderAttribute.Order;
